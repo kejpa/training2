@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Application\Actions\User;
+namespace Tests\Application\Actions\Login;
 
-use App\Application\Actions\User\ResendUserAction;
+use App\Application\Actions\Login\ResendLoginAction;
 use App\Domain\User\User;
 use App\Domain\User\UserRepository;
 use App\Domain\User\UserValidator;
@@ -15,12 +15,12 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
 use Slim\Psr7\Factory\ResponseFactory;
 
-class ResendUserActionTest extends TestCase {
+class ResendLoginActionTest extends TestCase {
     private UserRepository $userRepository;
     private UserValidator $userValidator;
     private LoggerInterface $logger;
     private EmailService $emailService;
-    private ResendUserAction $action;
+    private ResendLoginAction $action;
     private Request $request;
     private ResponseFactory $responseFactory;
 
@@ -31,7 +31,7 @@ class ResendUserActionTest extends TestCase {
         $this->emailService = $this->createMock(EmailService::class);
         $this->responseFactory = new ResponseFactory();
 
-        $this->action = new ResendUserAction(
+        $this->action = new ResendLoginAction(
             $this->logger,
             $this->userRepository,
             $this->emailService,

@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Application\Actions\User;
+namespace App\Application\Actions\Login;
 
+use App\Application\Actions\User\UserAction;
 use App\Domain\User\UserRepository;
 use App\Domain\User\UserValidator;
 use App\Infrastructure\Email\EmailService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 
-class ResendUserAction extends UserAction {
+class ResendLoginAction extends UserAction {
     public function __construct(LoggerInterface $logger, UserRepository $userRepository, EmailService $emailService, private UserValidator $userValidator) {
         parent::__construct($logger, $userRepository, $emailService);
     }
@@ -44,8 +45,8 @@ class ResendUserAction extends UserAction {
                 'user' => $user
             ], 200);
         } catch (\Exception $e) {
-            $this->logger->error("ResendUserAction: Exception throwed:" . $e->getMessage());
-            $this->logger->error("ResendUserAction: Parsed body:" . print_r($data, true));
+            $this->logger->error("ResendLoginAction: Exception throwed:" . $e->getMessage());
+            $this->logger->error("ResendLoginAction: Parsed body:" . print_r($data, true));
 
             return $this->respondWithData([
                 'error' => $e->getMessage()

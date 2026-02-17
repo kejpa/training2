@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Application\Actions\Login\ResendLoginAction;
 use App\Application\Actions\User\ListUsersAction;
 use App\Application\Actions\User\RegisterUserAction;
-use App\Application\Actions\User\ResendUserAction;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
@@ -17,7 +17,8 @@ return function (App $app) {
     });
 
     $app->post('/register', RegisterUserAction::class);
-    $app->post('/resend', ResendUserAction::class);
+    $app->post('/resend', ResendLoginAction::class);
+    $app->post('/getNewCode', ResendLoginAction::class);
 
     $app->group('/users', function (Group $group) {
         $group->get('', ListUsersAction::class);
