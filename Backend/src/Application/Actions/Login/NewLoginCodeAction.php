@@ -6,10 +6,12 @@ use App\Application\Actions\User\UserAction;
 use App\Domain\User\UserRepository;
 use App\Domain\User\UserValidator;
 use App\Infrastructure\Email\EmailService;
+use DateTimeImmutable;
+use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 
-class ResendLoginAction extends UserAction {
+class NewLoginCodeAction extends UserAction {
     public function __construct(LoggerInterface $logger, UserRepository $userRepository, EmailService $emailService, private UserValidator $userValidator) {
         parent::__construct($logger, $userRepository, $emailService);
     }
@@ -38,6 +40,13 @@ class ResendLoginAction extends UserAction {
                 ], 404);
             }
 
+            // Skapa en slumpmässig 6 siffrig kod
+            $randomCode = (string)random_int(100000, 999999);
+            $user->setCode($randomCode);
+            $user->setExpires(new DateTimeImmutable('+1 hour'));
+
+            // Spara uppdaterad användare
+            $this->userRepository->save($user);
 
             // Maila användaren ny inloggningskod
             $this->emailService->sendNewCodeEmail($user);
@@ -45,7 +54,7 @@ class ResendLoginAction extends UserAction {
             return $this->respondWithData([
                 'user' => $user
             ], 200);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->logger->error("ResendLoginAction: Exception throwed:" . $e->getMessage());
             $this->logger->error("ResendLoginAction: Parsed body:" . print_r($data, true));
 

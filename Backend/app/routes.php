@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Application\Actions\Login\NewLoginCodeAction;
 use App\Application\Actions\Login\ResendLoginAction;
 use App\Application\Actions\User\ListUsersAction;
 use App\Application\Actions\User\RegisterUserAction;
@@ -18,7 +19,7 @@ return function (App $app) {
 
     $app->post('/register', RegisterUserAction::class);
     $app->post('/resend', ResendLoginAction::class);
-    $app->post('/getNewCode', ResendLoginAction::class);
+    $app->post('/getNewCode', NewLoginCodeAction::class);
 
     $app->group('/users', function (Group $group) {
         $group->get('', ListUsersAction::class);

@@ -23,7 +23,8 @@ class User implements JsonSerializable {
 
     public static function fromRow(array $row): self {
         return new self(new UserId($row['id']), $row['email'], $row['firstname'], $row['lastname'], $row['secret'], $row['qrUrl'], $row['imgData'],
-            $row['code'], DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $row['expires']));
+            $row['code'], DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $row['expires']),
+            DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $row['created_at']));
     }
 
     public function getId(): UserId {
@@ -60,6 +61,14 @@ class User implements JsonSerializable {
 
     public function getCode(): ?string {
         return $this->code;
+    }
+
+    public function setCode(?string $code): void {
+        $this->code = $code;
+    }
+
+    public function setExpires(?DateTimeImmutable $expires): void {
+        $this->expires = $expires;
     }
 
     public function getExpires(): ?DateTimeImmutable {

@@ -97,6 +97,29 @@ class EmailService {
         }
     }
 
+    public function sendNewCodeEmail(User $user): void {
+        try {
+            $this->mailer->addAddress($user->getEmail(), $user->getName());
+            $this->mailer->Subject = 'Ny inloggningskod';
+            $this->mailer->isHTML(true);
+
+            $this->mailer->Body = "<h1>Hej igen {$user->getFirstname()}!</h1>
+<p>Här kommer den nya inloggningskoden.</p>
+<p>Följande kod: {$user->getCode()} gäller till {$user->getExpires()->format('H:i e')}</p>
+<p>mvh<br>Webbmaster</p>
+            ";
+
+
+            if ($this->isDevelopment) {
+                $this->saveToFile();
+            } else {
+                $this->mailer->send();
+            }
+        } catch (Exception $e) {
+            throw new \RuntimeException("E-post kunde inte skickas: {$this->mailer->ErrorInfo}");
+        }
+    }
+
     private function getWelcomeEmailTemplate(User $user): string {
         return "
 <h1>Välkommen {$user->getName()}!</h1>
