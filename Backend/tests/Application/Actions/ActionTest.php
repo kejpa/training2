@@ -11,10 +11,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 use Tests\TestCase;
 
-class ActionTest extends TestCase
-{
-    public function testActionSetsHttpCodeInRespond()
-    {
+class ActionTest extends TestCase {
+    public function testActionSetsHttpCodeInRespond() {
         $app = $this->getAppInstance();
         $container = $app->getContainer();
         $logger = $container->get(LoggerInterface::class);
@@ -26,8 +24,7 @@ class ActionTest extends TestCase
                 parent::__construct($loggerInterface);
             }
 
-            public function action(): Response
-            {
+            public function action(): Response {
                 return $this->respond(
                     new ActionPayload(
                         202,
@@ -46,8 +43,7 @@ class ActionTest extends TestCase
         $this->assertEquals(202, $response->getStatusCode());
     }
 
-    public function testActionSetsHttpCodeRespondData()
-    {
+    public function testActionSetsHttpCodeRespondData() {
         $app = $this->getAppInstance();
         $container = $app->getContainer();
         $logger = $container->get(LoggerInterface::class);
@@ -59,8 +55,7 @@ class ActionTest extends TestCase
                 parent::__construct($loggerInterface);
             }
 
-            public function action(): Response
-            {
+            public function action(): Response {
                 return $this->respondWithData(
                     [
                         'willBeDoneAt' => (new DateTimeImmutable())->format(DateTimeImmutable::ATOM)

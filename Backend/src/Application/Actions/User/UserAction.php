@@ -6,15 +6,12 @@ namespace App\Application\Actions\User;
 
 use App\Application\Actions\Action;
 use App\Domain\User\UserRepository;
+use App\Infrastructure\Email\EmailService;
 use Psr\Log\LoggerInterface;
 
-abstract class UserAction extends Action
-{
-    protected UserRepository $userRepository;
+abstract class UserAction extends Action {
 
-    public function __construct(LoggerInterface $logger, UserRepository $userRepository)
-    {
+    public function __construct(LoggerInterface $logger, protected UserRepository $userRepository, protected EmailService $emailService) {
         parent::__construct($logger);
-        $this->userRepository = $userRepository;
     }
 }

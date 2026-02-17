@@ -75,6 +75,22 @@
       <path value="$PROJECT_DIR$/Backend/vendor/psr/http-server-middleware" />
       <path value="$PROJECT_DIR$/Backend/vendor/psr/log" />
       <path value="$PROJECT_DIR$/Backend/vendor/staabm/side-effects-detector" />
+      <path value="$PROJECT_DIR$/Backend/vendor/ramsey/collection" />
+      <path value="$PROJECT_DIR$/Backend/vendor/ramsey/uuid" />
+      <path value="$PROJECT_DIR$/Backend/vendor/brick/math" />
+      <path value="$PROJECT_DIR$/Backend/vendor/pragmarx/google2fa" />
+      <path value="$PROJECT_DIR$/Backend/vendor/paragonie/constant_time_encoding" />
+      <path value="$PROJECT_DIR$/Backend/vendor/dasprid/enum" />
+      <path value="$PROJECT_DIR$/Backend/vendor/bacon/bacon-qr-code" />
+      <path value="$PROJECT_DIR$/Backend/vendor/phpmailer/phpmailer" />
+      <path value="$PROJECT_DIR$/Backend/vendor/graham-campbell/result-type" />
+      <path value="$PROJECT_DIR$/Backend/vendor/vlucas/phpdotenv" />
+      <path value="$PROJECT_DIR$/Backend/vendor/phpoption/phpoption" />
+      <path value="$PROJECT_DIR$/Backend/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/Backend/vendor/symfony/polyfill-php80" />
+      <path value="$PROJECT_DIR$/Backend/vendor/symfony/polyfill-ctype" />
+      <path value="$PROJECT_DIR$/Backend/vendor/psr/cache" />
+      <path value="$PROJECT_DIR$/Backend/vendor/doctrine/dbal" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2">
