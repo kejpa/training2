@@ -69,6 +69,34 @@ class EmailService {
         }
     }
 
+    public function resendEmail(User $user): void {
+        try {
+            $this->mailer->addAddress($user->getEmail(), $user->getName());
+            $this->mailer->Subject = 'Återsändning av inloggnings-qr';
+            $this->mailer->isHTML(true);
+
+            // Avkoda base64 och lägg till som embedded image
+            $imageData = base64_decode($user->getImgData());
+            $this->mailer->addStringEmbeddedImage(
+                $imageData,
+                'qrkod',           // CID (Content-ID)
+                'qr.png',       // Filnamn
+                'base64',
+                'image/png'
+            );
+
+            $this->mailer->Body = $this->getResendEmailTemplate($user);
+
+            if ($this->isDevelopment) {
+                $this->saveToFile();
+            } else {
+                $this->mailer->send();
+            }
+        } catch (Exception $e) {
+            throw new \RuntimeException("E-post kunde inte skickas: {$this->mailer->ErrorInfo}");
+        }
+    }
+
     private function getWelcomeEmailTemplate(User $user): string {
         return "
 <h1>Välkommen {$user->getName()}!</h1>
@@ -77,6 +105,16 @@ class EmailService {
 <p>Scanna nedanstående qr-kod om du vill använda en authenticator-app för inloggning<br>
 <img src='cid:qrkod' alt='qrkod' /> </p>
 <p>Vill du logga in med en engångskod kan du denna gång använda följande kod: {$user->getCode()}</p>
+<p>mvh<br>Webbmaster</p>
+";
+    }
+
+    private function getResendEmailTemplate(User $user): string {
+        return "
+<h1>Hej igen {$user->getFirstname()}!</h1>
+<p>Här kommer qr-koden igen som du kan använda via valfri authenticator-app.</p>
+<p>Scanna nedanstående qr-kod för att använda en authenticator-app för inloggning<br>
+<img src='cid:qrkod' alt='qrkod' /> </p>
 <p>mvh<br>Webbmaster</p>
 ";
     }

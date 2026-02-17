@@ -30,7 +30,6 @@ class DbalUserRepository extends AbstractDBRepository implements UserRepository 
 
     /**
      * @throws Exception
-     * @throws NotFoundException
      */
     public function getById(UserId $id): ?User {
         $qb = $this->connection->createQueryBuilder();
