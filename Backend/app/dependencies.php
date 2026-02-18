@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Application\Settings\SettingsInterface;
+use App\Infrastructure\Auth\TokenService;
 use DI\ContainerBuilder;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
@@ -41,6 +42,7 @@ return function (ContainerBuilder $containerBuilder) {
             ];
             return DriverManager::getConnection($connectionParams);
         },
+        TokenService::class => \DI\autowire(),
 
     ]);
 };

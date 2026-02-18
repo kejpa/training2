@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Application\Actions\Login;
 
 use App\Application\Actions\Login\NewLoginCodeAction;
+use App\Domain\Login\LoginValidator;
 use App\Domain\User\User;
 use App\Domain\User\UserRepository;
 use App\Domain\User\UserValidator;
@@ -18,7 +19,7 @@ use Slim\Psr7\Factory\ResponseFactory;
 class NewLoginCodeActionTest extends TestCase
 {
     private UserRepository $userRepository;
-    private UserValidator $userValidator;
+    private LoginValidator $loginValidator;
     private LoggerInterface $logger;
     private EmailService $emailService;
     private NewLoginCodeAction $action;
@@ -28,7 +29,7 @@ class NewLoginCodeActionTest extends TestCase
     protected function setUp(): void
     {
         $this->userRepository = $this->createMock(UserRepository::class);
-        $this->userValidator = $this->createMock(UserValidator::class);
+        $this->loginValidator = $this->createMock(LoginValidator::class);
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->emailService = $this->createMock(EmailService::class);
         $this->responseFactory = new ResponseFactory();
@@ -37,7 +38,7 @@ class NewLoginCodeActionTest extends TestCase
             $this->logger,
             $this->userRepository,
             $this->emailService,
-            $this->userValidator
+            $this->loginValidator
         );
 
         $this->request = $this->createMock(Request::class);
@@ -77,8 +78,8 @@ class NewLoginCodeActionTest extends TestCase
             ->method('getParsedBody')
             ->willReturn($data);
 
-        $this->userValidator
-            ->method('validateResend')
+        $this->loginValidator
+            ->method('validateEmail')
             ->with($data)
             ->willReturn(true);
 
@@ -127,8 +128,8 @@ class NewLoginCodeActionTest extends TestCase
             ->method('getParsedBody')
             ->willReturn($data);
 
-        $this->userValidator
-            ->method('validateResend')
+        $this->loginValidator
+            ->method('validateEmail')
             ->willReturn(true);
 
         $this->userRepository
@@ -164,8 +165,8 @@ class NewLoginCodeActionTest extends TestCase
             ->method('getParsedBody')
             ->willReturn($data);
 
-        $this->userValidator
-            ->method('validateResend')
+        $this->loginValidator
+            ->method('validateEmail')
             ->willReturn(true);
 
         $this->userRepository
@@ -206,8 +207,8 @@ class NewLoginCodeActionTest extends TestCase
             ->method('getParsedBody')
             ->willReturn($data);
 
-        $this->userValidator
-            ->method('validateResend')
+        $this->loginValidator
+            ->method('validateEmail')
             ->willReturn(true);
 
         $this->userRepository
@@ -245,12 +246,12 @@ class NewLoginCodeActionTest extends TestCase
             ->method('getParsedBody')
             ->willReturn($data);
 
-        $this->userValidator
-            ->method('validateResend')
+        $this->loginValidator
+            ->method('validateEmail')
             ->with($data)
             ->willReturn(false);
 
-        $this->userValidator
+        $this->loginValidator
             ->method('getErrors')
             ->willReturn($errors);
 
@@ -285,12 +286,12 @@ class NewLoginCodeActionTest extends TestCase
             ->method('getParsedBody')
             ->willReturn(null);
 
-        $this->userValidator
-            ->method('validateResend')
+        $this->loginValidator
+            ->method('validateEmail')
             ->with([])
             ->willReturn(false);
 
-        $this->userValidator
+        $this->loginValidator
             ->method('getErrors')
             ->willReturn(['email' => 'E-post krävs']);
 
@@ -312,8 +313,8 @@ class NewLoginCodeActionTest extends TestCase
             ->method('getParsedBody')
             ->willReturn($data);
 
-        $this->userValidator
-            ->method('validateResend')
+        $this->loginValidator
+            ->method('validateEmail')
             ->with(['email' => 'test@example.com'])
             ->willReturn(true);
 
@@ -343,8 +344,8 @@ class NewLoginCodeActionTest extends TestCase
             ->method('getParsedBody')
             ->willReturn($data);
 
-        $this->userValidator
-            ->method('validateResend')
+        $this->loginValidator
+            ->method('validateEmail')
             ->willReturn(true);
 
         $this->userRepository
@@ -372,7 +373,7 @@ class NewLoginCodeActionTest extends TestCase
         $this->assertEquals('Database error', $body['data']['error']);
 
         $this->assertCount(2, $loggedMessages);
-        $this->assertStringContainsString('Exception throwed:', $loggedMessages[0]);
+        $this->assertStringContainsString('Exception thrown:', $loggedMessages[0]);
         $this->assertStringContainsString('Parsed body:', $loggedMessages[1]);
     }
 
@@ -386,8 +387,8 @@ class NewLoginCodeActionTest extends TestCase
             ->method('getParsedBody')
             ->willReturn($data);
 
-        $this->userValidator
-            ->method('validateResend')
+        $this->loginValidator
+            ->method('validateEmail')
             ->willReturn(true);
 
         $this->userRepository
@@ -427,8 +428,8 @@ class NewLoginCodeActionTest extends TestCase
             ->method('getParsedBody')
             ->willReturn($data);
 
-        $this->userValidator
-            ->method('validateResend')
+        $this->loginValidator
+            ->method('validateEmail')
             ->willReturn(true);
 
         $this->userRepository

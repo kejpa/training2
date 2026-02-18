@@ -96,7 +96,8 @@ class UserTest extends TestCase {
             'qrUrl' => 'https://example.com/qr',
             'imgData' => 'base64data',
             'code' => '654321',
-            'expires' => '2026-12-31 23:59:59'
+            'expires' => '2026-12-31 23:59:59',
+            'created_at' => '2021-01-01 00:00:00'
         ];
 
         $user = User::fromRow($row);
@@ -112,6 +113,8 @@ class UserTest extends TestCase {
         $this->assertSame($row['code'], $user->getCode());
         $this->assertInstanceOf(\DateTimeImmutable::class, $user->getExpires());
         $this->assertSame('2026-12-31 23:59:59', $user->getExpires()->format('Y-m-d H:i:s'));
+        $this->assertInstanceOf(\DateTimeImmutable::class, $user->getCreatedAt());
+        $this->assertSame('2021-01-01 00:00:00', $user->getCreatedAt()->format('Y-m-d H:i:s'));
     }
 
     public function testJsonSerializeReturnsCorrectStructure(): void {

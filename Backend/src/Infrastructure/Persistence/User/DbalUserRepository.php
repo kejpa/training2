@@ -6,7 +6,6 @@ use App\Domain\User\User;
 use App\Domain\User\UserRepository;
 use App\Domain\ValueObject\UserId;
 use App\Infrastructure\Persistence\AbstractDBRepository;
-use DI\NotFoundException;
 use Doctrine\DBAL\Exception;
 
 class DbalUserRepository extends AbstractDBRepository implements UserRepository {
@@ -14,7 +13,6 @@ class DbalUserRepository extends AbstractDBRepository implements UserRepository 
 
     /**
      * @throws Exception
-     * @throws NotFoundException
      */
     public function getAll(): array {
         $qb = $this->connection->createQueryBuilder();
@@ -59,7 +57,6 @@ class DbalUserRepository extends AbstractDBRepository implements UserRepository 
 
     /**
      * @throws Exception
-     * @throws NotFoundException
      */
     public function getByEmail(string $email): ?User {
         $qb = $this->connection->createQueryBuilder();

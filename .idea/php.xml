@@ -91,6 +91,7 @@
       <path value="$PROJECT_DIR$/Backend/vendor/symfony/polyfill-ctype" />
       <path value="$PROJECT_DIR$/Backend/vendor/psr/cache" />
       <path value="$PROJECT_DIR$/Backend/vendor/doctrine/dbal" />
+      <path value="$PROJECT_DIR$/Backend/vendor/firebase/php-jwt" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2">

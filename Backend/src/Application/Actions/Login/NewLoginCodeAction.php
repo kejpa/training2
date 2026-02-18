@@ -3,8 +3,8 @@
 namespace App\Application\Actions\Login;
 
 use App\Application\Actions\User\UserAction;
+use App\Domain\Login\LoginValidator;
 use App\Domain\User\UserRepository;
-use App\Domain\User\UserValidator;
 use App\Infrastructure\Email\EmailService;
 use DateTimeImmutable;
 use Exception;
@@ -12,7 +12,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 
 class NewLoginCodeAction extends UserAction {
-    public function __construct(LoggerInterface $logger, UserRepository $userRepository, EmailService $emailService, private UserValidator $userValidator) {
+    public function __construct(LoggerInterface $logger, UserRepository $userRepository, EmailService $emailService, private LoginValidator $validator) {
         parent::__construct($logger, $userRepository, $emailService);
     }
 
@@ -24,14 +24,14 @@ class NewLoginCodeAction extends UserAction {
         $data = array_change_key_case($data ?? [], CASE_LOWER);
 
         // Validera
-        if (!$this->userValidator->validateResend($data)) {
+        if (!$this->validator->validateEmail($data)) {
             return $this->respondWithData([
-                'errors' => $this->userValidator->getErrors()
+                'errors' => $this->validator->getErrors()
             ], 400);
         }
 
         try {
-            // Skapa user
+            // Hämta användaren
             $user = $this->userRepository->getByEmail($data['email']);
 
             if (!$user) {
@@ -55,7 +55,7 @@ class NewLoginCodeAction extends UserAction {
                 'user' => $user
             ], 200);
         } catch (Exception $e) {
-            $this->logger->error("ResendLoginAction: Exception throwed:" . $e->getMessage());
+            $this->logger->error("ResendLoginAction: Exception thrown:" . $e->getMessage());
             $this->logger->error("ResendLoginAction: Parsed body:" . print_r($data, true));
 
             return $this->respondWithData([
