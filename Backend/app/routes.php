@@ -24,6 +24,7 @@ return function (App $app) {
     $app->post('/resend', ResendLoginAction::class);
     $app->post('/getNewCode', NewLoginCodeAction::class);
     $app->post('/login/mail', MailLoginAction::class);
+    $app->post('/login/totp', TotpLoginAction::class);
     $app->get('/refresh', RefreshTokenAction::class);
     $app->delete('/refresh', LogoutAction::class);
 

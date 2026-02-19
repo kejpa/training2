@@ -60,8 +60,8 @@ class NewLoginCodeAction extends UserAction {
                 'user' => $user
             ], 200);
         } catch (Exception $e) {
-            $this->logger->error("ResendLoginAction: Exception thrown:" . $e->getMessage());
-            $this->logger->error("ResendLoginAction: Parsed body:" . print_r($data, true));
+            $this->logger->error("NewLoginCodeAction: Exception thrown:" . $e->getMessage());
+            $this->logger->error("NewLoginCodeAction: Parsed body:" . print_r($data, true));
 
             return $this->respondWithData([
                 'error' => $e->getMessage()

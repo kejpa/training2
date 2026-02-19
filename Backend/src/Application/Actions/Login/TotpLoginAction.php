@@ -8,10 +8,11 @@ use App\Domain\User\UserRepository;
 use App\Infrastructure\Auth\TokenService;
 use App\Infrastructure\Email\EmailService;
 use Exception;
+use PragmaRX\Google2FA\Google2FA;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 
-class MailLoginAction extends UserAction {
+class TotpLoginAction extends UserAction {
     public function __construct(LoggerInterface $logger, UserRepository $userRepository, EmailService $emailService,
         private LoginValidator $validator, private TokenService $tokenService) {
         parent::__construct($logger, $userRepository, $emailService);
@@ -41,25 +42,24 @@ class MailLoginAction extends UserAction {
                 ], 404);
             }
 
-            $now = new \DateTimeImmutable();
-            $expires = $user->getExpires();
+            // Verifiera TOTP-kod
+            try {
+                $g2fa = new Google2FA();
+                $g2fa->setWindow(1); // Accepterar koder från ±30 sekunder
 
-            if ($data['code'] !== $user->getCode()) {
+                $valid = $g2fa->verifyKey($user->getSecret(), $data['code']);
+
+                if (!$valid) {
+                    return $this->respondWithData([
+                        'error' => 'Ogiltig kod'
+                    ], 401);
+                }
+            } catch (\Exception $e) {
+                $this->logger->error("TOTP verification failed: " . $e->getMessage());
                 return $this->respondWithData([
                     'error' => 'Ogiltig kod'
                 ], 401);
             }
-
-            if (!$expires || $expires < $now) {
-                return $this->respondWithData([
-                    'error' => 'Koden har gått ut'
-                ], 401);
-            }
-
-            //Nollställ kod och utgångstid
-            $user->setCode(null);
-            $user->setExpires(null);
-            $this->userRepository->save($user);
 
             // Generera tokens
             $accessToken = $this->tokenService->generateAccessToken($user);
@@ -90,8 +90,8 @@ class MailLoginAction extends UserAction {
             return $response->withAddedHeader('Set-Cookie', $cookieHeader);
 
         } catch (Exception $e) {
-            $this->logger->error("MailLoginAction: Exception thrown:" . $e->getMessage());
-            $this->logger->error("MailLoginAction: Parsed body:" . print_r($data, true));
+            $this->logger->error("TotpLoginAction: Exception thrown:" . $e->getMessage());
+            $this->logger->error("TotpLoginAction: Parsed body:" . print_r($data, true));
 
             return $this->respondWithData([
                 'error' => $e->getMessage()
