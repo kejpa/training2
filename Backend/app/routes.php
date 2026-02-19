@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Application\Actions\Auth\LogoutAction;
-use App\Application\Actions\Login\LoginAction;
+use App\Application\Actions\Login\MailLoginAction;
 use App\Application\Actions\Login\NewLoginCodeAction;
 use App\Application\Actions\Login\RefreshTokenAction;
 use App\Application\Actions\Login\ResendLoginAction;
@@ -23,7 +23,7 @@ return function (App $app) {
     $app->post('/register', RegisterUserAction::class);
     $app->post('/resend', ResendLoginAction::class);
     $app->post('/getNewCode', NewLoginCodeAction::class);
-    $app->post('/login', LoginAction::class);
+    $app->post('/login/mail', MailLoginAction::class);
     $app->get('/refresh', RefreshTokenAction::class);
     $app->delete('/refresh', LogoutAction::class);
 

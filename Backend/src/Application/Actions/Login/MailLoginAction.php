@@ -11,7 +11,7 @@ use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 
-class LoginAction extends UserAction {
+class MailLoginAction extends UserAction {
     public function __construct(LoggerInterface $logger, UserRepository $userRepository, EmailService $emailService,
         private LoginValidator $validator, private TokenService $tokenService) {
         parent::__construct($logger, $userRepository, $emailService);
@@ -40,22 +40,26 @@ class LoginAction extends UserAction {
                     'error' => 'Användaren hittades inte'
                 ], 404);
             }
-            if ($data['loginalternative'] === 'mail') {
-                $now = new \DateTimeImmutable();
-                $expires = $user->getExpires();
 
-                if ($data['code'] !== $user->getCode()) {
-                    return $this->respondWithData([
-                        'error' => 'Ogiltig kod'
-                    ], 401);
-                }
+            $now = new \DateTimeImmutable();
+            $expires = $user->getExpires();
 
-                if (!$expires || $expires < $now) {
-                    return $this->respondWithData([
-                        'error' => 'Koden har gått ut'
-                    ], 401);
-                }
+            if ($data['code'] !== $user->getCode()) {
+                return $this->respondWithData([
+                    'error' => 'Ogiltig kod'
+                ], 401);
             }
+
+            if (!$expires || $expires < $now) {
+                return $this->respondWithData([
+                    'error' => 'Koden har gått ut'
+                ], 401);
+            }
+
+            //Nollställ kod och utgångstid
+            $user->setCode(null);
+            $user->setExpires(null);
+            $this->userRepository->save($user);
 
             // Generera tokens
             $accessToken = $this->tokenService->generateAccessToken($user);
