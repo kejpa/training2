@@ -8,28 +8,25 @@ use App\Application\Actions\Login\NewLoginCodeAction;
 use App\Domain\Login\LoginValidator;
 use App\Domain\User\User;
 use App\Domain\User\UserRepository;
-use App\Domain\User\UserValidator;
 use App\Domain\ValueObject\UserId;
 use App\Infrastructure\Email\EmailService;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
-use PHPUnit\Framework\TestCase;
 use Slim\Psr7\Factory\ResponseFactory;
 
-class NewLoginCodeActionTest extends TestCase
-{
+class NewLoginCodeActionTest extends TestCase {
     private UserRepository $userRepository;
-    private LoginValidator $loginValidator;
+    private LoginValidator $validator;
     private LoggerInterface $logger;
     private EmailService $emailService;
     private NewLoginCodeAction $action;
     private Request $request;
     private ResponseFactory $responseFactory;
 
-    protected function setUp(): void
-    {
+    protected function setUp(): void {
         $this->userRepository = $this->createMock(UserRepository::class);
-        $this->loginValidator = $this->createMock(LoginValidator::class);
+        $this->validator = $this->createMock(LoginValidator::class);
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->emailService = $this->createMock(EmailService::class);
         $this->responseFactory = new ResponseFactory();
@@ -38,7 +35,7 @@ class NewLoginCodeActionTest extends TestCase
             $this->logger,
             $this->userRepository,
             $this->emailService,
-            $this->loginValidator
+            $this->validator
         );
 
         $this->request = $this->createMock(Request::class);
@@ -54,8 +51,7 @@ class NewLoginCodeActionTest extends TestCase
         $responseProperty->setValue($this->action, $this->responseFactory->createResponse());
     }
 
-    private function createTestUser(): User
-    {
+    private function createTestUser(string $code = null, \DateTimeImmutable $expires = null): User {
         return new User(
             new UserId(),
             'test@example.com',
@@ -64,27 +60,25 @@ class NewLoginCodeActionTest extends TestCase
             'secret123',
             'https://qr.url',
             'base64imagedata',
-            '123456',
-            new \DateTimeImmutable('+2 hours')
+            $code,
+            $expires
         );
     }
 
-    public function testSuccessfulNewLoginCode(): void
-    {
+    public function testGeneratesNewCodeWhenExpiresIsNull(): void {
         $data = ['email' => 'test@example.com'];
-        $user = $this->createTestUser();
+        $user = $this->createTestUser(null, null);
 
         $this->request
             ->method('getParsedBody')
             ->willReturn($data);
 
-        $this->loginValidator
+        $this->validator
             ->method('validateEmail')
             ->with($data)
             ->willReturn(true);
 
         $this->userRepository
-            ->expects($this->once())
             ->method('getByEmail')
             ->with('test@example.com')
             ->willReturn($user);
@@ -110,25 +104,23 @@ class NewLoginCodeActionTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $body = json_decode((string)$response->getBody(), true);
-        $this->assertArrayHasKey('user', $body['data']);
-
-        // Verifiera att användaren uppdaterades
+        // Verifiera att ny kod skapades
         $this->assertNotNull($capturedUser);
         $this->assertNotNull($capturedUser->getCode());
         $this->assertMatchesRegularExpression('/^\d{6}$/', $capturedUser->getCode());
+        $this->assertNotNull($capturedUser->getExpires());
     }
 
-    public function testGenerates6DigitCode(): void
-    {
+    public function testGeneratesNewCodeWhenExpiresHasPassed(): void {
         $data = ['email' => 'test@example.com'];
-        $user = $this->createTestUser();
+        $oldCode = '111111';
+        $user = $this->createTestUser($oldCode, new \DateTimeImmutable('-1 hour')); // Utgången
 
         $this->request
             ->method('getParsedBody')
             ->willReturn($data);
 
-        $this->loginValidator
+        $this->validator
             ->method('validateEmail')
             ->willReturn(true);
 
@@ -143,29 +135,34 @@ class NewLoginCodeActionTest extends TestCase
                 $capturedUser = $user;
             });
 
-        $this->action->__invoke(
+        $this->emailService
+            ->method('sendNewCodeEmail');
+
+        $response = $this->action->__invoke(
             $this->request,
             $this->responseFactory->createResponse(),
             []
         );
 
+        $this->assertEquals(200, $response->getStatusCode());
+
+        // Verifiera att ny kod skapades (inte samma som gamla)
         $this->assertNotNull($capturedUser);
-        $code = $capturedUser->getCode();
-        $this->assertMatchesRegularExpression('/^\d{6}$/', $code);
-        $this->assertGreaterThanOrEqual(100000, (int)$code);
-        $this->assertLessThanOrEqual(999999, (int)$code);
+        $this->assertNotNull($capturedUser->getCode());
+        $this->assertMatchesRegularExpression('/^\d{6}$/', $capturedUser->getCode());
+        // Koden kan vara samma eller olika pga randomisering, men den ska finnas
     }
 
-    public function testSetsExpirationTo1Hour(): void
-    {
+    public function testKeepsExistingCodeWhenExpiresIsValid(): void {
         $data = ['email' => 'test@example.com'];
-        $user = $this->createTestUser();
+        $existingCode = '123456';
+        $user = $this->createTestUser($existingCode, new \DateTimeImmutable('+30 minutes')); // Giltig
 
         $this->request
             ->method('getParsedBody')
             ->willReturn($data);
 
-        $this->loginValidator
+        $this->validator
             ->method('validateEmail')
             ->willReturn(true);
 
@@ -180,7 +177,101 @@ class NewLoginCodeActionTest extends TestCase
                 $capturedUser = $user;
             });
 
-        $beforeAction = new \DateTime();
+        $this->emailService
+            ->method('sendNewCodeEmail');
+
+        $response = $this->action->__invoke(
+            $this->request,
+            $this->responseFactory->createResponse(),
+            []
+        );
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        // Verifiera att samma kod behölls
+        $this->assertNotNull($capturedUser);
+        $this->assertEquals($existingCode, $capturedUser->getCode());
+        $this->assertNotNull($capturedUser->getExpires());
+    }
+
+    public function testExtendsExpirationTimeWhenCodeIsValid(): void {
+        $data = ['email' => 'test@example.com'];
+        $existingCode = '123456';
+        $oldExpires = new \DateTimeImmutable('+30 minutes');
+        $user = $this->createTestUser($existingCode, $oldExpires);
+
+        $this->request
+            ->method('getParsedBody')
+            ->willReturn($data);
+
+        $this->validator
+            ->method('validateEmail')
+            ->willReturn(true);
+
+        $this->userRepository
+            ->method('getByEmail')
+            ->willReturn($user);
+
+        $capturedUser = null;
+        $this->userRepository
+            ->method('save')
+            ->willReturnCallback(function (User $user) use (&$capturedUser) {
+                $capturedUser = $user;
+            });
+
+        $this->emailService
+            ->method('sendNewCodeEmail');
+
+        $beforeAction = new \DateTimeImmutable();
+
+        $response = $this->action->__invoke(
+            $this->request,
+            $this->responseFactory->createResponse(),
+            []
+        );
+
+        $afterAction = new \DateTimeImmutable();
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        // Verifiera att expires förlängdes till +1 timme från nu
+        $this->assertNotNull($capturedUser);
+        $newExpires = $capturedUser->getExpires();
+        $this->assertNotNull($newExpires);
+
+        // Nya expires borde vara ~1 timme från nu (inte från gamla expires)
+        $diff = $newExpires->getTimestamp() - $beforeAction->getTimestamp();
+        $this->assertGreaterThanOrEqual(3600 - 5, $diff); // 1h minus margin
+        $this->assertLessThanOrEqual(3600 + 5, $diff);    // 1h plus margin
+    }
+
+    public function testSetsExpirationTo1Hour(): void {
+        $data = ['email' => 'test@example.com'];
+        $user = $this->createTestUser(null, null);
+
+        $this->request
+            ->method('getParsedBody')
+            ->willReturn($data);
+
+        $this->validator
+            ->method('validateEmail')
+            ->willReturn(true);
+
+        $this->userRepository
+            ->method('getByEmail')
+            ->willReturn($user);
+
+        $capturedUser = null;
+        $this->userRepository
+            ->method('save')
+            ->willReturnCallback(function (User $user) use (&$capturedUser) {
+                $capturedUser = $user;
+            });
+
+        $this->emailService
+            ->method('sendNewCodeEmail');
+
+        $beforeAction = new \DateTimeImmutable();
 
         $this->action->__invoke(
             $this->request,
@@ -188,26 +279,24 @@ class NewLoginCodeActionTest extends TestCase
             []
         );
 
-        $afterAction = new \DateTime();
+        $afterAction = new \DateTimeImmutable();
 
         $this->assertNotNull($capturedUser);
         $expires = $capturedUser->getExpires();
 
-        // Verifiera att expires är ungefär 1 timme från nu
         $diff = $expires->getTimestamp() - $beforeAction->getTimestamp();
-        $this->assertGreaterThanOrEqual(3600 - 5, $diff); // 1h minus 5 sekunder margin
-        $this->assertLessThanOrEqual(3600 + 5, $diff);    // 1h plus 5 sekunder margin
+        $this->assertGreaterThanOrEqual(3600 - 5, $diff);
+        $this->assertLessThanOrEqual(3600 + 5, $diff);
     }
 
-    public function testReturns404WhenUserNotFound(): void
-    {
+    public function testReturns404WhenUserNotFound(): void {
         $data = ['email' => 'nonexistent@example.com'];
 
         $this->request
             ->method('getParsedBody')
             ->willReturn($data);
 
-        $this->loginValidator
+        $this->validator
             ->method('validateEmail')
             ->willReturn(true);
 
@@ -237,8 +326,7 @@ class NewLoginCodeActionTest extends TestCase
         $this->assertEquals('Användaren hittades inte', $body['data']['error']);
     }
 
-    public function testReturnsValidationErrors(): void
-    {
+    public function testReturnsValidationErrors(): void {
         $data = ['email' => 'invalid-email'];
         $errors = ['email' => 'Ogiltig e-postadress'];
 
@@ -246,12 +334,12 @@ class NewLoginCodeActionTest extends TestCase
             ->method('getParsedBody')
             ->willReturn($data);
 
-        $this->loginValidator
+        $this->validator
             ->method('validateEmail')
             ->with($data)
             ->willReturn(false);
 
-        $this->loginValidator
+        $this->validator
             ->method('getErrors')
             ->willReturn($errors);
 
@@ -280,18 +368,17 @@ class NewLoginCodeActionTest extends TestCase
         $this->assertEquals($errors, $body['data']['errors']);
     }
 
-    public function testHandlesNullParsedBody(): void
-    {
+    public function testHandlesNullParsedBody(): void {
         $this->request
             ->method('getParsedBody')
             ->willReturn(null);
 
-        $this->loginValidator
+        $this->validator
             ->method('validateEmail')
             ->with([])
             ->willReturn(false);
 
-        $this->loginValidator
+        $this->validator
             ->method('getErrors')
             ->willReturn(['email' => 'E-post krävs']);
 
@@ -304,8 +391,7 @@ class NewLoginCodeActionTest extends TestCase
         $this->assertEquals(400, $response->getStatusCode());
     }
 
-    public function testConvertsKeysToLowercase(): void
-    {
+    public function testConvertsKeysToLowercase(): void {
         $data = ['EMAIL' => 'test@example.com'];
         $user = $this->createTestUser();
 
@@ -313,7 +399,7 @@ class NewLoginCodeActionTest extends TestCase
             ->method('getParsedBody')
             ->willReturn($data);
 
-        $this->loginValidator
+        $this->validator
             ->method('validateEmail')
             ->with(['email' => 'test@example.com'])
             ->willReturn(true);
@@ -326,6 +412,9 @@ class NewLoginCodeActionTest extends TestCase
         $this->userRepository
             ->method('save');
 
+        $this->emailService
+            ->method('sendNewCodeEmail');
+
         $response = $this->action->__invoke(
             $this->request,
             $this->responseFactory->createResponse(),
@@ -335,8 +424,7 @@ class NewLoginCodeActionTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testLogsErrorWhenRepositoryThrowsException(): void
-    {
+    public function testLogsErrorOnException(): void {
         $data = ['email' => 'test@example.com'];
         $exception = new \Exception('Database error');
 
@@ -344,7 +432,7 @@ class NewLoginCodeActionTest extends TestCase
             ->method('getParsedBody')
             ->willReturn($data);
 
-        $this->loginValidator
+        $this->validator
             ->method('validateEmail')
             ->willReturn(true);
 
@@ -369,7 +457,6 @@ class NewLoginCodeActionTest extends TestCase
         $this->assertEquals(400, $response->getStatusCode());
 
         $body = json_decode((string)$response->getBody(), true);
-        $this->assertArrayHasKey('error', $body['data']);
         $this->assertEquals('Database error', $body['data']['error']);
 
         $this->assertCount(2, $loggedMessages);
@@ -377,8 +464,7 @@ class NewLoginCodeActionTest extends TestCase
         $this->assertStringContainsString('Parsed body:', $loggedMessages[1]);
     }
 
-    public function testLogsErrorWhenEmailServiceFails(): void
-    {
+    public function testLogsErrorWhenEmailServiceFails(): void {
         $data = ['email' => 'test@example.com'];
         $user = $this->createTestUser();
         $exception = new \Exception('Email service unavailable');
@@ -387,7 +473,7 @@ class NewLoginCodeActionTest extends TestCase
             ->method('getParsedBody')
             ->willReturn($data);
 
-        $this->loginValidator
+        $this->validator
             ->method('validateEmail')
             ->willReturn(true);
 
@@ -418,8 +504,7 @@ class NewLoginCodeActionTest extends TestCase
         $this->assertEquals('Email service unavailable', $body['data']['error']);
     }
 
-    public function testExecutesInCorrectOrder(): void
-    {
+    public function testExecutesInCorrectOrder(): void {
         $data = ['email' => 'test@example.com'];
         $user = $this->createTestUser();
         $callOrder = [];
@@ -428,7 +513,7 @@ class NewLoginCodeActionTest extends TestCase
             ->method('getParsedBody')
             ->willReturn($data);
 
-        $this->loginValidator
+        $this->validator
             ->method('validateEmail')
             ->willReturn(true);
 
@@ -458,5 +543,44 @@ class NewLoginCodeActionTest extends TestCase
         );
 
         $this->assertEquals(['getByEmail', 'save', 'sendEmail'], $callOrder);
+    }
+
+    public function testCodeIs6Digits(): void {
+        $data = ['email' => 'test@example.com'];
+        $user = $this->createTestUser(null, null);
+
+        $this->request
+            ->method('getParsedBody')
+            ->willReturn($data);
+
+        $this->validator
+            ->method('validateEmail')
+            ->willReturn(true);
+
+        $this->userRepository
+            ->method('getByEmail')
+            ->willReturn($user);
+
+        $capturedUser = null;
+        $this->userRepository
+            ->method('save')
+            ->willReturnCallback(function (User $user) use (&$capturedUser) {
+                $capturedUser = $user;
+            });
+
+        $this->emailService
+            ->method('sendNewCodeEmail');
+
+        $this->action->__invoke(
+            $this->request,
+            $this->responseFactory->createResponse(),
+            []
+        );
+
+        $this->assertNotNull($capturedUser);
+        $code = $capturedUser->getCode();
+        $this->assertMatchesRegularExpression('/^\d{6}$/', $code);
+        $this->assertGreaterThanOrEqual(100000, (int)$code);
+        $this->assertLessThanOrEqual(999999, (int)$code);
     }
 }

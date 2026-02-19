@@ -40,10 +40,15 @@ class NewLoginCodeAction extends UserAction {
                 ], 404);
             }
 
-            // Skapa en slumpmässig 6 siffrig kod
-            $randomCode = (string)random_int(100000, 999999);
-            $user->setCode($randomCode);
-            $user->setExpires(new DateTimeImmutable('+1 hour'));
+
+            // Skapa en slumpmässig 6 siffrig kod om tiden är null eller har gått ut
+            if(!$user->getExpires() || $user->getExpires() < new DateTimeImmutable()) {
+                $randomCode = (string)random_int(100000, 999999);
+                $user->setCode($randomCode);
+                $user->setExpires(new DateTimeImmutable('+1 hour'));
+            } else {
+                $user->setExpires(new DateTimeImmutable('+1 hour'));
+            }
 
             // Spara uppdaterad användare
             $this->userRepository->save($user);
