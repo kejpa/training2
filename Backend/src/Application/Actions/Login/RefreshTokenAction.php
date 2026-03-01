@@ -11,7 +11,11 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 
 class RefreshTokenAction extends UserAction {
-    public function __construct(LoggerInterface $logger, UserRepository $userRepository, private TokenService $tokenService) {
+    public function __construct(
+        LoggerInterface $logger,
+        UserRepository $userRepository,
+        private TokenService $tokenService
+    ) {
         parent::__construct($logger, $userRepository);
     }
 
@@ -70,7 +74,6 @@ class RefreshTokenAction extends UserAction {
             ], 200);
 
             return $response->withAddedHeader('Set-Cookie', $cookieHeader);
-
         } catch (\Exception $e) {
             $this->logger->error("RefreshTokenAction: " . $e->getMessage());
 

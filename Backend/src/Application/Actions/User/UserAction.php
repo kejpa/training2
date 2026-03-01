@@ -10,7 +10,6 @@ use App\Infrastructure\Email\EmailService;
 use Psr\Log\LoggerInterface;
 
 abstract class UserAction extends Action {
-
     public function __construct(LoggerInterface $logger, protected UserRepository $userRepository) {
         parent::__construct($logger);
     }

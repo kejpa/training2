@@ -10,7 +10,6 @@
 
     <!-- Vilka filer ska kollas -->
     <file>src</file>
-    <file>tests</file>
 
     <!-- Exkludera vendor -->
     <exclude-pattern>vendor/*</exclude-pattern>

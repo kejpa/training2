@@ -32,7 +32,6 @@ class JwtMiddleware implements MiddlewareInterface {
             $request = $request->withAttribute('userEmail', $decoded->email);
 
             return $handler->handle($request);
-
         } catch (\Exception $e) {
             $response = new SlimResponse();
             $response->getBody()->write(json_encode(['error' => 'Ogiltig eller utgången token']));

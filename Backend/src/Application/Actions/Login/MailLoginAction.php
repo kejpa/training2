@@ -12,8 +12,12 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 
 class MailLoginAction extends UserAction {
-    public function __construct(LoggerInterface $logger, UserRepository $userRepository,private EmailService $emailService,
-        private LoginValidator $validator, private TokenService $tokenService) {
+    public function __construct(
+        LoggerInterface $logger,
+        UserRepository $userRepository,
+        private LoginValidator $validator,
+        private TokenService $tokenService
+    ) {
         parent::__construct($logger, $userRepository);
     }
 
@@ -88,7 +92,6 @@ class MailLoginAction extends UserAction {
 
             // Lägg till cookie header
             return $response->withAddedHeader('Set-Cookie', $cookieHeader);
-
         } catch (Exception $e) {
             $this->logger->error("MailLoginAction: Exception thrown:" . $e->getMessage());
             $this->logger->error("MailLoginAction: Parsed body:" . print_r($data, true));
@@ -98,5 +101,4 @@ class MailLoginAction extends UserAction {
             ], 400);
         }
     }
-
 }

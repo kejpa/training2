@@ -12,8 +12,12 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 
 class TotpLoginAction extends UserAction {
-    public function __construct(LoggerInterface $logger, UserRepository $userRepository,
-        private LoginValidator $validator, private TokenService $tokenService) {
+    public function __construct(
+        LoggerInterface $logger,
+        UserRepository $userRepository,
+        private LoginValidator $validator,
+        private TokenService $tokenService
+    ) {
         parent::__construct($logger, $userRepository);
     }
 
@@ -87,7 +91,6 @@ class TotpLoginAction extends UserAction {
 
             // Lägg till cookie header
             return $response->withAddedHeader('Set-Cookie', $cookieHeader);
-
         } catch (Exception $e) {
             $this->logger->error("TotpLoginAction: Exception thrown:" . $e->getMessage());
             $this->logger->error("TotpLoginAction: Parsed body:" . print_r($data, true));
@@ -97,5 +100,4 @@ class TotpLoginAction extends UserAction {
             ], 400);
         }
     }
-
 }

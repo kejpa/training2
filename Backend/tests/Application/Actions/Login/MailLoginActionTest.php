@@ -41,7 +41,6 @@ class MailLoginActionTest extends TestCase {
         $this->action = new MailLoginAction(
             $this->logger,
             $this->userRepository,
-            $this->emailService,
             $this->validator,
             $this->tokenService
         );

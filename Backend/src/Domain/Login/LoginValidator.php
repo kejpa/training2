@@ -3,8 +3,15 @@
 namespace App\Domain\Login;
 
 class LoginValidator {
+    /**
+     * @var array<string, string>
+     */
     private array $errors = [];
 
+    /**
+     * @param string[] $data
+     * @return bool
+     */
     public function validateEmail(array $data): bool {
         $this->errors = [];
 
@@ -15,6 +22,10 @@ class LoginValidator {
         return empty($this->errors);
     }
 
+    /**
+     * @param string[] $data
+     * @return bool
+     */
     public function validateLogin(array $data): bool {
         $this->errors = [];
 
@@ -31,6 +42,9 @@ class LoginValidator {
         return empty($this->errors);
     }
 
+    /**
+     * @return string[]
+     */
     public function getErrors(): array {
         return $this->errors;
     }

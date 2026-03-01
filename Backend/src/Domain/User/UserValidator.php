@@ -3,8 +3,15 @@
 namespace App\Domain\User;
 
 class UserValidator {
+    /**
+     * @var array <string, string>
+     */
     private array $errors = [];
 
+    /**
+     * @param array<string, string> $data
+     * @return bool
+     */
     public function validateRegistration(array $data): bool {
         $this->errors = [];
 
@@ -23,6 +30,9 @@ class UserValidator {
         return empty($this->errors);
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function getErrors(): array {
         return $this->errors;
     }

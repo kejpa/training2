@@ -11,27 +11,25 @@ use Psr\Log\LoggerInterface;
 use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpNotFoundException;
 
-abstract class Action
-{
-    protected LoggerInterface $logger;
-
+abstract class Action {
     protected Request $request;
 
     protected Response $response;
 
+    /**
+     * @var array <string, string>
+     */
     protected array $args;
 
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
+    public function __construct(protected LoggerInterface $logger) {    }
 
     /**
-     * @throws HttpNotFoundException
-     * @throws HttpBadRequestException
+     * @param Request $request
+     * @param Response $response
+     * @param string[] $args
+     * @return Response
      */
-    public function __invoke(Request $request, Response $response, array $args): Response
-    {
+    public function __invoke(Request $request, Response $response, array $args): Response {
         $this->request = $request;
         $this->response = $response;
         $this->args = $args;
@@ -50,19 +48,17 @@ abstract class Action
     abstract protected function action(): Response;
 
     /**
-     * @return array|object
+     * @return string[]
      */
-    protected function getFormData()
-    {
+    protected function getFormData() {
         return $this->request->getParsedBody();
     }
 
     /**
-     * @return mixed
+     * @return string
      * @throws HttpBadRequestException
      */
-    protected function resolveArg(string $name)
-    {
+    protected function resolveArg(string $name): string {
         if (!isset($this->args[$name])) {
             throw new HttpBadRequestException($this->request, "Could not resolve argument `{$name}`.");
         }
@@ -71,22 +67,20 @@ abstract class Action
     }
 
     /**
-     * @param array|object|null $data
+     * @param mixed|null $data
      */
-    protected function respondWithData($data = null, int $statusCode = 200): Response
-    {
+    protected function respondWithData(mixed $data = null, int $statusCode = 200): Response {
         $payload = new ActionPayload($statusCode, $data);
 
         return $this->respond($payload);
     }
 
-    protected function respond(ActionPayload $payload): Response
-    {
+    protected function respond(ActionPayload $payload): Response {
         $json = json_encode($payload, JSON_PRETTY_PRINT);
         $this->response->getBody()->write($json);
 
         return $this->response
-                    ->withHeader('Content-Type', 'application/json')
-                    ->withStatus($payload->getStatusCode());
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus($payload->getStatusCode());
     }
 }

@@ -52,6 +52,7 @@
         "test:static": "php -d memory_limit=512M vendor/bin/phpstan analyse",
         "test:unit": "phpunit",
         "test:coverage": "phpunit --coverage-html coverage",
-        "test:coverage-text": "phpunit --coverage-text"
+        "test:coverage-text": "phpunit --coverage-text",
+        "format": "phpcbf"
     }
 }

@@ -1,5 +1,4 @@
 <?php
-// src/Infrastructure/Auth/TokenService.php
 
 namespace App\Infrastructure\Auth;
 

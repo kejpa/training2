@@ -6,8 +6,7 @@ namespace App\Domain\User;
 
 use App\Domain\ValueObject\UserId;
 
-interface UserRepository
-{
+interface UserRepository {
     /**
      * @return User[]
      */
@@ -25,6 +24,7 @@ interface UserRepository
      * @return User
      */
     public function getByEmail(string $email): ?User;
+
     /**
      * @param User $user
      * @return void
@@ -32,7 +32,7 @@ interface UserRepository
     public function save(User $user): void;
 
     /**
-     * @param User $user
+     * @param UserId $id
      * @return void
      */
     public function delete(UserId $id): void;

@@ -14,7 +14,12 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 
 class RegisterUserAction extends UserAction {
-    public function __construct(LoggerInterface $logger, UserRepository $userRepository,private EmailService $emailService, private UserValidator $userValidator) {
+    public function __construct(
+        LoggerInterface $logger,
+        UserRepository $userRepository,
+        private EmailService $emailService,
+        private UserValidator $userValidator
+    ) {
         parent::__construct($logger, $userRepository);
     }
 

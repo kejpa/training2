@@ -45,6 +45,9 @@ class ActionError implements JsonSerializable {
         return $this;
     }
 
+    /**
+     * @return string[]
+     */
     public function jsonSerialize(): array {
         return [
             'type' => $this->type,

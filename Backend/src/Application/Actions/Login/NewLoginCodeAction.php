@@ -12,7 +12,12 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 
 class NewLoginCodeAction extends UserAction {
-    public function __construct(LoggerInterface $logger, UserRepository $userRepository,private EmailService $emailService, private LoginValidator $validator) {
+    public function __construct(
+        LoggerInterface $logger,
+        UserRepository $userRepository,
+        private EmailService $emailService,
+        private LoginValidator $validator
+    ) {
         parent::__construct($logger, $userRepository);
     }
 
@@ -42,7 +47,7 @@ class NewLoginCodeAction extends UserAction {
 
 
             // Skapa en slumpmässig 6 siffrig kod om tiden är null eller har gått ut
-            if(!$user->getExpires() || $user->getExpires() < new DateTimeImmutable()) {
+            if (!$user->getExpires() || $user->getExpires() < new DateTimeImmutable()) {
                 $randomCode = (string)random_int(100000, 999999);
                 $user->setCode($randomCode);
                 $user->setExpires(new DateTimeImmutable('+1 hour'));
