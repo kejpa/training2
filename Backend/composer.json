@@ -17,7 +17,7 @@
     },
     "require-dev": {
         "jangregor/phpstan-prophecy": "^2.3",
-        "phpspec/prophecy-phpunit": "^2.4",
+        "phpspec/prophecy-phpunit": "^2.5",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^11.5",
