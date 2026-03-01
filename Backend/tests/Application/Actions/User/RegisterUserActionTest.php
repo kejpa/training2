@@ -30,7 +30,7 @@ class RegisterUserActionTest extends TestCase {
         $this->userValidator = $this->createMock(UserValidator::class);
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->emailService = $this->createMock(EmailService::class);
-$this->responseFactory = new ResponseFactory();
+        $this->responseFactory = new ResponseFactory();
 
         $this->action = new RegisterUserAction(
             $this->logger,
@@ -248,8 +248,7 @@ $this->responseFactory = new ResponseFactory();
         $this->assertLessThanOrEqual(7200 + 5, $diff);    // 2h plus 5 sekunder margin
     }
 
-    public function testRegistrationLogsErrorOnException(): void
-    {
+    public function testRegistrationLogsErrorOnException(): void {
         $data = [
             'email' => 'test@example.com',
             'firstname' => 'Anna',
@@ -273,7 +272,7 @@ $this->responseFactory = new ResponseFactory();
         $this->logger
             ->expects($this->exactly(2))
             ->method('error')
-            ->with($this->callback(function($message) {
+            ->with($this->callback(function ($message) {
                 static $callCount = 0;
                 $callCount++;
 
@@ -298,6 +297,7 @@ $this->responseFactory = new ResponseFactory();
         $this->assertArrayHasKey('error', $json['data']);
         $this->assertEquals('Database connection failed', $json['data']['error']);
     }
+
     public function testEmailServiceIsCalledAfterSuccessfulSave(): void {
         $data = [
             'email' => 'test@example.com',

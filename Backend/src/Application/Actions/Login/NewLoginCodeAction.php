@@ -12,8 +12,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 
 class NewLoginCodeAction extends UserAction {
-    public function __construct(LoggerInterface $logger, UserRepository $userRepository, EmailService $emailService, private LoginValidator $validator) {
-        parent::__construct($logger, $userRepository, $emailService);
+    public function __construct(LoggerInterface $logger, UserRepository $userRepository,private EmailService $emailService, private LoginValidator $validator) {
+        parent::__construct($logger, $userRepository);
     }
 
     /**

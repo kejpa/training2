@@ -1,4 +1,10 @@
 parameters:
-  level: 4
-  paths:
-    - src
+    level: 6
+    paths:
+        - src
+        - tests
+    excludePaths:
+        - vendor
+    tmpDir: var/phpstan
+    parallel:
+        maximumNumberOfProcesses: 2

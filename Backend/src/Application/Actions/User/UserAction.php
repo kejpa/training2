@@ -11,7 +11,7 @@ use Psr\Log\LoggerInterface;
 
 abstract class UserAction extends Action {
 
-    public function __construct(LoggerInterface $logger, protected UserRepository $userRepository, protected EmailService $emailService) {
+    public function __construct(LoggerInterface $logger, protected UserRepository $userRepository) {
         parent::__construct($logger);
     }
 }

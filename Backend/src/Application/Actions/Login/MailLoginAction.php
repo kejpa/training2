@@ -12,9 +12,9 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 
 class MailLoginAction extends UserAction {
-    public function __construct(LoggerInterface $logger, UserRepository $userRepository, EmailService $emailService,
+    public function __construct(LoggerInterface $logger, UserRepository $userRepository,private EmailService $emailService,
         private LoginValidator $validator, private TokenService $tokenService) {
-        parent::__construct($logger, $userRepository, $emailService);
+        parent::__construct($logger, $userRepository);
     }
 
     /**

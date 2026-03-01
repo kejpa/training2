@@ -43,6 +43,8 @@ return function (ContainerBuilder $containerBuilder) {
             return DriverManager::getConnection($connectionParams);
         },
         TokenService::class => \DI\autowire(),
+        JwtMiddleware::class => \DI\autowire()
+            ->constructorParameter('tokenService', \DI\get(TokenService::class)),
 
     ]);
 };

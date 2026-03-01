@@ -44,7 +44,6 @@ class TotpLoginActionTest extends TestCase {
         $this->action = new TotpLoginAction(
             $this->logger,
             $this->userRepository,
-            $this->emailService,
             $this->validator,
             $this->tokenService
         );

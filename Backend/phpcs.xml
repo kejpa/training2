@@ -1,17 +1,26 @@
 <?xml version="1.0"?>
-<ruleset name="Slim coding standard">
-    <description>Slim coding standard</description>
+<ruleset name="Custom">
+    <description>Custom coding standard</description>
 
-    <!-- display progress -->
+    <!-- Visa progress -->
     <arg value="p"/>
-    <!-- use colors in output -->
+
+    <!-- Använd färger -->
     <arg name="colors"/>
 
-    <!-- inherit rules from: -->
-    <rule ref="PSR12"/>
-    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
-
-    <!-- Paths to check -->
+    <!-- Vilka filer ska kollas -->
     <file>src</file>
     <file>tests</file>
+
+    <!-- Exkludera vendor -->
+    <exclude-pattern>vendor/*</exclude-pattern>
+
+    <!-- Använd PSR-12 som bas -->
+    <rule ref="PSR12">
+        <!-- Ta bort regel om måsvingar på ny rad -->
+        <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine"/>
+        <exclude name="PSR2.Classes.ClassDeclaration.OpenBraceNewLine"/>
+        <exclude name="Squiz.WhiteSpace.ScopeClosingBrace.ContentBefore"/>
+    </rule>
+
 </ruleset>

@@ -6,16 +6,15 @@ use App\Application\Actions\User\UserAction;
 use App\Domain\Login\LoginValidator;
 use App\Domain\User\UserRepository;
 use App\Infrastructure\Auth\TokenService;
-use App\Infrastructure\Email\EmailService;
 use Exception;
 use PragmaRX\Google2FA\Google2FA;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 
 class TotpLoginAction extends UserAction {
-    public function __construct(LoggerInterface $logger, UserRepository $userRepository, EmailService $emailService,
+    public function __construct(LoggerInterface $logger, UserRepository $userRepository,
         private LoginValidator $validator, private TokenService $tokenService) {
-        parent::__construct($logger, $userRepository, $emailService);
+        parent::__construct($logger, $userRepository);
     }
 
     /**

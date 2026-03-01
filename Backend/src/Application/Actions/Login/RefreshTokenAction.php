@@ -3,15 +3,16 @@
 namespace App\Application\Actions\Login;
 
 use App\Application\Actions\Action;
+use App\Application\Actions\User\UserAction;
 use App\Domain\User\UserRepository;
 use App\Domain\ValueObject\UserId;
 use App\Infrastructure\Auth\TokenService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 
-class RefreshTokenAction extends Action {
-    public function __construct(LoggerInterface $logger, private UserRepository $userRepository, private TokenService $tokenService) {
-        parent::__construct($logger);
+class RefreshTokenAction extends UserAction {
+    public function __construct(LoggerInterface $logger, UserRepository $userRepository, private TokenService $tokenService) {
+        parent::__construct($logger, $userRepository);
     }
 
     protected function action(): Response {

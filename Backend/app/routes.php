@@ -2,23 +2,26 @@
 
 declare(strict_types=1);
 
-use App\Application\Actions\Auth\LogoutAction;
+use App\Application\Actions\Login\LogoutAction;
 use App\Application\Actions\Login\MailLoginAction;
 use App\Application\Actions\Login\NewLoginCodeAction;
 use App\Application\Actions\Login\RefreshTokenAction;
 use App\Application\Actions\Login\ResendLoginAction;
-use App\Application\Actions\User\ListUsersAction;
+use App\Application\Actions\Login\TotpLoginAction;
 use App\Application\Actions\User\RegisterUserAction;
+use App\Application\Actions\User\ViewUserAction;
+use App\Application\Middleware\JwtMiddleware;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 
 return function (App $app) {
-    $app->options('/{routes:.*}', function (Request $request, Response $response) {
+/*    $app->options('/{routes:.*}', function (Request $request, Response $response) {
         // CORS Pre-Flight OPTIONS Request Handler
         return $response;
     });
+*/
 
     $app->post('/register', RegisterUserAction::class);
     $app->post('/resend', ResendLoginAction::class);
@@ -30,7 +33,6 @@ return function (App $app) {
 
 
     $app->group('/users', function (Group $group) {
-        $group->get('', ListUsersAction::class);
         $group->get('/{id}', ViewUserAction::class);
-    });
+    })->add(JwtMiddleware::class);
 };
