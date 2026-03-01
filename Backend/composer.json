@@ -7,7 +7,7 @@
         "doctrine/dbal": "^4.4",
         "firebase/php-jwt": "^7.0",
         "monolog/monolog": "^3.10",
-        "php-di/php-di": "^6.4",
+        "php-di/php-di": "^7.1",
         "phpmailer/phpmailer": "^7.0",
         "pragmarx/google2fa": "^9.0",
         "ramsey/uuid": "^4.9",
