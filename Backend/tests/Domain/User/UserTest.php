@@ -194,4 +194,163 @@ class UserTest extends TestCase {
 
         $this->assertNotEquals($user1->getId(), $user2->getId());
     }
+    public function testSetCodeUpdatesCode(): void {
+        $user = new User(
+            null,
+            'test@example.com',
+            'Anna',
+            'Andersson',
+            'secret',
+            null,
+            null,
+            '123456',
+            null
+        );
+
+        $user->setCode('654321');
+        $this->assertSame('654321', $user->getCode());
+    }
+
+    public function testSetCodeAcceptsNull(): void {
+        $user = new User(
+            null,
+            'test@example.com',
+            'Anna',
+            'Andersson',
+            'secret',
+            null,
+            null,
+            '123456',
+            null
+        );
+
+        $user->setCode(null);
+        $this->assertNull($user->getCode());
+    }
+
+    public function testSetExpiresUpdatesExpires(): void {
+        $user = new User(
+            null,
+            'test@example.com',
+            'Anna',
+            'Andersson',
+            'secret',
+            null,
+            null,
+            null,
+            new \DateTimeImmutable('2026-01-01 00:00:00')
+        );
+
+        $newExpires = new \DateTimeImmutable('2027-06-15 12:00:00');
+        $user->setExpires($newExpires);
+
+        $this->assertSame($newExpires, $user->getExpires());
+        $this->assertSame('2027-06-15 12:00:00', $user->getExpires()->format('Y-m-d H:i:s'));
+    }
+
+    public function testSetExpiresAcceptsNull(): void {
+        $user = new User(
+            null,
+            'test@example.com',
+            'Anna',
+            'Andersson',
+            'secret',
+            null,
+            null,
+            null,
+            new \DateTimeImmutable('2026-01-01 00:00:00')
+        );
+
+        $user->setExpires(null);
+        $this->assertNull($user->getExpires());
+    }
+
+    public function testGetUpdatedAtReturnsNullWhenNotSet(): void {
+        $user = new User(
+            null,
+            'test@example.com',
+            'Anna',
+            'Andersson',
+            'secret',
+            null,
+            null,
+            null,
+            null
+        );
+
+        $this->assertNull($user->getUpdatedAt());
+    }
+
+    public function testGetUpdatedAtReturnsDateTimeImmutableWhenFromRow(): void {
+        $row = [
+            'id' => '550e8400-e29b-41d4-a716-446655440000',
+            'email' => 'test@example.com',
+            'firstname' => 'Anna',
+            'lastname' => 'Andersson',
+            'secret' => 'secret',
+            'qrUrl' => null,
+            'imgData' => null,
+            'code' => null,
+            'expires' => null,
+            'created_at' => '2021-01-01 00:00:00',
+            'updated_at' => '2024-05-20 10:30:00',
+        ];
+
+        $user = User::fromRow($row);
+
+        $this->assertInstanceOf(\DateTimeImmutable::class, $user->getUpdatedAt());
+        $this->assertSame('2024-05-20 10:30:00', $user->getUpdatedAt()->format('Y-m-d H:i:s'));
+    }
+
+    public function testStateReturnsCorrectStructure(): void {
+        $userId = new UserId();
+        $expires = new \DateTimeImmutable('2026-12-31 23:59:59');
+
+        $user = new User(
+            $userId,
+            'state@example.com',
+            'Bo',
+            'Bengtsson',
+            'mysecret',
+            'https://qr.example.com',
+            'base64img',
+            '112233',
+            $expires
+        );
+
+        $state = $user->state();
+
+        $this->assertIsArray($state);
+        $this->assertSame($userId->toString(), $state['id']);
+        $this->assertSame('state@example.com', $state['email']);
+        $this->assertSame('Bo', $state['firstname']);
+        $this->assertSame('Bengtsson', $state['lastname']);
+        $this->assertSame('mysecret', $state['secret']);
+        $this->assertSame('https://qr.example.com', $state['qrUrl']);
+        $this->assertSame('base64img', $state['imgData']);
+        $this->assertSame('112233', $state['code']);
+        $this->assertSame('2026-12-31 23:59:59', $state['expires']);
+        $this->assertNull($state['updated_at']);
+    }
+
+    public function testStateFormatsUpdatedAtWhenSet(): void {
+        $row = [
+            'id' => '550e8400-e29b-41d4-a716-446655440000',
+            'email' => 'state@example.com',
+            'firstname' => 'Bo',
+            'lastname' => 'Bengtsson',
+            'secret' => 'mysecret',
+            'qrUrl' => null,
+            'imgData' => null,
+            'code' => '112233',
+            'expires' => '2026-12-31 23:59:59',
+            'created_at' => '2021-01-01 00:00:00',
+            'updated_at' => '2024-03-15 08:00:00',
+        ];
+
+        $user = User::fromRow($row);
+        $state = $user->state();
+
+        $this->assertSame('2024-03-15 08:00:00', $state['updated_at']);
+    }
 }

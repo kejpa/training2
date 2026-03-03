@@ -26,7 +26,7 @@ export default new (class APIService {
     return new Promise((resolve, reject) => {
       // Hämta data från endpointen
       fetch(this.apiBase + params, {
-        headers: { Token: 'Bearer ' + jwtToken },
+        headers: {Token: 'Bearer ' + jwtToken},
         method: 'GET',
       })
         .then((response) => {
@@ -39,21 +39,21 @@ export default new (class APIService {
                 if (second.ok) {
                   return second.json()
                 } else {
-                  throw second.text()
+                  throw second.json()
                 }
               })
               .then((data) => {
-                jwtToken = data.jwt
+                jwtToken = data.access_token
                 storeAccessToken(jwtToken)
                 storeUser(data.user)
                 fetch(this.apiBase + params, {
-                  headers: { Token: 'Bearer ' + jwtToken },
+                  headers: {Token: 'Bearer ' + jwtToken},
                   method: 'GET',
                 }).then((response) => {
                   if (response.ok) {
                     resolve(response.json())
                   } else {
-                    throw response.text()
+                    throw response.json()
                   }
                 })
               })
@@ -62,7 +62,7 @@ export default new (class APIService {
                 reject(err)
               })
           } else {
-            throw response.text()
+            throw response.json()
           }
         })
         .catch((err) => {
@@ -88,7 +88,7 @@ export default new (class APIService {
           if (response.status === 200) {
             resolve(response.headers)
           } else {
-            throw response.text()
+            throw response.json()
           }
         })
         .catch((err) => {
@@ -110,7 +110,10 @@ export default new (class APIService {
       // Skicka förfrågan till api:et
       fetch(this.apiBase + params, {
         method: 'POST',
-        headers: { Token: 'Bearer ' + jwtToken },
+        headers: {
+          Token: 'Bearer ' + jwtToken,
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(object),
       })
         .then((response) => {
@@ -123,27 +126,30 @@ export default new (class APIService {
                 if (response.ok) {
                   return response.json()
                 } else {
-                  throw response.text()
+                  throw response.json()
                 }
               })
               .then((data) => {
-                jwtToken = data.jwt
+                jwtToken = data.access_token
                 storeAccessToken(jwtToken)
                 storeUser(data.user)
                 fetch(this.apiBase + params, {
                   method: 'POST',
-                  headers: { Token: 'Bearer ' + jwtToken },
+                  headers: {
+                    Token: 'Bearer ' + jwtToken,
+                    'Content-Type': 'application/json'
+                  },
                   body: JSON.stringify(object),
                 }).then((response) => {
                   if (response.ok) {
                     resolve(response.json())
                   } else {
-                    throw response.text()
+                    throw response.json()
                   }
                 })
               })
           } else {
-            throw response.text()
+            throw response.json()
           }
         })
         .catch(async function (err) {
@@ -166,7 +172,10 @@ export default new (class APIService {
       // Skicka förfrågan till api:et
       fetch(this.apiBase + params, {
         method: 'PUT',
-        headers: { Token: 'Bearer ' + jwtToken },
+        headers: {
+          Token: 'Bearer ' + jwtToken,
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(object),
       })
         .then((response) => {
@@ -179,27 +188,30 @@ export default new (class APIService {
                 if (response.ok) {
                   return response.json()
                 } else {
-                  throw response.text()
+                  throw response.json()
                 }
               })
               .then((data) => {
-                jwtToken = data.jwt
+                jwtToken = data.access_token
                 storeAccessToken(jwtToken)
                 storeUser(data.user)
                 fetch(this.apiBase + params, {
                   method: 'PUT',
-                  headers: { Token: 'Bearer ' + jwtToken },
+                  headers: {
+                    Token: 'Bearer ' + jwtToken,
+                    'Content-Type': 'application/json'
+                  },
                   body: JSON.stringify(object),
                 }).then((response) => {
                   if (response.ok) {
                     resolve(response.json())
                   } else {
-                    throw response.text()
+                    throw response.json()
                   }
                 })
               })
           } else {
-            throw response.text()
+            throw response.json()
           }
         })
         .catch((err) => {
@@ -220,7 +232,10 @@ export default new (class APIService {
       // Skicka förfrågan till api:et
       fetch(this.apiBase + params, {
         method: 'DELETE',
-        headers: { Token: 'Bearer ' + jwtToken },
+        headers: {
+          Token: 'Bearer ' + jwtToken,
+          'Content-Type': 'application/json'
+        },
       })
         .then((response) => {
           if (response.status === 200) {
@@ -232,26 +247,29 @@ export default new (class APIService {
                 if (response.ok) {
                   return response.json()
                 } else {
-                  throw response.text()
+                  throw response.json()
                 }
               })
               .then((data) => {
-                jwtToken = data.jwt
+                jwtToken = data.access_token
                 storeAccessToken(jwtToken)
                 storeUser(data.user)
                 fetch(this.apiBase + params, {
                   method: 'DELETE',
-                  headers: { Token: 'Bearer ' + jwtToken },
+                  headers: {
+                    Token: 'Bearer ' + jwtToken,
+                    'Content-Type': 'application/json'
+                  },
                 }).then((response) => {
                   if (response.ok) {
                     resolve(response.json())
                   } else {
-                    throw response.text()
+                    throw response.json()
                   }
                 })
               })
           } else {
-            throw response.text()
+            throw response.json()
           }
         })
         .catch((err) => {

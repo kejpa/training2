@@ -6,7 +6,6 @@ use App\Application\Actions\User\UserAction;
 use App\Domain\Login\LoginValidator;
 use App\Domain\User\UserRepository;
 use App\Infrastructure\Auth\TokenService;
-use App\Infrastructure\Email\EmailService;
 use Exception;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
@@ -53,7 +52,6 @@ class MailLoginAction extends UserAction {
                     'error' => 'Ogiltig kod'
                 ], 401);
             }
-
             if (!$expires || $expires < $now) {
                 return $this->respondWithData([
                     'error' => 'Koden har gått ut'

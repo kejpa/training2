@@ -1,8 +1,9 @@
-import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import {defineStore} from 'pinia'
+import {ref} from 'vue'
 
 export const useToastsStore = defineStore('toasts', () => {
   const toasts = ref([])
+
   function addToast(type, message) {
     let mess
     if (Array.isArray(message)) {
@@ -13,42 +14,40 @@ export const useToastsStore = defineStore('toasts', () => {
       mess = message
     }
     let now = new Date()
-    let toast = { time: now.getTime(), type, message: mess }
+    let toast = {time: now.getTime(), type, message: mess}
     toast.toastTimer = setTimeout(() => {
-      this.remove(toast)
+      remove(toast)
     }, 5000)
-    this.toasts.push(toast)
+    toasts.value.push(toast)
   }
+
   function remove(toast) {
-    this.toasts.map((itm) => {
+    toasts.value.map((itm) => {
       if (itm.time === toast.time) {
         clearTimeout(toast.toastTimer)
       }
     })
-    this.toasts = this.toasts.filter((itm) => {
+    toasts.value = toasts.value.filter((itm) => {
       return itm.time !== toast.time
     })
   }
-  function resetTimer(toast) {
-    this.toasts.map((itm) => {
-      if (itm.time === toast.time) {
-        toast.toastTimer = setTimeout(() => {
-          this.remove(toast)
-        }, 5000)
-      }
-    })
-  }
+
   function stopTimer(toast) {
-    this.toasts.map((itm) => {
-      if (itm.time === toast.time) {
-        clearTimeout(toast.toastTimer)
-      }
-    })
+    const found = toasts.value.find((itm) => itm.time === toast.time)
+    if (found) clearTimeout(found.toastTimer)
+  }
+
+  function resetTimer(toast) {
+    const found = toasts.value.find((itm) => itm.time === toast.time)
+    if (found) {
+      found.toastTimer = setTimeout(() => remove(found), 5000)
+    }
   }
 
   return {
     toasts,
     addToast,
+    remove,
     resetTimer,
     stopTimer,
   }

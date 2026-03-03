@@ -21,13 +21,11 @@ class User implements JsonSerializable {
         private ?string $code,
         private ?DateTimeImmutable $expires,
         private ?DateTimeImmutable $created_at = new DateTimeImmutable(),
-        private ?DateTimeImmutable $updated_at = new DateTimeImmutable()
+        private ?DateTimeImmutable $updated_at = null
     ) {
         if (!$this->id) {
             $this->id = new UserId();
         }
-
-        $this->updated_at = new DateTimeImmutable();
     }
 
     /**
@@ -44,8 +42,9 @@ class User implements JsonSerializable {
             $row['qrUrl'],
             $row['imgData'],
             $row['code'],
-            DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $row['expires']),
-            DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $row['created_at'])
+            $row['expires'] ? DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $row['expires']) : null,
+            DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $row['created_at']),
+            $row['updated_at'] ? DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $row['updated_at']) : null
         );
     }
 
@@ -118,9 +117,9 @@ class User implements JsonSerializable {
             'qrUrl' => $this->qrUrl,
             'imgData' => $this->imgData,
             'code' => $this->code,
-            'expires' => $this->expires->format('Y-m-d H:i:s'),
+            'expires' => $this->expires?->format('Y-m-d H:i:s'),
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-            'updated_at' => $this->updated_at ? $this->updated_at->format('Y-m-d H:i:s') : null,
+            'updated_at' => $this->updated_at?->format('Y-m-d H:i:s'),
         ];
     }
 

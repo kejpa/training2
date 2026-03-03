@@ -11,25 +11,25 @@ use App\Application\Actions\Login\TotpLoginAction;
 use App\Application\Actions\User\RegisterUserAction;
 use App\Application\Actions\User\ViewUserAction;
 use App\Application\Middleware\JwtMiddleware;
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 
 return function (App $app) {
-/*    $app->options('/{routes:.*}', function (Request $request, Response $response) {
-        // CORS Pre-Flight OPTIONS Request Handler
-        return $response;
-    });
-*/
+    /*    $app->options('/{routes:.*}', function (Request $request, Response $response) {
+            // CORS Pre-Flight OPTIONS Request Handler
+            return $response;
+        });
+    */
 
-    $app->post('/register', RegisterUserAction::class);
-    $app->post('/resend', ResendLoginAction::class);
-    $app->post('/getNewCode', NewLoginCodeAction::class);
-    $app->post('/login/mail', MailLoginAction::class);
-    $app->post('/login/totp', TotpLoginAction::class);
-    $app->get('/refresh', RefreshTokenAction::class);
-    $app->delete('/refresh', LogoutAction::class);
+    $app->group('/api', function (Group $group) {
+        $group->post('/register', RegisterUserAction::class);
+        $group->post('/resend', ResendLoginAction::class);
+        $group->post('/getNewCode', NewLoginCodeAction::class);
+        $group->post('/login/mail', MailLoginAction::class);
+        $group->post('/login/totp', TotpLoginAction::class);
+        $group->get('/refresh', RefreshTokenAction::class);
+        $group->delete('/refresh', LogoutAction::class);
+    });
 
 
     $app->group('/users', function (Group $group) {

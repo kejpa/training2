@@ -16,7 +16,7 @@ class LoginValidator {
         $this->errors = [];
 
         if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            $this->errors['email'] = 'Ogiltig e-postadress';
+            $this->errors['email'] = "Ogiltig e-postadress";
         }
 
         return empty($this->errors);
