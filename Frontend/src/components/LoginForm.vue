@@ -22,7 +22,6 @@ function nextState() {
           'error',
           e.data.error
         )
-        return
       })
   } else {
     enterCode.value = true

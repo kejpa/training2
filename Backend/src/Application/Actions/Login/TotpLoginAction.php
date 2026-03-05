@@ -54,7 +54,7 @@ class TotpLoginAction extends UserAction {
 
                 if (!$valid) {
                     return $this->respondWithData([
-                        'error' => 'Ogiltig kod'
+                        'error' => 'Ogiltig kod' . $data['code']
                     ], 401);
                 }
             } catch (\Exception $e) {
@@ -75,7 +75,7 @@ class TotpLoginAction extends UserAction {
             $sameSite = 'Strict';
 
             $cookieHeader = sprintf(
-                'refresh_token=%s; Path=/refresh; Expires=%s; HttpOnly; SameSite=%s%s',
+                'refresh_token=%s; Path=/api/refresh; Expires=%s; HttpOnly; SameSite=%s%s',
                 $cookieValue,
                 gmdate('D, d M Y H:i:s T', $expires),
                 $sameSite,
