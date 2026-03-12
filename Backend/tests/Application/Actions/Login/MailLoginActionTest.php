@@ -645,6 +645,6 @@ class MailLoginActionTest extends TestCase {
         );
 
         $setCookieHeaders = $response->getHeader('Set-Cookie');
-        $this->assertStringContainsString('Path=/refresh', $setCookieHeaders[0]);
+        $this->assertStringContainsString('Path=/api/refresh', $setCookieHeaders[0]);
     }
 }

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\User;
 
-use App\Domain\ValueObject\UserId;
-
 interface UserRepository {
     /**
      * @return User[]
@@ -13,11 +11,11 @@ interface UserRepository {
     public function getAll(): array;
 
     /**
-     * @param UserId $id
+     * @param string $id
      * @return User
      * @throws UserNotFoundException
      */
-    public function getById(UserId $id): ?User;
+    public function getById(string $id): ?User;
 
     /**
      * @param string $email
@@ -32,8 +30,8 @@ interface UserRepository {
     public function save(User $user): void;
 
     /**
-     * @param UserId $id
+     * @param string $id
      * @return void
      */
-    public function delete(UserId $id): void;
+    public function delete(string $id): void;
 }

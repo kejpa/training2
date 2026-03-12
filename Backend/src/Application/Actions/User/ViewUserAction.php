@@ -18,7 +18,7 @@ class ViewUserAction extends UserAction {
         $userId = $this->request->getAttribute('userId');
 
         // Hämta användare
-        $user = $this->userRepository->getById(new UserId($userId));
+        $user = $this->userRepository->getById($userId);
 
         if (!$user) {
             return $this->respondWithData([

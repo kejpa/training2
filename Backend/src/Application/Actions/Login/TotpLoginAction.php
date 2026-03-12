@@ -54,7 +54,7 @@ class TotpLoginAction extends UserAction {
 
                 if (!$valid) {
                     return $this->respondWithData([
-                        'error' => 'Ogiltig kod' . $data['code']
+                        'error' => 'Ogiltig kod'
                     ], 401);
                 }
             } catch (\Exception $e) {

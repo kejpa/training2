@@ -97,7 +97,8 @@ class UserTest extends TestCase {
             'imgData' => 'base64data',
             'code' => '654321',
             'expires' => '2026-12-31 23:59:59',
-            'created_at' => '2021-01-01 00:00:00'
+            'created_at' => '2021-01-01 00:00:00',
+            'updated_at' => '2021-01-01 00:00:00'
         ];
 
         $user = User::fromRow($row);
@@ -265,21 +266,6 @@ class UserTest extends TestCase {
         $this->assertNull($user->getExpires());
     }
 
-    public function testGetUpdatedAtReturnsNullWhenNotSet(): void {
-        $user = new User(
-            null,
-            'test@example.com',
-            'Anna',
-            'Andersson',
-            'secret',
-            null,
-            null,
-            null,
-            null
-        );
-
-        $this->assertNull($user->getUpdatedAt());
-    }
 
     public function testGetUpdatedAtReturnsDateTimeImmutableWhenFromRow(): void {
         $row = [
@@ -330,7 +316,6 @@ class UserTest extends TestCase {
         $this->assertSame('base64img', $state['imgData']);
         $this->assertSame('112233', $state['code']);
         $this->assertSame('2026-12-31 23:59:59', $state['expires']);
-        $this->assertNull($state['updated_at']);
     }
 
     public function testStateFormatsUpdatedAtWhenSet(): void {

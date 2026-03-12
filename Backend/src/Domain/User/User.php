@@ -21,7 +21,7 @@ class User implements JsonSerializable {
         private ?string $code,
         private ?DateTimeImmutable $expires,
         private ?DateTimeImmutable $created_at = new DateTimeImmutable(),
-        private ?DateTimeImmutable $updated_at = null
+        private ?DateTimeImmutable $updated_at = new DateTimeImmutable()
     ) {
         if (!$this->id) {
             $this->id = new UserId();
@@ -96,11 +96,11 @@ class User implements JsonSerializable {
         return $this->expires;
     }
 
-    public function getCreatedAt(): ?DateTimeImmutable {
+    public function getCreatedAt(): DateTimeImmutable {
         return $this->created_at;
     }
 
-    public function getUpdatedAt(): ?DateTimeImmutable {
+    public function getUpdatedAt(): DateTimeImmutable {
         return $this->updated_at;
     }
 
@@ -119,7 +119,7 @@ class User implements JsonSerializable {
             'code' => $this->code,
             'expires' => $this->expires?->format('Y-m-d H:i:s'),
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-            'updated_at' => $this->updated_at?->format('Y-m-d H:i:s'),
+            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
         ];
     }
 

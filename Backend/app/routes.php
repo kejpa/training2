@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Application\Actions\Activity\AddActivityAction;
+use App\Application\Actions\Activity\GetActivityAction;
+use App\Application\Actions\Activity\GetAllActivitiesAction;
 use App\Application\Actions\Login\LogoutAction;
 use App\Application\Actions\Login\MailLoginAction;
 use App\Application\Actions\Login\NewLoginCodeAction;
@@ -29,6 +32,13 @@ return function (App $app) {
         $group->post('/login/totp', TotpLoginAction::class);
         $group->get('/refresh', RefreshTokenAction::class);
         $group->delete('/refresh', LogoutAction::class);
+
+        $group->group('', function (Group $protected) {
+            // Activities
+            $protected->get('/activities', GetAllActivitiesAction::class);
+            $protected->get('/activities/{id}', GetActivityAction::class);
+            $protected->post('/activities', AddActivityAction::class);
+        })->add(JwtMiddleware::class);
     });
 
 

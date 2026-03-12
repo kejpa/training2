@@ -60,7 +60,7 @@ class DbalUserRepositoryTest extends TestCase {
 
         $this->repository->save($user);
 
-        $found = $this->repository->getById($user->getId());
+        $found = $this->repository->getById($user->getId()->toString());
 
         $this->assertNotNull($found);
         $this->assertEquals($user->getId(), $found->getId());
@@ -98,14 +98,14 @@ class DbalUserRepositoryTest extends TestCase {
 
         $this->repository->save($updatedUser);
 
-        $found = $this->repository->getById($user->getId());
+        $found = $this->repository->getById($user->getId()->toString());
 
         $this->assertEquals('updated@example.com', $found->getEmail());
         $this->assertEquals('Nilsson', $found->getLastname());
     }
 
     public function testFindByIdReturnsNullWhenNotFound(): void {
-        $result = $this->repository->getById(new UserId());
+        $result = $this->repository->getById('Invalid');
 
         $this->assertNull($result);
     }
@@ -173,15 +173,15 @@ class DbalUserRepositoryTest extends TestCase {
         );
 
         $this->repository->save($user);
-        $this->assertNotNull($this->repository->getById($user->getId()));
+        $this->assertNotNull($this->repository->getById($user->getId()->toString()));
 
         $this->repository->delete($user->getId());
 
-        $this->assertNull($this->repository->getById($user->getId()));
+        $this->assertNull($this->repository->getById($user->getId()->toString()));
     }
 
     public function testDeleteNonExistentUserDoesNotThrow(): void {
-        $this->repository->delete(new UserId());
+        $this->repository->delete('Invalid');
 
         $this->assertTrue(true); // Om vi kommer hit har inget exception kastats
     }

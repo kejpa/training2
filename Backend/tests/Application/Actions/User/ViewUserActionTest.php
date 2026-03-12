@@ -69,9 +69,7 @@ class ViewUserActionTest extends TestCase {
         $this->userRepository
             ->expects($this->once())
             ->method('getById')
-            ->with($this->callback(function ($id) use ($userId) {
-                return $id instanceof UserId && $id->toString() === $userId;
-            }))
+            ->with( $userId)
             ->willReturn($user);
 
         $response = $this->action->__invoke(
@@ -101,9 +99,7 @@ class ViewUserActionTest extends TestCase {
         $this->userRepository
             ->expects($this->once())
             ->method('getById')
-            ->with($this->callback(function ($id) use ($userId) {
-                return $id instanceof UserId && $id->toString() === $userId;
-            }))
+            ->with($userId)
             ->willReturn(null);
 
         $response = $this->action->__invoke(
@@ -149,11 +145,10 @@ class ViewUserActionTest extends TestCase {
             ->with('userId')
             ->willReturn($userId);
 
-        $capturedUserId = null;
         $this->userRepository
             ->method('getById')
             ->willReturnCallback(function ($id) use (&$capturedUserId, $user) {
-                $capturedUserId = $id->toString();
+                $capturedUserId = $id;
                 return $user;
             });
 

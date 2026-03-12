@@ -87,9 +87,7 @@ class RefreshTokenActionTest extends TestCase {
 
         $this->userRepository
             ->method('getById')
-            ->with($this->callback(function ($id) use ($userId) {
-                return $id instanceof UserId && $id->toString() === $userId;
-            }))
+            ->with($userId)
             ->willReturn($user);
 
         $this->tokenService

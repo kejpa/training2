@@ -29,12 +29,12 @@ class DbalUserRepository extends AbstractDBRepository implements UserRepository 
     /**
      * @throws Exception
      */
-    public function getById(UserId $id): ?User {
+    public function getById(string $id): ?User {
         $qb = $this->connection->createQueryBuilder();
         $qb->select('*')
             ->from(self::TABLE)
             ->where('id = :id')
-            ->setParameter('id', $id->toString());
+            ->setParameter('id', $id);
 
         $result = $qb->executeQuery();
         $row = $result->fetchAssociative();
@@ -73,7 +73,7 @@ class DbalUserRepository extends AbstractDBRepository implements UserRepository 
         return null;
     }
 
-    public function delete(UserId $id): void {
-        $this->connection->delete(self::TABLE, ['id' => $id->toString()]);
+    public function delete(string $id): void {
+        $this->connection->delete(self::TABLE, ['id' => $id]);
     }
 }

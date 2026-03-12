@@ -11,6 +11,7 @@ import ToastContainer from '@/components/ToastContainer.vue'
     <div class="wrapper">
       <nav>
         <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/activities">Ativities</RouterLink>
         <RouterLink to="/about">About</RouterLink>
       </nav>
     </div>
