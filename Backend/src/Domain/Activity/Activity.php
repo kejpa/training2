@@ -125,7 +125,7 @@ class Activity implements \JsonSerializable {
     public function state(): array {
         return [
             'id' => $this->id->toString(),
-            'userId' => $this->userId->toString(),
+            'userid' => $this->userId->toString(),
             'emoji' => $this->emoji,
             'name' => $this->name,
             'log_distance' => $this->logDistance,

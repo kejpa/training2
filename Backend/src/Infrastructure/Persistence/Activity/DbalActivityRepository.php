@@ -35,11 +35,11 @@ class DbalActivityRepository extends AbstractDBRepository implements ActivityRep
     }
 
     function update(Activity $activity): void {
-        // TODO: Implement update() method.
+        $this->connection->update(self::TABLE, $activity->state(), ['id' => $activity->getId(), 'userid' => $activity->getUserId()]);
     }
 
     function delete(string $id, string $userId): void {
-        // TODO: Implement delete() method.
+        $this->connection->delete(self::TABLE, ['id' => $id, 'userid' => $userId]);
     }
 
     /**
@@ -57,6 +57,6 @@ class DbalActivityRepository extends AbstractDBRepository implements ActivityRep
             ->executeQuery()
             ->fetchAssociative();
 
-        return Activity::fromRow($result);
+        return $result ? Activity::fromRow($result) : null;
     }
 }

@@ -15,7 +15,7 @@ class ActivityValidator {
     public function validateRegister(array $data): bool {
         $this->errors = [];
 
-        if (empty($data['name'])) {
+        if (empty(trim($data['name'] ?? ''))) {
             $this->errors['name'] = 'Namn krävs';
         }
 
