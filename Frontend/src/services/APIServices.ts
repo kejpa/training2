@@ -1,8 +1,6 @@
 import {
-  deleteUser,
   getAccessToken,
   storeAccessToken,
-  storeUser,
 } from '../stores/accessTokenStorage'
 
 export default new (class APIService {
@@ -26,14 +24,13 @@ export default new (class APIService {
     return new Promise((resolve, reject) => {
       // Hämta data från endpointen
       fetch(this.apiBase + params, {
-        headers: {Token: 'Bearer ' + jwtToken},
+        headers: {'Authorization': 'Bearer ' + jwtToken},
         method: 'GET',
       })
         .then((response) => {
           if (response.status === 200) {
             resolve(response.json())
           } else if (response.status === 401) {
-            deleteUser()
             fetch(this.apiBase + 'refresh')
               .then((second) => {
                 if (second.ok) {
@@ -43,11 +40,10 @@ export default new (class APIService {
                 }
               })
               .then((data) => {
-                jwtToken = data.access_token
+                jwtToken = data.data.access_token
                 storeAccessToken(jwtToken)
-                storeUser(data.user)
-                fetch(this.apiBase + params, {
-                  headers: {Token: 'Bearer ' + jwtToken},
+               fetch(this.apiBase + params, {
+                  headers: {'Authorization': 'Bearer ' + jwtToken},
                   method: 'GET',
                 }).then((response) => {
                   if (response.ok) {
@@ -111,7 +107,7 @@ export default new (class APIService {
       fetch(this.apiBase + params, {
         method: 'POST',
         headers: {
-          Token: 'Bearer ' + jwtToken,
+          'Authorization': 'Bearer ' + jwtToken,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(object),
@@ -120,7 +116,6 @@ export default new (class APIService {
           if (response.status === 200) {
             resolve(response.json())
           } else if (response.status === 401) {
-            deleteUser()
             fetch(this.apiBase + 'refresh')
               .then((response) => {
                 if (response.ok) {
@@ -130,13 +125,12 @@ export default new (class APIService {
                 }
               })
               .then((data) => {
-                jwtToken = data.access_token
+                jwtToken = data.data.access_token
                 storeAccessToken(jwtToken)
-                storeUser(data.user)
-                fetch(this.apiBase + params, {
+               fetch(this.apiBase + params, {
                   method: 'POST',
                   headers: {
-                    Token: 'Bearer ' + jwtToken,
+                    'Authorization': 'Bearer ' + jwtToken,
                     'Content-Type': 'application/json'
                   },
                   body: JSON.stringify(object),
@@ -173,7 +167,7 @@ export default new (class APIService {
       fetch(this.apiBase + params, {
         method: 'PUT',
         headers: {
-          Token: 'Bearer ' + jwtToken,
+          'Authorization': 'Bearer ' + jwtToken,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(object),
@@ -182,7 +176,6 @@ export default new (class APIService {
           if (response.status === 200) {
             resolve(response.json())
           } else if (response.status === 401) {
-            deleteUser()
             fetch(this.apiBase + 'refresh')
               .then((response) => {
                 if (response.ok) {
@@ -192,13 +185,12 @@ export default new (class APIService {
                 }
               })
               .then((data) => {
-                jwtToken = data.access_token
+                jwtToken = data.data.access_token
                 storeAccessToken(jwtToken)
-                storeUser(data.user)
                 fetch(this.apiBase + params, {
                   method: 'PUT',
                   headers: {
-                    Token: 'Bearer ' + jwtToken,
+                    'Authorization': 'Bearer ' + jwtToken,
                     'Content-Type': 'application/json'
                   },
                   body: JSON.stringify(object),
@@ -233,7 +225,7 @@ export default new (class APIService {
       fetch(this.apiBase + params, {
         method: 'DELETE',
         headers: {
-          Token: 'Bearer ' + jwtToken,
+          'Authorization': 'Bearer ' + jwtToken,
           'Content-Type': 'application/json'
         },
       })
@@ -241,7 +233,6 @@ export default new (class APIService {
           if (response.status === 200) {
             resolve(response.json())
           } else if (response.status === 401) {
-            deleteUser()
             fetch(this.apiBase + 'refresh')
               .then((response) => {
                 if (response.ok) {
@@ -251,13 +242,12 @@ export default new (class APIService {
                 }
               })
               .then((data) => {
-                jwtToken = data.access_token
+                jwtToken = data.data.access_token
                 storeAccessToken(jwtToken)
-                storeUser(data.user)
                 fetch(this.apiBase + params, {
                   method: 'DELETE',
                   headers: {
-                    Token: 'Bearer ' + jwtToken,
+                    'Authorization': 'Bearer ' + jwtToken,
                     'Content-Type': 'application/json'
                   },
                 }).then((response) => {

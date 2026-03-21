@@ -29,16 +29,18 @@ class AddActivityAction extends ActivityAction {
                 'errors' => $this->validator->getErrors()
             ], 400);
         }
-
         $data['userid'] = $userId;
         $data['id'] = (new ActivityId())->toString();
         $activity = Activity::fromRow($data);
 
-        // Lägg till aktivitet
-        $this->activityRepository->add($activity);
+      try {
+           // Lägg till aktivitet
+           $this->activityRepository->add($activity);
 
-        // returnerar data
-        return $this->respondWithData($activity);
-
+           // returnerar data
+           return $this->respondWithData($activity);
+       } catch (\Exception $e) {
+           var_dump($activity->state(),$e );exit;
+       }
     }
 }

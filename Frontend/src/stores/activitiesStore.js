@@ -4,7 +4,14 @@ import APIServices from "@/services/APIServices.ts";
 
 export const useActivitiesStore = defineStore('activities', () => {
   const activities = ref([])
-
+const initial={
+  id: null,
+  name: '',
+  emoji: '',
+  log_distance: false,
+  log_time: false,
+  distance_unit: 'm'
+}
   async function getAll() {
     let data = await APIServices.get('activities')
     activities.value = data.data.activities
@@ -43,5 +50,13 @@ export const useActivitiesStore = defineStore('activities', () => {
     })
   }
 
-  return {activities, getAll, saveActivity}
+  async function deleteActivity(id) {
+    await APIServices.delete('activities/'+id)
+    activities.value = activities.value.filter(itm => itm.id !== id)
+  }
+
+  function getInitial() {
+    return {...initial}
+  }
+  return {activities,getInitial, getAll, saveActivity, deleteActivity}
 })

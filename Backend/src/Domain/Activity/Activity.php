@@ -13,8 +13,7 @@ class Activity implements \JsonSerializable {
         if (!$this->id) {
             $this->id = new ActivityId();
         }
-
-    }
+   }
 
     /**
      * @return ActivityId|null
@@ -123,14 +122,15 @@ class Activity implements \JsonSerializable {
      * @return array<string, mixed>
      */
     public function state(): array {
+
         return [
             'id' => $this->id->toString(),
             'userid' => $this->userId->toString(),
             'emoji' => $this->emoji,
             'name' => $this->name,
-            'log_distance' => $this->logDistance,
-            'log_time' => $this->logTime,
-            'distance_unit' => $this->distanceUnit,
+            'log_distance' => (int)$this->logDistance,
+            'log_time' => (int)$this->logTime,
+            'distance_unit' => $this->logDistance ? $this->distanceUnit : '',
         ];
     }
 

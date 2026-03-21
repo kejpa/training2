@@ -15,14 +15,3 @@ export function deleteAccessToken() {
 export async function deleteRefreshToken() {
   await APIServices.delete('/refresh')
 }
-export function storeUser(user: object) {
-  localStorage.setItem('user', JSON.stringify(user))
-}
-
-export function getUser() {
-  return JSON.parse(localStorage.getItem('user') ?? '')
-}
-
-export function deleteUser() {
-  localStorage.removeItem('user')
-}

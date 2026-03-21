@@ -1,29 +1,34 @@
 <script setup>
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import {useActivitiesStore} from "@/stores/activitiesStore.js";
 import {storeToRefs} from "pinia";
+import edit from "@/assets/icons/edit.svg"
+import remove from "@/assets/icons/delete.png"
+import check from "@/assets/icons/check.svg"
 
 const activitiesStore = useActivitiesStore()
-const activities = storeToRefs(activitiesStore)
+const {activities} = storeToRefs(activitiesStore)
 
-const activity = ref({
-  id: null,
-  name: '',
-  emoji: '',
-  log_distance: false,
-  log_time: false,
-  distance_unit: 'm'
-})
+const activity = ref({})
 const emojis = ref(['🏊‍♂️', '🤽‍♀️', '🏄‍♀️', '🚣‍♀️', '🛶', '⛵', '🏋️‍♀️', '🤸', '💪',
   '🏃', '🚶‍♂️', '🧗', , '🚴', '🚵', '🧘‍♀️', '⚽', '🏀', '🎾', '🏐', '🏓',
   '🏸', '🏒', '🏑', '🥍', '🏏', '⛷️', '🏂', '⛸️', '🛷', '🤼‍♀️', '🥊', '🥋', '🤺',
   '⭐', '✨', '🔥', '💯', '❤️'
 ])
 
+onMounted(() => {
+  activitiesStore.getAll()
+  activity.value = activitiesStore.getInitial();
+  }
+)
+
 async function saveActivity() {
   await activitiesStore.saveActivity(activity.value)
+  activity.value = activitiesStore.getInitial();
 }
-
+async function removeActivity(act) {
+  await activitiesStore.delete(act.id);
+}
 </script>
 
 <template>
@@ -46,16 +51,25 @@ async function saveActivity() {
     <label><input type="checkbox" v-model="activity.log_time" value="true"> Logga tid</label>
     <div>
       <button @click="saveActivity">Spara</button>
+      <button @click="activity=activitiesStore.getInitial()">Ny</button>
     </div>
   </div>
 
+  <ul v-if="activities.length>0" class="header">
+    <li>Emoji</li>
+    <li>Name</li>
+    <li>Log distance</li>
+    <li>Distance unit</li>
+    <li>Log time</li>
+    <li>&nbsp;</li>
+  </ul>
   <ul v-for="act in activities" :key="act">
     <li>{{ act.emoji }}</li>
     <li>{{ act.name }}</li>
-    <li>{{ act.log_distance ? '' : '' }}</li>
+    <li><img :src="act.log_distance ? check : remove" alt="log"></li>
     <li>{{ act.distance_unit }}</li>
-    <li>{{ act.log_time ? '' : '' }}</li>
-    <li><img src="" alt="Redigera"> <img src="" alt="Radera"></li>
+    <li><img :src="act.log_time ? check : remove" alt="log"></li>
+    <li><img :src="edit" alt="Redigera" @click="activity={...act}"> <img :src="remove" alt="Radera" @click="removeActivity(act)"></li>
   </ul>
 </template>
 
@@ -64,10 +78,40 @@ async function saveActivity() {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-bottom: 10px;
+}
+button {
+  margin-left: 10px;
+}
+
+ul {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  background-color: #888;
+}
+
+ul:nth-child(odd) {
+  background-color: #eee;
+}
+
+ul li {
+  list-style: none;
+}
+
+ul.header {
+  background-color: #ccc;
+}
+
+ul.header li {
+  font-weight: bold;
 }
 
 li img {
   height: 16px;
+  margin: 5px;
 }
 
 </style>
