@@ -4,6 +4,7 @@ import {useActivitiesStore} from "@/stores/activitiesStore.js";
 import {storeToRefs} from "pinia";
 import edit from "@/assets/icons/edit.svg"
 import remove from "@/assets/icons/delete.png"
+import waste from "@/assets/icons/waste.png"
 import check from "@/assets/icons/check.svg"
 
 const activitiesStore = useActivitiesStore()
@@ -27,7 +28,7 @@ async function saveActivity() {
   activity.value = activitiesStore.getInitial();
 }
 async function removeActivity(act) {
-  await activitiesStore.delete(act.id);
+  await activitiesStore.deleteActivity(act.id);
 }
 </script>
 
@@ -69,7 +70,7 @@ async function removeActivity(act) {
     <li><img :src="act.log_distance ? check : remove" alt="log"></li>
     <li>{{ act.distance_unit }}</li>
     <li><img :src="act.log_time ? check : remove" alt="log"></li>
-    <li><img :src="edit" alt="Redigera" @click="activity={...act}"> <img :src="remove" alt="Radera" @click="removeActivity(act)"></li>
+    <li><img :src="edit" alt="Redigera" @click="activity={...act}"> <img :src="waste" alt="Radera" @click="removeActivity(act)"></li>
   </ul>
 </template>
 
