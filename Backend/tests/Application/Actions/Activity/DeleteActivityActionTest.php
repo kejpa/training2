@@ -4,21 +4,19 @@ declare(strict_types=1);
 
 namespace Tests\Application\Actions\Activity;
 
-use App\Application\Actions\Activity\GetActivityAction;
-use App\Domain\Activity\Activity;
+use App\Application\Actions\Activity\DeleteActivityAction;
 use App\Domain\Activity\ActivityRepository;
 use App\Domain\ValueObject\ActivityId;
 use App\Domain\ValueObject\UserId;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
-use Slim\Exception\HttpBadRequestException;
 use Slim\Psr7\Factory\ResponseFactory;
 
-class GetActivityActionTest extends TestCase {
+class DeleteActivityActionTest extends TestCase {
     private ActivityRepository $activityRepository;
     private LoggerInterface $logger;
-    private GetActivityAction $action;
+    private DeleteActivityAction $action;
     private Request $request;
     private ResponseFactory $responseFactory;
 
@@ -27,7 +25,7 @@ class GetActivityActionTest extends TestCase {
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->responseFactory = new ResponseFactory();
 
-        $this->action = new GetActivityAction(
+        $this->action = new DeleteActivityAction(
             $this->logger,
             $this->activityRepository
         );
@@ -44,7 +42,6 @@ class GetActivityActionTest extends TestCase {
         $responseProperty->setAccessible(true);
         $responseProperty->setValue($this->action, $this->responseFactory->createResponse());
 
-        // Set args property for resolveArg to work
         $argsProperty = $reflection->getProperty('args');
         $argsProperty->setAccessible(true);
         $argsProperty->setValue($this->action, []);
@@ -57,22 +54,9 @@ class GetActivityActionTest extends TestCase {
         $argsProperty->setValue($this->action, $args);
     }
 
-    private function createTestActivity(?string $activityId = null, ?string $userId = null): Activity {
-        return new Activity(
-            $activityId ? new ActivityId($activityId) : new ActivityId(),
-            $userId ? new UserId($userId) : new UserId(),
-            '🏃',
-            'Löpning',
-            true,
-            true,
-            'km'
-        );
-    }
-
-    public function testSuccessfullyReturnsActivity(): void {
+    public function testSuccessfullyDeletesActivity(): void {
         $activityId = (new ActivityId())->toString();
         $userId = (new UserId())->toString();
-        $activity = $this->createTestActivity($activityId, $userId);
 
         $this->setArgs(['id' => $activityId]);
 
@@ -83,9 +67,8 @@ class GetActivityActionTest extends TestCase {
 
         $this->activityRepository
             ->expects($this->once())
-            ->method('getActivityForUser')
-            ->with($activityId, $userId)
-            ->willReturn($activity);
+            ->method('delete')
+            ->with($activityId, $userId);
 
         $response = $this->action->__invoke(
             $this->request,
@@ -93,71 +76,39 @@ class GetActivityActionTest extends TestCase {
             ['id' => $activityId]
         );
 
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $body = json_decode((string)$response->getBody());
-        $this->assertObjectHasProperty('activity', $body->data);
-        $this->assertEquals($activityId, $body->data->activity->id);
-        $this->assertEquals($userId, $body->data->activity->userId);
+        $this->assertEquals(204, $response->getStatusCode());
     }
 
-    public function testThrowsNotFoundExceptionWhenActivityNotFound(): void {
-        $activityId = 'non-existent-activity-id';
+    public function testReturns204NoContent(): void {
+        $activityId = (new ActivityId())->toString();
         $userId = (new UserId())->toString();
 
         $this->setArgs(['id' => $activityId]);
 
         $this->request
             ->method('getAttribute')
-            ->with('userId')
             ->willReturn($userId);
 
         $this->activityRepository
-            ->expects($this->once())
-            ->method('getActivityForUser')
-            ->with($activityId, $userId)
-            ->willReturn(null);
+            ->method('delete');
 
-        $this->expectException(\Slim\Exception\HttpNotFoundException::class);
-
-        $this->action->__invoke(
+        $response = $this->action->__invoke(
             $this->request,
             $this->responseFactory->createResponse(),
             ['id' => $activityId]
         );
-    }
 
-    public function testThrowsNotFoundExceptionForWrongUser(): void {
-        $activityId = (new ActivityId())->toString();
-        $userId = 'current-user-id';
+        $this->assertEquals(204, $response->getStatusCode());
 
-        $this->setArgs(['id' => $activityId]);
-
-        $this->request
-            ->method('getAttribute')
-            ->with('userId')
-            ->willReturn($userId);
-
-        // Repository returnerar null eftersom userId inte matchar
-        $this->activityRepository
-            ->expects($this->once())
-            ->method('getActivityForUser')
-            ->with($activityId, $userId)
-            ->willReturn(null);
-
-        $this->expectException(\Slim\Exception\HttpNotFoundException::class);
-
-        $this->action->__invoke(
-            $this->request,
-            $this->responseFactory->createResponse(),
-            ['id' => $activityId]
-        );
+        // 204 No Content ska ha en tom body
+        $body = (string)$response->getBody();
+        $decoded = json_decode($body, true);
+        $this->assertEmpty($decoded['data']);
     }
 
     public function testReadsActivityIdFromUrlParameter(): void {
-        $activityId = (new ActivityId())->toString();
+        $activityId = 'specific-activity-id-123';
         $userId = (new UserId())->toString();
-        $activity = $this->createTestActivity($activityId, $userId);
 
         $this->setArgs(['id' => $activityId]);
 
@@ -167,10 +118,9 @@ class GetActivityActionTest extends TestCase {
 
         $capturedActivityId = null;
         $this->activityRepository
-            ->method('getActivityForUser')
-            ->willReturnCallback(function ($id, $uid) use (&$capturedActivityId, $activity) {
+            ->method('delete')
+            ->willReturnCallback(function ($id, $uid) use (&$capturedActivityId) {
                 $capturedActivityId = $id;
-                return $activity;
             });
 
         $this->action->__invoke(
@@ -184,8 +134,7 @@ class GetActivityActionTest extends TestCase {
 
     public function testReadsUserIdFromJwtAttribute(): void {
         $activityId = (new ActivityId())->toString();
-        $userId = (new UserId())->toString();
-        $activity = $this->createTestActivity($activityId, $userId);
+        $userId = 'jwt-user-id-456';
 
         $this->setArgs(['id' => $activityId]);
 
@@ -197,10 +146,9 @@ class GetActivityActionTest extends TestCase {
 
         $capturedUserId = null;
         $this->activityRepository
-            ->method('getActivityForUser')
-            ->willReturnCallback(function ($id, $uid) use (&$capturedUserId, $activity) {
+            ->method('delete')
+            ->willReturnCallback(function ($id, $uid) use (&$capturedUserId) {
                 $capturedUserId = $uid;
-                return $activity;
             });
 
         $this->action->__invoke(
@@ -213,9 +161,8 @@ class GetActivityActionTest extends TestCase {
     }
 
     public function testPassesBothIdsToRepository(): void {
-        $activityId = (new ActivityId())->toString();
-        $userId = (new UserId())->toString();
-        $activity = $this->createTestActivity($activityId, $userId);
+        $activityId = 'activity-123';
+        $userId = 'user-456';
 
         $this->setArgs(['id' => $activityId]);
 
@@ -225,12 +172,11 @@ class GetActivityActionTest extends TestCase {
 
         $this->activityRepository
             ->expects($this->once())
-            ->method('getActivityForUser')
+            ->method('delete')
             ->with(
                 $this->equalTo($activityId),
                 $this->equalTo($userId)
-            )
-            ->willReturn($activity);
+            );
 
         $this->action->__invoke(
             $this->request,
@@ -239,10 +185,9 @@ class GetActivityActionTest extends TestCase {
         );
     }
 
-    public function testRepositoryIsCalledExactlyOnce(): void {
+    public function testRepositoryDeleteIsCalledExactlyOnce(): void {
         $activityId = (new ActivityId())->toString();
         $userId = (new UserId())->toString();
-        $activity = $this->createTestActivity($activityId, $userId);
 
         $this->setArgs(['id' => $activityId]);
 
@@ -252,8 +197,7 @@ class GetActivityActionTest extends TestCase {
 
         $this->activityRepository
             ->expects($this->once())
-            ->method('getActivityForUser')
-            ->willReturn($activity);
+            ->method('delete');
 
         $this->action->__invoke(
             $this->request,
@@ -262,10 +206,11 @@ class GetActivityActionTest extends TestCase {
         );
     }
 
-    public function testResponseContainsActivityObject(): void {
+    public function testDoesNotValidateInput(): void {
+        // Delete-operationer behöver inte validera data eftersom
+        // det inte finns någon request body att validera
         $activityId = (new ActivityId())->toString();
         $userId = (new UserId())->toString();
-        $activity = $this->createTestActivity($activityId, $userId);
 
         $this->setArgs(['id' => $activityId]);
 
@@ -274,8 +219,33 @@ class GetActivityActionTest extends TestCase {
             ->willReturn($userId);
 
         $this->activityRepository
-            ->method('getActivityForUser')
-            ->willReturn($activity);
+            ->method('delete');
+
+        // Ingen exception ska kastas
+        $response = $this->action->__invoke(
+            $this->request,
+            $this->responseFactory->createResponse(),
+            ['id' => $activityId]
+        );
+
+        $this->assertEquals(204, $response->getStatusCode());
+    }
+
+    public function testDeleteIsIdempotent(): void {
+        // Delete ska kunna anropas flera gånger utan fel
+        // (även om aktiviteten inte finns längre)
+        $activityId = (new ActivityId())->toString();
+        $userId = (new UserId())->toString();
+
+        $this->setArgs(['id' => $activityId]);
+
+        $this->request
+            ->method('getAttribute')
+            ->willReturn($userId);
+
+        // Repository returnerar inget, även om aktiviteten inte finns
+        $this->activityRepository
+            ->method('delete');
 
         $response = $this->action->__invoke(
             $this->request,
@@ -283,25 +253,72 @@ class GetActivityActionTest extends TestCase {
             ['id' => $activityId]
         );
 
-        $body = json_decode((string)$response->getBody());
-
-        $this->assertObjectHasProperty('data', $body);
-        $this->assertObjectHasProperty('activity', $body->data);
-        $this->assertIsObject($body->data->activity);
+        $this->assertEquals(204, $response->getStatusCode());
     }
 
-    public function testResponseContainsAllActivityFields(): void {
+    public function testEnsuresUserCanOnlyDeleteTheirOwnActivities(): void {
+        // Säkerhet: userId från JWT skickas till repository
+        // Repository-lagret ansvarar för att verifiera ägarskap
+        $activityId = (new ActivityId())->toString();
+        $userId = 'current-user-id';
+
+        $this->setArgs(['id' => $activityId]);
+
+        $this->request
+            ->method('getAttribute')
+            ->willReturn($userId);
+
+        // Verifiera att BÅDE activityId OCH userId skickas
+        $this->activityRepository
+            ->expects($this->once())
+            ->method('delete')
+            ->with($activityId, $userId);
+
+        $this->action->__invoke(
+            $this->request,
+            $this->responseFactory->createResponse(),
+            ['id' => $activityId]
+        );
+    }
+
+    public function testHandlesDifferentActivityIds(): void {
+        $userId = (new UserId())->toString();
+
+        $activityIds = [
+            (new ActivityId())->toString(),
+            (new ActivityId())->toString(),
+            (new ActivityId())->toString(),
+        ];
+
+        foreach ($activityIds as $activityId) {
+            $this->setUp(); // Reset mocks
+
+            $this->setArgs(['id' => $activityId]);
+
+            $this->request
+                ->method('getAttribute')
+                ->willReturn($userId);
+
+            $capturedId = null;
+            $this->activityRepository
+                ->method('delete')
+                ->willReturnCallback(function ($id) use (&$capturedId) {
+                    $capturedId = $id;
+                });
+
+            $this->action->__invoke(
+                $this->request,
+                $this->responseFactory->createResponse(),
+                ['id' => $activityId]
+            );
+
+            $this->assertEquals($activityId, $capturedId);
+        }
+    }
+
+    public function testResponseHasCorrectContentType(): void {
         $activityId = (new ActivityId())->toString();
         $userId = (new UserId())->toString();
-        $activity = new Activity(
-            new ActivityId($activityId),
-            new UserId($userId),
-            '🏋️',
-            'Styrketräning',
-            false,
-            true,
-            'kg'
-        );
 
         $this->setArgs(['id' => $activityId]);
 
@@ -310,8 +327,7 @@ class GetActivityActionTest extends TestCase {
             ->willReturn($userId);
 
         $this->activityRepository
-            ->method('getActivityForUser')
-            ->willReturn($activity);
+            ->method('delete');
 
         $response = $this->action->__invoke(
             $this->request,
@@ -319,18 +335,38 @@ class GetActivityActionTest extends TestCase {
             ['id' => $activityId]
         );
 
-        $body = json_decode((string)$response->getBody());
-        $activityData = $body->data->activity;
-
-        $this->assertEquals($activityId, $activityData->id);
-        $this->assertEquals($userId, $activityData->userId);
-        $this->assertEquals('🏋️', $activityData->emoji);
-        $this->assertEquals('Styrketräning', $activityData->name);
-        $this->assertFalse($activityData->log_distance);
-        $this->assertTrue($activityData->log_time);
-        $this->assertEquals('kg', $activityData->distance_unit);
+        // Verifiera att response är JSON (även om body är tom)
+        $body = (string)$response->getBody();
+        $decoded = json_decode($body, true);
+        $this->assertNotNull($decoded);
+        $this->assertEquals(JSON_ERROR_NONE, json_last_error());
     }
 
+    public function testResponseBodyIsEmpty(): void {
+        $activityId = (new ActivityId())->toString();
+        $userId = (new UserId())->toString();
+
+        $this->setArgs(['id' => $activityId]);
+
+        $this->request
+            ->method('getAttribute')
+            ->willReturn($userId);
+
+        $this->activityRepository
+            ->method('delete');
+
+        $response = $this->action->__invoke(
+            $this->request,
+            $this->responseFactory->createResponse(),
+            ['id' => $activityId]
+        );
+
+        $body = json_decode((string)$response->getBody(), true);
+
+        $this->assertIsArray($body);
+        $this->assertArrayHasKey('data', $body);
+        $this->assertEmpty($body['data']);
+    }
 
     public function testThrowsExceptionWhenIdParameterMissing(): void {
         $userId = (new UserId())->toString();
@@ -342,7 +378,7 @@ class GetActivityActionTest extends TestCase {
             ->method('getAttribute')
             ->willReturn($userId);
 
-        $this->expectException(HttpBadRequestException::class);
+        $this->expectException(\Slim\Exception\HttpBadRequestException::class);
         $this->expectExceptionMessage('Could not resolve argument `id`');
 
         $this->action->__invoke(
@@ -352,97 +388,33 @@ class GetActivityActionTest extends TestCase {
         );
     }
 
-    public function testResponseIsJson(): void {
+    public function testDeleteOperationIsSecure(): void {
+        // Detta test verifierar att både activityId OCH userId krävs
+        // för att förhindra att användare raderar andras aktiviteter
         $activityId = (new ActivityId())->toString();
-        $userId = (new UserId())->toString();
-        $activity = $this->createTestActivity($activityId, $userId);
+        $currentUserId = 'current-user-id';
 
         $this->setArgs(['id' => $activityId]);
 
         $this->request
             ->method('getAttribute')
-            ->willReturn($userId);
+            ->with('userId')
+            ->willReturn($currentUserId);
 
+        $receivedParams = [];
         $this->activityRepository
-            ->method('getActivityForUser')
-            ->willReturn($activity);
-
-        $response = $this->action->__invoke(
-            $this->request,
-            $this->responseFactory->createResponse(),
-            ['id' => $activityId]
-        );
-
-        $body = (string)$response->getBody();
-
-        $decoded = json_decode($body);
-        $this->assertNotNull($decoded);
-        $this->assertEquals(JSON_ERROR_NONE, json_last_error());
-    }
-
-    public function testHandlesActivityWithEmoji(): void {
-        $activityId = (new ActivityId())->toString();
-        $userId = (new UserId())->toString();
-
-        $emojis = ['🏃', '🚴', '🏊', '🧘', '🏋️'];
-
-        foreach ($emojis as $emoji) {
-            $this->setUp(); // Reset mocks
-
-            $activity = new Activity(
-                new ActivityId($activityId),
-                new UserId($userId),
-                $emoji,
-                'Test',
-                true,
-                true,
-                'km'
-            );
-
-            $this->setArgs(['id' => $activityId]);
-
-            $this->request
-                ->method('getAttribute')
-                ->willReturn($userId);
-
-            $this->activityRepository
-                ->method('getActivityForUser')
-                ->willReturn($activity);
-
-            $response = $this->action->__invoke(
-                $this->request,
-                $this->responseFactory->createResponse(),
-                ['id' => $activityId]
-            );
-
-            $body = json_decode((string)$response->getBody());
-            $this->assertEquals($emoji, $body->data->activity->emoji, "Failed for emoji: $emoji");
-        }
-    }
-
-    public function testEnsuresUserCanOnlyAccessTheirOwnActivities(): void {
-        // Detta är implicit genom att skicka userId till repository
-        $activityId = (new ActivityId())->toString();
-        $userId = (new UserId())->toString();
-        $activity = $this->createTestActivity($activityId, $userId);
-
-        $this->setArgs(['id' => $activityId]);
-
-        $this->request
-            ->method('getAttribute')
-            ->willReturn($userId);
-
-        // Repository får BÅDE activityId OCH userId
-        $this->activityRepository
-            ->expects($this->once())
-            ->method('getActivityForUser')
-            ->with($activityId, $userId)
-            ->willReturn($activity);
+            ->method('delete')
+            ->willReturnCallback(function ($id, $uid) use (&$receivedParams) {
+                $receivedParams = ['id' => $id, 'userId' => $uid];
+            });
 
         $this->action->__invoke(
             $this->request,
             $this->responseFactory->createResponse(),
             ['id' => $activityId]
         );
+
+        $this->assertEquals($activityId, $receivedParams['id']);
+        $this->assertEquals($currentUserId, $receivedParams['userId']);
     }
 }

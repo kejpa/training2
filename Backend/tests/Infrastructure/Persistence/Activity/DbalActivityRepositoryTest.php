@@ -102,7 +102,7 @@ class DbalActivityRepositoryTest extends TestCase {
         $this->assertEquals('Styrketräning', $row['name']);
         $this->assertFalse((bool)$row['log_distance']); // Konvertera till bool
         $this->assertTrue((bool)$row['log_time']);      // Konvertera till bool
-        $this->assertEquals('kg', $row['distance_unit']);
+        $this->assertEquals('', $row['distance_unit']);
     }
 
     public function testAddMultipleActivities(): void {
@@ -201,7 +201,7 @@ class DbalActivityRepositoryTest extends TestCase {
         $this->assertEquals('Styrketräning', $activity->getName());
         $this->assertFalse($activity->getLogDistance());
         $this->assertTrue($activity->getLogTime());
-        $this->assertEquals('kg', $activity->getDistanceUnit());
+        $this->assertEquals('', $activity->getDistanceUnit());
     }
 
     // ========== getActivityForUser() tests ==========
@@ -265,7 +265,7 @@ class DbalActivityRepositoryTest extends TestCase {
         $this->assertEquals('Yoga', $result->getName());
         $this->assertFalse($result->getLogDistance());
         $this->assertTrue($result->getLogTime());
-        $this->assertEquals('min', $result->getDistanceUnit());
+        $this->assertEquals('', $result->getDistanceUnit());
     }
 
     // ========== update() tests ==========

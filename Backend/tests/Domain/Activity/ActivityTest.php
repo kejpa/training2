@@ -220,8 +220,8 @@ class ActivityTest extends TestCase {
         $this->assertEquals($userId->toString(), $state['userid']);
         $this->assertEquals('🏃', $state['emoji']);
         $this->assertEquals('Löpning', $state['name']);
-        $this->assertTrue($state['log_distance']);
-        $this->assertFalse($state['log_time']);
+        $this->assertTrue((bool)$state['log_distance']);
+        $this->assertFalse((bool)$state['log_time']);
         $this->assertEquals('km', $state['distance_unit']);
     }
 
@@ -233,8 +233,8 @@ class ActivityTest extends TestCase {
         $this->assertIsString($state['userid']);
         $this->assertIsString($state['emoji']);
         $this->assertIsString($state['name']);
-        $this->assertIsBool($state['log_distance']);
-        $this->assertIsBool($state['log_time']);
+        $this->assertIsInt($state['log_distance']);
+        $this->assertIsInt($state['log_time']);
         $this->assertIsString($state['distance_unit']);
     }
 

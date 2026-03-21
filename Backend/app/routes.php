@@ -3,8 +3,10 @@
 declare(strict_types=1);
 
 use App\Application\Actions\Activity\AddActivityAction;
+use App\Application\Actions\Activity\DeleteActivityAction;
 use App\Application\Actions\Activity\GetActivityAction;
 use App\Application\Actions\Activity\GetAllActivitiesAction;
+use App\Application\Actions\Activity\UpdateActivityAction;
 use App\Application\Actions\Login\LogoutAction;
 use App\Application\Actions\Login\MailLoginAction;
 use App\Application\Actions\Login\NewLoginCodeAction;
@@ -38,6 +40,8 @@ return function (App $app) {
             $protected->get('/activities', GetAllActivitiesAction::class);
             $protected->get('/activities/{id}', GetActivityAction::class);
             $protected->post('/activities', AddActivityAction::class);
+            $protected->put('/activities/{id}', UpdateActivityAction::class);
+            $protected->delete('/activities/{id}', DeleteActivityAction::class);
         })->add(JwtMiddleware::class);
     });
 

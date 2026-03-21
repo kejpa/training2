@@ -11,8 +11,8 @@ use Psr\Log\LoggerInterface;
 
 class AddActivityAction extends ActivityAction {
 
-    public function __construct(LoggerInterface $logger, ActivityRepository $activitiyRepository, private ActivityValidator $validator) {
-        parent::__construct($logger, $activitiyRepository);
+    public function __construct(LoggerInterface $logger, ActivityRepository $activityRepository, private ActivityValidator $validator) {
+        parent::__construct($logger, $activityRepository);
     }
 
     protected function action(): Response {
@@ -33,14 +33,10 @@ class AddActivityAction extends ActivityAction {
         $data['id'] = (new ActivityId())->toString();
         $activity = Activity::fromRow($data);
 
-      try {
-           // Lägg till aktivitet
-           $this->activityRepository->add($activity);
+        // Lägg till aktivitet
+        $this->activityRepository->add($activity);
 
-           // returnerar data
-           return $this->respondWithData($activity);
-       } catch (\Exception $e) {
-           var_dump($activity->state(),$e );exit;
-       }
+        // returnerar data
+        return $this->respondWithData($activity);
     }
 }

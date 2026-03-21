@@ -2,7 +2,9 @@
 
 namespace App\Application\Actions\Activity;
 
+use App\Domain\User\UserNotFoundException;
 use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Exception\HttpNotFoundException;
 
 class GetActivityAction extends ActivityAction {
     protected function action(): Response {
@@ -13,6 +15,9 @@ class GetActivityAction extends ActivityAction {
 
         // Läs aktivitet
         $activity = $this->activityRepository->getActivityForUser($id, $userId);
+        if (!$activity) {
+            throw new HttpNotFoundException ($this->request, "Activity not found");
+        }
 
         // returnerar data
         return $this->respondWithData(["activity" => $activity]);
