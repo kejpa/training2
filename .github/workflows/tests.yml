@@ -13,10 +13,7 @@ jobs:
       matrix:
         php: [8.2]
         experimental: [false]
-        include:
-          - php: 8.3
-            experimental: false
-            analysis: true
+        analysis: [true]
 
     steps:
       - name: Checkout
