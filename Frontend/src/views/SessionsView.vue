@@ -71,6 +71,7 @@ async function removeSession() {
     <div>
       <button @click="saveSession">Spara</button>
       <button @click="session = sessionsStore.getInitial();">Ny</button>
+      <button v-if="session.id" @click="removeSession">Radera</button>
     </div>
   </div>
 </template>

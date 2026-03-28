@@ -39,11 +39,6 @@ const initial={
     sessions.value.push(data.data.session)
   }
 
-  async function deleteSession(id) {
-    await APIServices.delete('sessions/'+id)
-    sessions.value = sessions.value.filter(itm => itm.id !== id)
-  }
-
   async function updateSession(id, session) {
     await APIServices.put('sessions/'+id, session)
     sessions.value = sessions.value.map(itm => {
