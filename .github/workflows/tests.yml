@@ -56,11 +56,3 @@ jobs:
         working-directory: ./Backend
         run: vendor/bin/phpunit --coverage-clover clover.xml
 
-      - name: Upload coverage results to Coveralls
-        if: matrix.analysis && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        working-directory: ./Backend
-        env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-        run: |
-          composer require php-coveralls/php-coveralls -n -W
-          vendor/bin/php-coveralls --coverage_clover=clover.xml -v
