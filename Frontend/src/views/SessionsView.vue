@@ -39,8 +39,6 @@ async function removeSession() {
       Träning:
       <select v-model="session.activityid">
         <option v-for="act in activities" :value="act.id">{{ `${act.emoji}  ${act.name}` }}</option>
-        <option value="">🏃‍♂️ Springning</option>
-        <option value="">🏃‍♂️ Jogging</option>
       </select>
     </label>
     <label>
