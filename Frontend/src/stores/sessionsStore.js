@@ -17,6 +17,10 @@ const initial={
     let data = await APIServices.get('sessions')
     sessions.value = data.data.sessions
   }
+  async function getSession(id) {
+    let data = await APIServices.get(`sessions/${id}`)
+    return  {...data.data.session}
+  }
 
   async function saveSession(session) {
     if(session.id){
@@ -59,5 +63,5 @@ const initial={
   function getInitial() {
     return {...initial}
   }
-  return {sessions,getInitial, getAll, saveSession, deleteSession}
+  return {sessions,getInitial, getAll, saveSession, deleteSession, getSession}
 })

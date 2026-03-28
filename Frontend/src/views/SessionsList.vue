@@ -16,7 +16,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <ul>
+  <ul class="header">
     <li>Aktivitet</li>
     <li>Datum</li>
     <li>Distans</li>
@@ -24,7 +24,7 @@ onMounted(async () => {
     <li>Beskrivning</li>
     <li>rpe</li>
   </ul>
-  <ul v-for="session in sessions" :key="session">
+  <ul v-for="session in sessions" :key="session.id" @click="$router.push(`/sessions/${session.id}`)">
     <li>{{ `${activities.find(itm => itm.id === session.activityid)?.emoji} ${activities.find(itm => itm.id === session.activityid)?.name}` }}</li>
     <li>{{ session.date }}</li>
     <li>{{ session.distance ? `${session.distance} ${activities.find(itm => itm.id === session.activityid)?.distance_unit} ` : '' }}</li>
@@ -42,6 +42,7 @@ ul {
   list-style: none;
   padding: 0;
   background-color: #888;
+  cursor: pointer;
 }
 
 ul:nth-child(odd) {
@@ -54,6 +55,7 @@ ul li {
 
 ul.header {
   background-color: #ccc;
+  cursor: default;
 }
 
 ul.header li {

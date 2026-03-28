@@ -21,9 +21,17 @@ class DbalSessionRepositoryTest extends TestCase {
 
     protected function setUp(): void {
         $this->connection = DriverManager::getConnection([
-            'driver' => 'pdo_sqlite',
-            'memory' => true,
+            'driver' => 'pdo_mysql',
+            'host' => '127.0.0.1',
+            'port' => 3307,
+            'user' => 'root',
+            'password' => '',
+            'dbname' => 'test',
+            'charset' => 'utf8mb4',
         ]);
+
+        // Rensa tabell inför varje test
+        $this->connection->executeStatement('DROP TABLE IF EXISTS sessions');
 
         $this->createSchema();
         $this->repository = new DbalSessionRepository($this->connection);
@@ -36,15 +44,17 @@ class DbalSessionRepositoryTest extends TestCase {
     private function createSchema(): void {
         $schema = <<<SQL
         CREATE TABLE sessions (
-            id TEXT PRIMARY KEY,
-            userid TEXT NOT NULL,
-            activityid TEXT NOT NULL,
-            date TEXT NOT NULL,
-            duration TEXT DEFAULT NULL,
-            distance REAL DEFAULT NULL,
-            description TEXT,
-            rpe INTEGER
-        )
+            id CHAR(36) NOT NULL PRIMARY KEY,
+            userid CHAR(36) NOT NULL,
+            activityid CHAR(36) NOT NULL,
+            date DATE NOT NULL,
+            duration TIME DEFAULT NULL,
+            distance DECIMAL(5,2) DEFAULT NULL,
+            description VARCHAR(255),
+            rpe TINYINT DEFAULT NULL,
+            KEY userid (userid),
+            KEY activityid (activityid)
+        ) ENGINE=MEMORY;
         SQL;
 
         $this->connection->executeStatement($schema);

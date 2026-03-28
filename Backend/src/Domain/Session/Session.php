@@ -28,7 +28,7 @@ class Session implements JsonSerializable {
             'userid' => $this->userId->toString(),
             'activityid' => $this->activityId->toString(),
             'date' => $this->date->format('Y-m-d'),
-            'duration' => $this->duration,
+            'duration' => $this->formatDuration($this->duration),
             'distance' => $this->distance,
             'description' => $this->description,
             'rpe' => $this->rpe,
@@ -154,11 +154,19 @@ class Session implements JsonSerializable {
         $me->userid = $this->userId->toString();
         $me->activityid = $this->activityId->toString();
         $me->date = $this->date->format('Y-m-d');
-        $me->duration = $this->duration;
+        $me->duration =  $this->formatDuration($this->duration);
         $me->distance = $this->distance;
         $me->description = $this->description;
         $me->rpe = $this->rpe;
 
         return $me;
+    }
+
+    private function formatDuration(?string $duration): ?string {
+        if ($duration === null) return null;
+
+        // Tar bort sekunder om de finns
+        $parts = explode(':', $duration);
+        return sprintf('%02d:%02d', $parts[0], $parts[1] ?? 0);
     }
 }

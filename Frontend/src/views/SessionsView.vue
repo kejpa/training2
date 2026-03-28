@@ -4,7 +4,9 @@ import {onMounted, ref} from "vue";
 import {useSessionsStore} from "@/stores/sessionsStore.js";
 import {useActivitiesStore} from "@/stores/activitiesStore.js";
 import {storeToRefs} from "pinia";
+import {useRoute} from "vue-router";
 
+const route = useRoute()
 const sessionsStore = useSessionsStore()
 const activitiesStore = useActivitiesStore()
 const session = ref({})
@@ -12,14 +14,20 @@ const {activities} = storeToRefs(activitiesStore)
 
 onMounted(async () => {
   await activitiesStore.getAll()
-  session.value = sessionsStore.getInitial();
+  // Om id finns, ladda det passet, annars skapa nytt
+  if (route.params.id) {
+    // Ladda session med det id:t
+    session.value = await sessionsStore.getSession(route.params.id)
+  } else {
+    session.value = sessionsStore.getInitial()
+  }
 })
 
 async function saveSession() {
-  if(!activities.value.find(itm => itm.id===session.value.activityid)?.log_duration) {
+  if (!activities.value.find(itm => itm.id === session.value.activityid)?.log_duration) {
     session.value.duration = null
   }
-  if(!activities.value.find(itm => itm.id===session.value.activityid)?.log_distance) {
+  if (!activities.value.find(itm => itm.id === session.value.activityid)?.log_distance) {
     session.value.distance = null
   }
   await sessionsStore.saveSession(session.value)

@@ -9,6 +9,7 @@ use App\Domain\ValueObject\ActivityId;
 use App\Domain\ValueObject\SessionId;
 use App\Domain\ValueObject\UserId;
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -19,7 +20,7 @@ class SessionTest extends TestCase {
         ?UserId $userId = null,
         ?ActivityId $activityId = null,
         string $date = '2024-01-01',
-        ?string $duration = '01:00:00',
+        ?string $duration = '01:00',
         ?float $distance = 10.5,
         string $description = 'Test pass',
         int $rpe = 5
@@ -49,7 +50,7 @@ class SessionTest extends TestCase {
         $this->assertInstanceOf(UserId::class, $session->getUserId());
         $this->assertInstanceOf(ActivityId::class, $session->getActivityId());
         $this->assertEquals('2024-01-01', $session->getDate()->format('Y-m-d'));
-        $this->assertEquals('01:00:00', $session->getDuration());
+        $this->assertEquals('01:00', $session->getDuration());
         $this->assertEquals(10.5, $session->getDistance());
         $this->assertEquals('Test pass', $session->getDescription());
         $this->assertEquals(5, $session->getRpe());
@@ -131,7 +132,7 @@ class SessionTest extends TestCase {
         $this->assertEquals($session->getUserId()->toString(), $state['userid']);
         $this->assertEquals($session->getActivityId()->toString(), $state['activityid']);
         $this->assertEquals('2024-01-01', $state['date']);
-        $this->assertEquals('01:00:00', $state['duration']);
+        $this->assertEquals('01:00', $state['duration']);
         $this->assertEquals(10.5, $state['distance']);
         $this->assertEquals('Test pass', $state['description']);
         $this->assertEquals(5, $state['rpe']);
@@ -147,7 +148,7 @@ class SessionTest extends TestCase {
         $this->assertEquals($session->getUserId()->toString(), $json->userid);
         $this->assertEquals($session->getActivityId()->toString(), $json->activityid);
         $this->assertEquals('2024-01-01', $json->date);
-        $this->assertEquals('01:00:00', $json->duration);
+        $this->assertEquals('01:00', $json->duration);
         $this->assertEquals(10.5, $json->distance);
         $this->assertEquals('Test pass', $json->description);
         $this->assertEquals(5, $json->rpe);
@@ -191,24 +192,26 @@ class SessionTest extends TestCase {
         $this->assertEquals($state['rpe'], $json->rpe);
     }
 
-    /**
-     * @dataProvider durationAndDistanceProvider
-     */
+    #[DataProvider('durationAndDistanceProvider')]
     public function testHandlesNullableFields(?string $duration, ?float $distance): void {
         $session = $this->createTestSession(
             duration: $duration,
             distance: $distance
         );
 
+        // getDuration() ska fortfarande returnera originalvärdet
         $this->assertSame($duration, $session->getDuration());
         $this->assertSame($distance, $session->getDistance());
 
+        // state() och jsonSerialize() ska returnera normaliserad duration (HH:MM)
+        $expectedDuration = $duration !== null ? substr($duration, 0, 5) : null;
+
         $state = $session->state();
-        $this->assertSame($duration, $state['duration']);
+        $this->assertSame($expectedDuration, $state['duration']);
         $this->assertSame($distance, $state['distance']);
 
         $json = $session->jsonSerialize();
-        $this->assertSame($duration, $json->duration);
+        $this->assertSame($expectedDuration, $json->duration);
         $this->assertSame($distance, $json->distance);
     }
 
@@ -218,12 +221,11 @@ class SessionTest extends TestCase {
             'no duration' => [null, 10.5],
             'no distance' => ['01:00:00', null],
             'both null' => [null, null],
+            'with minutes only' => ['01:30:00', 5.2],
         ];
     }
 
-    /**
-     * @dataProvider rpeProvider
-     */
+    #[DataProvider('rpeProvider')]
     public function testHandlesDifferentRpeValues(int $rpe): void {
         $session = $this->createTestSession(rpe: $rpe);
 
@@ -242,5 +244,44 @@ class SessionTest extends TestCase {
             'medium' => [5],
             'high' => [10],
         ];
+    }
+    // ========== format tests ==========
+
+    public function testDateIsAlwaysFormattedAsYearMonthDay(): void {
+        $session = new Session(
+            new SessionId(),
+            new UserId(),
+            new ActivityId(),
+            new DateTimeImmutable('2024-03-15 14:30:45'), // inkluderar tid
+            null,
+            null,
+            'Test',
+            5
+        );
+
+        $state = $session->state();
+
+        // Ska vara exakt Y-m-d (ingen tid)
+        $this->assertMatchesRegularExpression('/^\d{4}-\d{2}-\d{2}$/', $state['date']);
+        $this->assertEquals('2024-03-15', $state['date']);
+    }
+
+    public function testDurationIsStoredAsHoursMinutesFormat(): void {
+        $session = new Session(
+            new SessionId(),
+            new UserId(),
+            new ActivityId(),
+            new DateTimeImmutable(),
+            '01:30',
+            null,
+            'Test',
+            5
+        );
+
+        $state = $session->state();
+
+        // Validera format HH:MM
+        $this->assertMatchesRegularExpression('/^\d{2}:\d{2}$/', $state['duration']);
+        $this->assertEquals('01:30', $state['duration']);
     }
 }

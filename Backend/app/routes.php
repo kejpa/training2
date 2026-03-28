@@ -15,6 +15,8 @@ use App\Application\Actions\Login\ResendLoginAction;
 use App\Application\Actions\Login\TotpLoginAction;
 use App\Application\Actions\Session\AddSessionAction;
 use App\Application\Actions\Session\GetAllSessionsAction;
+use App\Application\Actions\Session\GetSessionAction;
+use App\Application\Actions\Session\UpdateSessionAction;
 use App\Application\Actions\User\RegisterUserAction;
 use App\Application\Actions\User\ViewUserAction;
 use App\Application\Middleware\JwtMiddleware;
@@ -46,7 +48,9 @@ return function (App $app) {
             $protected->delete('/activities/{id}', DeleteActivityAction::class);
             // Sessions
             $protected->get('/sessions', GetAllSessionsAction::class);
+            $protected->get('/sessions/{id}', GetSessionAction::class);
             $protected->post('/sessions', AddSessionAction::class);
+            $protected->put('/sessions/{id}', UpdateSessionAction::class);
 
         })->add(JwtMiddleware::class);
     });
