@@ -53,7 +53,7 @@ class AddActivityActionTest extends TestCase {
             'emoji' => '🏃',
             'name' => 'Löpning',
             'log_distance' => true,
-            'log_time' => true,
+            'log_duration' => true,
             'distance_unit' => 'km'
         ];
     }
@@ -109,7 +109,7 @@ class AddActivityActionTest extends TestCase {
             'emoji' => '🚴',
             'name' => 'Cykling',
             'log_distance' => true,
-            'log_time' => false,
+            'log_duration' => false,
             'distance_unit' => 'km'
         ];
 
@@ -188,7 +188,7 @@ class AddActivityActionTest extends TestCase {
             'emoji' => '',
             'name' => '',
             'log_distance' => true,
-            'log_time' => true,
+            'log_duration' => true,
             'distance_unit' => ''
         ];
 
@@ -267,7 +267,7 @@ class AddActivityActionTest extends TestCase {
             'EMOJI' => '🏃',
             'NAME' => 'Löpning',
             'LOG_DISTANCE' => true,
-            'LOG_TIME' => true,
+            'LOG_DURATION' => true,
             'DISTANCE_UNIT' => 'km'
         ];
 
@@ -285,7 +285,7 @@ class AddActivityActionTest extends TestCase {
                 'emoji' => '🏃',
                 'name' => 'Löpning',
                 'log_distance' => true,
-                'log_time' => true,
+                'log_duration' => true,
                 'distance_unit' => 'km'
             ])
             ->willReturn(true);
@@ -308,7 +308,7 @@ class AddActivityActionTest extends TestCase {
             'emoji' => '🏋️',
             'name' => 'Styrketräning',
             'log_distance' => false,
-            'log_time' => true,
+            'log_duration' => true,
             'distance_unit' => 'km'
         ];
 
@@ -386,7 +386,7 @@ class AddActivityActionTest extends TestCase {
                 'emoji' => $emoji,
                 'name' => 'Test',
                 'log_distance' => true,
-                'log_time' => true,
+                'log_duration' => true,
                 'distance_unit' => 'km'
             ];
 
@@ -424,7 +424,7 @@ class AddActivityActionTest extends TestCase {
             'emoji' => '🏃',
             'name' => 'Löpning',
             'log_distance' => true,
-            'log_time' => false,
+            'log_duration' => false,
             'distance_unit' => 'km'
         ];
 
@@ -465,10 +465,10 @@ class AddActivityActionTest extends TestCase {
     public function testHandlesBooleanFlags(): void
     {
         $testCases = [
-            ['log_distance' => true, 'log_time' => true],
-            ['log_distance' => true, 'log_time' => false],
-            ['log_distance' => false, 'log_time' => true],
-            ['log_distance' => false, 'log_time' => false],
+            ['log_distance' => true, 'log_duration' => true],
+            ['log_distance' => true, 'log_duration' => false],
+            ['log_distance' => false, 'log_duration' => true],
+            ['log_distance' => false, 'log_duration' => false],
         ];
 
         foreach ($testCases as $flags) {
@@ -480,7 +480,7 @@ class AddActivityActionTest extends TestCase {
                 'emoji' => '🏃',
                 'name' => 'Test',
                 'log_distance' => $flags['log_distance'],
-                'log_time' => $flags['log_time'],
+                'log_duration' => $flags['log_duration'],
                 'distance_unit' => 'km'
             ];
 
@@ -510,7 +510,7 @@ class AddActivityActionTest extends TestCase {
             );
 
             $this->assertEquals($flags['log_distance'], $capturedActivity->getLogDistance());
-            $this->assertEquals($flags['log_time'], $capturedActivity->getLogTime());
+            $this->assertEquals($flags['log_duration'], $capturedActivity->getLogTime());
         }
     }
     public function testHandlesDifferentDistanceUnits(): void
@@ -526,7 +526,7 @@ class AddActivityActionTest extends TestCase {
                 'emoji' => '🏃',
                 'name' => 'Test',
                 'log_distance' => true,
-                'log_time' => true,
+                'log_duration' => true,
                 'distance_unit' => $unit
             ];
 

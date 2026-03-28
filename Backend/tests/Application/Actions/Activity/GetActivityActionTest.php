@@ -327,7 +327,7 @@ class GetActivityActionTest extends TestCase {
         $this->assertEquals('🏋️', $activityData->emoji);
         $this->assertEquals('Styrketräning', $activityData->name);
         $this->assertFalse($activityData->log_distance);
-        $this->assertTrue($activityData->log_time);
+        $this->assertTrue($activityData->log_duration);
         $this->assertEquals('kg', $activityData->distance_unit);
     }
 

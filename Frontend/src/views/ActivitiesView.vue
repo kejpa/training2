@@ -49,7 +49,7 @@ async function removeActivity(act) {
     </select>
       </span>
     </label>
-    <label><input type="checkbox" v-model="activity.log_time" value="true"> Logga tid</label>
+    <label><input type="checkbox" v-model="activity.log_duration" value="true"> Logga tid</label>
     <div>
       <button @click="saveActivity">Spara</button>
       <button @click="activity=activitiesStore.getInitial()">Ny</button>
@@ -69,7 +69,7 @@ async function removeActivity(act) {
     <li>{{ act.name }}</li>
     <li><img :src="act.log_distance ? check : remove" alt="log"></li>
     <li>{{ act.distance_unit }}</li>
-    <li><img :src="act.log_time ? check : remove" alt="log"></li>
+    <li><img :src="act.log_duration ? check : remove" alt="log"></li>
     <li><img :src="edit" alt="Redigera" @click="activity={...act}"> <img :src="waste" alt="Radera" @click="removeActivity(act)"></li>
   </ul>
 </template>

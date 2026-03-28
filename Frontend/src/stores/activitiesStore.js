@@ -9,7 +9,7 @@ const initial={
   name: '',
   emoji: '',
   log_distance: false,
-  log_time: false,
+  log_duration: false,
   distance_unit: 'm'
 }
   async function getAll() {

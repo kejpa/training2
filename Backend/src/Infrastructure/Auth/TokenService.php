@@ -5,6 +5,7 @@ namespace App\Infrastructure\Auth;
 use App\Domain\User\User;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use stdClass;
 
 class TokenService {
     private string $secret;
@@ -46,7 +47,11 @@ class TokenService {
         return JWT::encode($payload, $this->secret, 'HS256');
     }
 
-    public function verifyToken(string $token): object {
+    /**
+     * @param string $token
+     * @return stdClass
+     */
+    public function verifyToken(string $token): stdClass {
         return JWT::decode($token, new Key($this->secret, 'HS256'));
     }
 

@@ -39,7 +39,7 @@ class DbalActivityRepositoryTest extends TestCase {
             emoji TEXT NOT NULL,
             name TEXT NOT NULL,
             log_distance INTEGER NOT NULL,
-            log_time INTEGER NOT NULL,
+            log_duration INTEGER NOT NULL,
             distance_unit TEXT NOT NULL
         )
         SQL;
@@ -101,7 +101,7 @@ class DbalActivityRepositoryTest extends TestCase {
         $this->assertEquals('🏋️', $row['emoji']);
         $this->assertEquals('Styrketräning', $row['name']);
         $this->assertFalse((bool)$row['log_distance']); // Konvertera till bool
-        $this->assertTrue((bool)$row['log_time']);      // Konvertera till bool
+        $this->assertTrue((bool)$row['log_duration']);      // Konvertera till bool
         $this->assertEquals('', $row['distance_unit']);
     }
 

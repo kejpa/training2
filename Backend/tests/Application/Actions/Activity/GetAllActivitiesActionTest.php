@@ -249,7 +249,7 @@ class GetAllActivitiesActionTest extends TestCase {
         $this->assertEquals('🏋️', $activityData->emoji);
         $this->assertEquals('Styrketräning', $activityData->name);
         $this->assertFalse($activityData->log_distance);
-        $this->assertTrue($activityData->log_time);
+        $this->assertTrue($activityData->log_duration);
         $this->assertEquals('kg', $activityData->distance_unit);
     }
 
@@ -417,13 +417,13 @@ class GetAllActivitiesActionTest extends TestCase {
         $returnedActivities = $body->data->activities;
 
         $this->assertTrue($returnedActivities[0]->log_distance);
-        $this->assertTrue($returnedActivities[0]->log_time);
+        $this->assertTrue($returnedActivities[0]->log_duration);
 
         $this->assertFalse($returnedActivities[1]->log_distance);
-        $this->assertTrue($returnedActivities[1]->log_time);
+        $this->assertTrue($returnedActivities[1]->log_duration);
 
         $this->assertFalse($returnedActivities[2]->log_distance);
-        $this->assertFalse($returnedActivities[2]->log_time);
+        $this->assertFalse($returnedActivities[2]->log_duration);
     }
 
     public function testResponseStructureIsCorrect(): void {

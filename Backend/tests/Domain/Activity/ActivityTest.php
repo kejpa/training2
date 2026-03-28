@@ -155,7 +155,7 @@ class ActivityTest extends TestCase {
             'emoji' => '🏃',
             'name' => 'Löpning',
             'log_distance' => true,
-            'log_time' => false,
+            'log_duration' => false,
             'distance_unit' => 'km'
         ];
 
@@ -178,7 +178,7 @@ class ActivityTest extends TestCase {
             'emoji' => '🚴',
             'name' => 'Cykling',
             'log_distance' => false,
-            'log_time' => true,
+            'log_duration' => true,
             'distance_unit' => 'mi'
         ];
 
@@ -213,7 +213,7 @@ class ActivityTest extends TestCase {
         $this->assertArrayHasKey('emoji', $state);
         $this->assertArrayHasKey('name', $state);
         $this->assertArrayHasKey('log_distance', $state);
-        $this->assertArrayHasKey('log_time', $state);
+        $this->assertArrayHasKey('log_duration', $state);
         $this->assertArrayHasKey('distance_unit', $state);
 
         $this->assertEquals($activityId->toString(), $state['id']);
@@ -221,7 +221,7 @@ class ActivityTest extends TestCase {
         $this->assertEquals('🏃', $state['emoji']);
         $this->assertEquals('Löpning', $state['name']);
         $this->assertTrue((bool)$state['log_distance']);
-        $this->assertFalse((bool)$state['log_time']);
+        $this->assertFalse((bool)$state['log_duration']);
         $this->assertEquals('km', $state['distance_unit']);
     }
 
@@ -234,7 +234,7 @@ class ActivityTest extends TestCase {
         $this->assertIsString($state['emoji']);
         $this->assertIsString($state['name']);
         $this->assertIsInt($state['log_distance']);
-        $this->assertIsInt($state['log_time']);
+        $this->assertIsInt($state['log_duration']);
         $this->assertIsString($state['distance_unit']);
     }
 
@@ -260,7 +260,7 @@ class ActivityTest extends TestCase {
         $this->assertEquals('🏋️', $json->emoji);
         $this->assertEquals('Styrketräning', $json->name);
         $this->assertFalse($json->log_distance);
-        $this->assertTrue($json->log_time);
+        $this->assertTrue($json->log_duration);
         $this->assertEquals('kg', $json->distance_unit);
     }
 
@@ -273,7 +273,7 @@ class ActivityTest extends TestCase {
         $this->assertObjectHasProperty('emoji', $json);
         $this->assertObjectHasProperty('name', $json);
         $this->assertObjectHasProperty('log_distance', $json);
-        $this->assertObjectHasProperty('log_time', $json);
+        $this->assertObjectHasProperty('log_duration', $json);
         $this->assertObjectHasProperty('distance_unit', $json);
     }
 
@@ -313,7 +313,7 @@ class ActivityTest extends TestCase {
         $this->assertEquals($state['emoji'], $json->emoji);
         $this->assertEquals($state['name'], $json->name);
         $this->assertEquals($state['log_distance'], $json->log_distance);
-        $this->assertEquals($state['log_time'], $json->log_time);
+        $this->assertEquals($state['log_duration'], $json->log_duration);
         $this->assertEquals($state['distance_unit'], $json->distance_unit);
     }
 
@@ -329,19 +329,19 @@ class ActivityTest extends TestCase {
         // Verifiera i state
         $state = $activity->state();
         $this->assertEquals($logDistance, $state['log_distance']);
-        $this->assertEquals($logTime, $state['log_time']);
+        $this->assertEquals($logTime, $state['log_duration']);
 
         // Verifiera i JSON
         $json = $activity->jsonSerialize();
         $this->assertEquals($logDistance, $json->log_distance);
-        $this->assertEquals($logTime, $json->log_time);
+        $this->assertEquals($logTime, $json->log_duration);
     }
 
     public static function booleanCombinationsProvider(): array {
         return [
             'both true' => [true, true],
             'distance only' => [true, false],
-            'time only' => [false, true],
+            'duration only' => [false, true],
             'both false' => [false, false],
         ];
     }

@@ -36,7 +36,7 @@ class UpdateActivityAction extends ActivityAction {
         }
         $activity->setEmoji($data['emoji'] ?? $activity->getEmoji());
         $activity->setLogDistance($data['log_distance'] ?? $activity->getLogDistance());
-        $activity->setLogTime($data['log_time'] ?? $activity->getLogTime());
+        $activity->setLogTime($data['log_duration'] ?? $activity->getLogTime());
         $activity->setName($data['name'] ?? $activity->getName());
         $activity->setDistanceUnit($data['distance_unit'] ?? $activity->getDistanceUnit());
         $this->sessionRepository->update($activity);

@@ -89,7 +89,7 @@ class UpdateActivityActionTest extends TestCase {
             'emoji' => '🚴',
             'name' => 'Cykling',
             'log_distance' => false,
-            'log_time' => true,
+            'log_duration' => true,
             'distance_unit' => 'mi'
         ];
 
@@ -551,7 +551,7 @@ class UpdateActivityActionTest extends TestCase {
         $updateData = [
             'name' => 'Test',
             'log_distance' => false,
-            'log_time' => false,
+            'log_duration' => false,
             'distance_unit' => ''
         ];
 

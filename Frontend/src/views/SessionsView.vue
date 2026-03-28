@@ -16,6 +16,12 @@ onMounted(async () => {
 })
 
 async function saveSession() {
+  if(!activities.value.find(itm => itm.id===session.value.activityid)?.log_duration) {
+    session.value.duration = null
+  }
+  if(!activities.value.find(itm => itm.id===session.value.activityid)?.log_distance) {
+    session.value.distance = null
+  }
   await sessionsStore.saveSession(session.value)
   session.value = sessionsStore.getInitial();
 }
@@ -32,7 +38,7 @@ async function removeSession() {
     <label>
       Träning:
       <select v-model="session.activityid">
-        <option v-for="act in activities" :value="act.id">{{`${act.emoji}  ${act.name}`}}</option>
+        <option v-for="act in activities" :value="act.id">{{ `${act.emoji}  ${act.name}` }}</option>
         <option value="">🏃‍♂️ Springning</option>
         <option value="">🏃‍♂️ Jogging</option>
       </select>
@@ -40,11 +46,12 @@ async function removeSession() {
     <label>
       Datum: <input type="date" v-model="session.date"/>
     </label>
-    <label v-if="activities.find(itm => itm.id===session.activityid)?.log_time ?? false">
-      Tid: <input type="time" v-model="session.time"/>
+    <label v-if="activities.find(itm => itm.id===session.activityid)?.log_duration ?? false">
+      Tid: <input type="time" v-model="session.duration"/>
     </label>
     <label v-if="activities.find(itm => itm.id===session.activityid)?.log_distance ?? false">
-      Distans: <input type="text" pattern="[0-9.]*" size="5" v-model="session.distance"/> {{activities.find(itm => itm.id===session.activityid)?.distance_unit ?? ''}}
+      Distans: <input type="text" pattern="[0-9.]*" size="5" v-model="session.distance"/>
+      {{ activities.find(itm => itm.id === session.activityid)?.distance_unit ?? '' }}
     </label>
     <label>
       Beskrivning <br>
@@ -52,7 +59,7 @@ async function removeSession() {
     </label>
     <label>
       Rpe: <select v-model="session.rpe">
-      <option v-for="i in [1,2,3,4,5,6,7,8,9,10]" value="">{{ i }}</option>
+      <option v-for="i in [1,2,3,4,5,6,7,8,9,10]" :value="i">{{ i }}</option>
     </select>
     </label>
     <div>

@@ -3,11 +3,15 @@
 namespace App\Application\Middleware;
 
 use App\Infrastructure\Auth\TokenService;
+use Firebase\JWT\BeforeValidException;
+use Firebase\JWT\ExpiredException;
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Psr7\Response as SlimResponse;
+use UnexpectedValueException;
 
 class JwtMiddleware implements MiddlewareInterface {
     public function __construct(private TokenService $tokenService) {
@@ -32,7 +36,10 @@ class JwtMiddleware implements MiddlewareInterface {
             $request = $request->withAttribute('userEmail', $decoded->email);
 
             return $handler->handle($request);
-        } catch (\Exception $e) {
+        } catch (UnexpectedValueException|
+        InvalidArgumentException|
+        BeforeValidException|
+        ExpiredException $e) {
             $response = new SlimResponse();
             $response->getBody()->write(json_encode(['error' => 'Ogiltig eller utgången token']));
             return $response->withStatus(401)->withHeader('Content-Type', 'application/json');

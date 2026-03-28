@@ -6,6 +6,7 @@ namespace Tests\Application\Middleware;
 
 use App\Application\Middleware\JwtMiddleware;
 use App\Infrastructure\Auth\TokenService;
+use Firebase\JWT\ExpiredException;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Psr7\Factory\ResponseFactory;
@@ -205,7 +206,7 @@ class JwtMiddlewareTest extends TestCase {
         $this->tokenService
             ->method('verifyToken')
             ->with($token)
-            ->willThrowException(new \Exception('Invalid token'));
+            ->willThrowException(new \InvalidArgumentException('Invalid token'));
 
         $this->handler
             ->expects($this->never())
@@ -229,7 +230,7 @@ class JwtMiddlewareTest extends TestCase {
         $this->tokenService
             ->method('verifyToken')
             ->with($token)
-            ->willThrowException(new \Exception('Token expired'));
+            ->willThrowException(new ExpiredException('Token expired'));
 
         $this->handler
             ->expects($this->never())
@@ -333,7 +334,7 @@ class JwtMiddlewareTest extends TestCase {
 
         $this->tokenService
             ->method('verifyToken')
-            ->willThrowException(new \Exception('Invalid'));
+            ->willThrowException(new \InvalidArgumentException('Invalid'));
 
         $this->handler
             ->expects($this->never())

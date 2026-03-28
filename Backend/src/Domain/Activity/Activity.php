@@ -116,7 +116,7 @@ class Activity implements JsonSerializable {
 
     public static function fromRow(array $row): self {
         return new self(new ActivityId($row['id']), new UserId($row['userid']), $row['emoji'], $row['name'],
-            $row['log_distance'], $row['log_time'], $row['distance_unit']);
+            $row['log_distance'], $row['log_duration'], $row['distance_unit']);
     }
 
     /**
@@ -130,7 +130,7 @@ class Activity implements JsonSerializable {
             'emoji' => $this->emoji,
             'name' => $this->name,
             'log_distance' => (int)$this->logDistance,
-            'log_time' => (int)$this->logTime,
+            'log_duration' => (int)$this->logTime,
             'distance_unit' => $this->logDistance ? $this->distanceUnit : '',
         ];
     }
@@ -146,7 +146,7 @@ class Activity implements JsonSerializable {
         $me->emoji = $this->emoji;
         $me->name = $this->name;
         $me->log_distance = $this->logDistance;
-        $me->log_time = $this->logTime;
+        $me->log_duration = $this->logTime;
         $me->distance_unit = $this->distanceUnit;
 
         return $me;

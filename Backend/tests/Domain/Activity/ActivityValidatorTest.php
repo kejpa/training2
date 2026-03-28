@@ -21,7 +21,7 @@ class ActivityValidatorTest extends TestCase {
             'name' => 'Löpning',
             'emoji' => '🏃',
             'log_distance' => true,
-            'log_time' => true,
+            'log_duration' => true,
             'distance_unit' => 'km'
         ];
 
@@ -284,7 +284,7 @@ class ActivityValidatorTest extends TestCase {
             'name' => 'Löpning',
             'emoji' => '🏃',
             'log_distance' => true,
-            'log_time' => true,
+            'log_duration' => true,
             'distance_unit' => 'km',
             'extra_field' => 'ignored'
         ];
@@ -320,7 +320,7 @@ class ActivityValidatorTest extends TestCase {
                     'name' => 'Cykling',
                     'emoji' => '🚴',
                     'log_distance' => true,
-                    'log_time' => true,
+                    'log_duration' => true,
                     'distance_unit' => 'km'
                 ]
             ],

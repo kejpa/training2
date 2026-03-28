@@ -8,8 +8,8 @@ const initial={
   id: null,
   activityid:null,
   distance:0,
-  date:(new Date()).toISOString(),
-  time:(new Date('01:00')).toLocaleTimeString(),
+  date:(new Date()).toISOString().split('T')[0],
+  duration:"01:00",
   rpe:null,
   description:''
 }
