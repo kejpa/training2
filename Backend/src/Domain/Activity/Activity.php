@@ -4,9 +4,10 @@ namespace App\Domain\Activity;
 
 use App\Domain\ValueObject\ActivityId;
 use App\Domain\ValueObject\UserId;
+use JsonSerializable;
 use stdClass;
 
-class Activity implements \JsonSerializable {
+class Activity implements JsonSerializable {
 
     public function __construct(private ?ActivityId $id, private UserId $userId, private string $emoji, private string $name, private bool $logDistance,
         private bool $logTime, private string $distanceUnit) {

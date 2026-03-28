@@ -1,20 +1,22 @@
 <?php
 
-namespace App\Application\Actions\Activity;
+namespace App\Application\Actions\Session;
 
-use App\Domain\Activity\Activity;
-use App\Domain\Activity\ActivityRepository;
-use App\Domain\Activity\ActivityValidator;
-use App\Domain\ValueObject\ActivityId;
+use App\Domain\Session\Session;
+use App\Domain\Session\SessionRepository;
+use App\Domain\Session\SessionValidator;
+use App\Domain\ValueObject\SessionId;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 
-class AddActivityAction extends ActivityAction {
-
-    public function __construct(LoggerInterface $logger, ActivityRepository $sessionRepository, private ActivityValidator $validator) {
+class AddSessionAction extends SessionAction {
+    public function __construct(LoggerInterface $logger, SessionRepository $sessionRepository, private SessionValidator $validator) {
         parent::__construct($logger, $sessionRepository);
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function action(): Response {
         // Hämta användaren
         $userId = $this->request->getAttribute('userId');
@@ -30,13 +32,15 @@ class AddActivityAction extends ActivityAction {
             ], 400);
         }
         $data['userid'] = $userId;
-        $data['id'] = (new ActivityId())->toString();
-        $activity = Activity::fromRow($data);
+        $data['id'] = (new SessionId())->toString();
+        $session = Session::fromRow($data);
 
         // Lägg till aktivitet
-        $this->sessionRepository->add($activity);
+        $this->sessionRepository->add($session);
 
         // returnerar data
-        return $this->respondWithData($activity);
+        return $this->respondWithData($session);
     }
+
+
 }

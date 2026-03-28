@@ -14,7 +14,7 @@ class GetActivityAction extends ActivityAction {
         $userId = $this->request->getAttribute('userId');
 
         // Läs aktivitet
-        $activity = $this->activityRepository->getActivityForUser($id, $userId);
+        $activity = $this->sessionRepository->getActivityForUser($id, $userId);
         if (!$activity) {
             throw new HttpNotFoundException ($this->request, "Activity not found");
         }

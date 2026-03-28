@@ -10,8 +10,8 @@ use Psr\Log\LoggerInterface;
 use Slim\Exception\HttpNotFoundException;
 
 class UpdateActivityAction extends ActivityAction {
-    public function __construct(LoggerInterface $logger, ActivityRepository $activityRepository, private ActivityValidator $validator) {
-        parent::__construct($logger, $activityRepository);
+    public function __construct(LoggerInterface $logger, ActivityRepository $sessionRepository, private ActivityValidator $validator) {
+        parent::__construct($logger, $sessionRepository);
     }
 
     protected function action(): Response {
@@ -30,7 +30,7 @@ class UpdateActivityAction extends ActivityAction {
         }
 
         // Läs aktivitet
-        $activity = $this->activityRepository->getActivityForUser($id, $userId);
+        $activity = $this->sessionRepository->getActivityForUser($id, $userId);
         if (!$activity) {
             throw new HttpNotFoundException($this->request, "Aktiviteten hittades inte");
         }
@@ -39,7 +39,7 @@ class UpdateActivityAction extends ActivityAction {
         $activity->setLogTime($data['log_time'] ?? $activity->getLogTime());
         $activity->setName($data['name'] ?? $activity->getName());
         $activity->setDistanceUnit($data['distance_unit'] ?? $activity->getDistanceUnit());
-        $this->activityRepository->update($activity);
+        $this->sessionRepository->update($activity);
 
         // returnerar data
         return $this->respondWithData(["activity" => $activity]);

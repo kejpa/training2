@@ -12,7 +12,7 @@ class  DeleteActivityAction extends ActivityAction {
         $userId = $this->request->getAttribute('userId');
 
         // Radera aktivitet
-        $this->activityRepository->delete($id, $userId);
+        $this->sessionRepository->delete($id, $userId);
 
         // returnerar data
         return $this->respondWithData([],204);
