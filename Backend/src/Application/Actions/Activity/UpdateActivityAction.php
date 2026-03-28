@@ -30,7 +30,7 @@ class UpdateActivityAction extends ActivityAction {
         }
 
         // Läs aktivitet
-        $activity = $this->sessionRepository->getActivityForUser($id, $userId);
+        $activity = $this->activityRepository->getActivityForUser($id, $userId);
         if (!$activity) {
             throw new HttpNotFoundException($this->request, "Aktiviteten hittades inte");
         }
@@ -39,7 +39,7 @@ class UpdateActivityAction extends ActivityAction {
         $activity->setLogTime($data['log_duration'] ?? $activity->getLogTime());
         $activity->setName($data['name'] ?? $activity->getName());
         $activity->setDistanceUnit($data['distance_unit'] ?? $activity->getDistanceUnit());
-        $this->sessionRepository->update($activity);
+        $this->activityRepository->update($activity);
 
         // returnerar data
         return $this->respondWithData(["activity" => $activity]);

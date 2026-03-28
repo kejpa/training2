@@ -34,7 +34,7 @@ class AddActivityAction extends ActivityAction {
         $activity = Activity::fromRow($data);
 
         // Lägg till aktivitet
-        $this->sessionRepository->add($activity);
+        $this->activityRepository->add($activity);
 
         // returnerar data
         return $this->respondWithData($activity);

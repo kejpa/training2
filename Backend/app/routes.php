@@ -14,6 +14,7 @@ use App\Application\Actions\Login\RefreshTokenAction;
 use App\Application\Actions\Login\ResendLoginAction;
 use App\Application\Actions\Login\TotpLoginAction;
 use App\Application\Actions\Session\AddSessionAction;
+use App\Application\Actions\Session\DeleteSessionAction;
 use App\Application\Actions\Session\GetAllSessionsAction;
 use App\Application\Actions\Session\GetSessionAction;
 use App\Application\Actions\Session\UpdateSessionAction;
@@ -51,6 +52,7 @@ return function (App $app) {
             $protected->get('/sessions/{id}', GetSessionAction::class);
             $protected->post('/sessions', AddSessionAction::class);
             $protected->put('/sessions/{id}', UpdateSessionAction::class);
+            $protected->delete('/sessions/{id}', DeleteSessionAction::class);
 
         })->add(JwtMiddleware::class);
     });

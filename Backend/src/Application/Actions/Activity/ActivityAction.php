@@ -9,7 +9,7 @@ use App\Domain\Activity\ActivityRepository;
 use Psr\Log\LoggerInterface;
 
 abstract class ActivityAction extends Action {
-    public function __construct(LoggerInterface $logger, protected ActivityRepository $sessionRepository) {
+    public function __construct(LoggerInterface $logger, protected ActivityRepository $activityRepository) {
         parent::__construct($logger);
     }
 }

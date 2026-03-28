@@ -11,7 +11,7 @@ class GetAllActivitiesAction extends ActivityAction {
         $userId = $this->request->getAttribute('userId');
 
         // Läs alla aktiviteter
-        $activities = $this->sessionRepository->getAllForUser($userId);
+        $activities = $this->activityRepository->getAllForUser($userId);
 
         // returnerar data
         return $this->respondWithData(["activities" => $activities]);

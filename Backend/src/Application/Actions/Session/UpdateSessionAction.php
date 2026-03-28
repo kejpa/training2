@@ -38,8 +38,8 @@ class UpdateSessionAction extends SessionAction {
             throw new HttpNotFoundException($this->request, "Passet hittades inte");
         }
         // Uppdatera fälten
-        $record->setActivityId(new ActivityId($data['activityid']) ?? $record->getActivityId());
-        $record->setDate(new DateTimeImmutable( $data['date']) ?? $record->getDate());
+        $record->setActivityId(isset($data['activityid']) ? new ActivityId($data['activityid']) : $record->getActivityId());
+        $record->setDate(isset($data['date']) ? new DateTimeImmutable($data['date']) : $record->getDate());
         $record->setDistance($data['distance'] ?? $record->getDistance());
         $record->setDuration($data['duration'] ?? $record->getDuration());
         $record->setDescription($data['description'] ?? $record->getDescription());
