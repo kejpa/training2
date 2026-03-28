@@ -15,6 +15,5 @@ class GetAllActivitiesAction extends ActivityAction {
 
         // returnerar data
         return $this->respondWithData(["activities" => $activities]);
-
     }
 }

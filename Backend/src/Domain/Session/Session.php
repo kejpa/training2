@@ -11,17 +11,38 @@ use JsonSerializable;
 use stdClass;
 
 class Session implements JsonSerializable {
-
-    public function __construct(private ?SessionId $id, private UserId $userId, private ActivityId $activityId, private DateTimeInterface $date,
-        private ?string $duration, private ?float $distance, private string $description, private int $rpe) {
-
+    public function __construct(
+        private ?SessionId $id,
+        private UserId $userId,
+        private ActivityId $activityId,
+        private DateTimeInterface $date,
+        private ?string $duration,
+        private ?float $distance,
+        private string $description,
+        private int $rpe
+    ) {
     }
 
+    /**
+     * @param array<string, mixed> $row
+     * @return self
+     */
     public static function fromRow(array $row): self {
-        return new self(new SessionId($row['id']), new UserId($row['userid']), new ActivityId($row['activityid']),
-            DateTimeImmutable::createFromFormat('Y-m-d', $row['date']), $row['duration'], $row['distance'], $row['description'], $row['rpe']);
+        return new self(
+            new SessionId($row['id']),
+            new UserId($row['userid']),
+            new ActivityId($row['activityid']),
+            DateTimeImmutable::createFromFormat('Y-m-d', $row['date']),
+            $row['duration'],
+            $row['distance'],
+            $row['description'],
+            $row['rpe']
+        );
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function state(): array {
         return [
             'id' => $this->id->toString(),
@@ -163,7 +184,9 @@ class Session implements JsonSerializable {
     }
 
     private function formatDuration(?string $duration): ?string {
-        if ($duration === null) return null;
+        if ($duration === null) {
+            return null;
+        }
 
         // Tar bort sekunder om de finns
         $parts = explode(':', $duration);

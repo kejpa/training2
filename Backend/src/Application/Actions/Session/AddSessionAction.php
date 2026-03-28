@@ -10,7 +10,11 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 
 class AddSessionAction extends SessionAction {
-    public function __construct(LoggerInterface $logger, SessionRepository $sessionRepository, private SessionValidator $validator) {
+    public function __construct(
+        LoggerInterface $logger,
+        SessionRepository $sessionRepository,
+        private SessionValidator $validator
+    ) {
         parent::__construct($logger, $sessionRepository);
     }
 
@@ -41,6 +45,4 @@ class AddSessionAction extends SessionAction {
         // returnerar data
         return $this->respondWithData($session);
     }
-
-
 }

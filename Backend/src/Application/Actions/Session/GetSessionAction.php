@@ -12,7 +12,7 @@ class GetSessionAction extends SessionAction {
      * @inheritDoc
      */
     protected function action(): Response {
-        $userId = new UserId ($this->request->getAttribute('userId'));
+        $userId = new UserId($this->request->getAttribute('userId'));
         $sessionId = new SessionId($this->resolveArg('id'));
 
         $session = $this->sessionRepository->get($userId, $sessionId);

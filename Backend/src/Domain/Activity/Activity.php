@@ -8,13 +8,19 @@ use JsonSerializable;
 use stdClass;
 
 class Activity implements JsonSerializable {
-
-    public function __construct(private ?ActivityId $id, private UserId $userId, private string $emoji, private string $name, private bool $logDistance,
-        private bool $logTime, private string $distanceUnit) {
+    public function __construct(
+        private ?ActivityId $id,
+        private UserId $userId,
+        private string $emoji,
+        private string $name,
+        private bool $logDistance,
+        private bool $logTime,
+        private string $distanceUnit
+    ) {
         if (!$this->id) {
             $this->id = new ActivityId();
         }
-   }
+    }
 
     /**
      * @return ActivityId|null
@@ -114,9 +120,20 @@ class Activity implements JsonSerializable {
         $this->distanceUnit = $distanceUnit;
     }
 
+    /**
+     * @param array<string, mixed> $row
+     * @return self
+     */
     public static function fromRow(array $row): self {
-        return new self(new ActivityId($row['id']), new UserId($row['userid']), $row['emoji'], $row['name'],
-            $row['log_distance'], $row['log_duration'], $row['distance_unit']);
+        return new self(
+            new ActivityId($row['id']),
+            new UserId($row['userid']),
+            $row['emoji'],
+            $row['name'],
+            $row['log_distance'],
+            $row['log_duration'],
+            $row['distance_unit']
+        );
     }
 
     /**

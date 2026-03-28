@@ -4,7 +4,7 @@ namespace App\Application\Actions\Activity;
 
 use Psr\Http\Message\ResponseInterface as Response;
 
-class  DeleteActivityAction extends ActivityAction {
+class DeleteActivityAction extends ActivityAction {
     protected function action(): Response {
         // Läs id från URL
         $id = $this->resolveArg('id');
@@ -15,7 +15,6 @@ class  DeleteActivityAction extends ActivityAction {
         $this->activityRepository->delete($id, $userId);
 
         // returnerar data
-        return $this->respondWithData([],204);
-
+        return $this->respondWithData([], 204);
     }
 }

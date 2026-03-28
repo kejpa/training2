@@ -32,5 +32,4 @@ class ActivityValidator {
     public function getErrors(): array {
         return $this->errors;
     }
-
 }

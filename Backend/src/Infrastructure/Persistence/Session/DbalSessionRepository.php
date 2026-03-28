@@ -19,7 +19,7 @@ class DbalSessionRepository extends AbstractDBRepository implements SessionRepos
      * @inheritDoc
      * @throws Exception
      */
-    function add(Session $session): void {
+    public function add(Session $session): void {
         $this->connection->insert(self::TABLE, $session->state());
     }
 
@@ -27,15 +27,19 @@ class DbalSessionRepository extends AbstractDBRepository implements SessionRepos
      * @inheritDoc
      * @throws Exception
      */
-    function update(Session $session): void {
-        $this->connection->update(self::TABLE, $session->state(), ['id' => $session->getId(), 'userid' => $session->getUserId()]);
+    public function update(Session $session): void {
+        $this->connection->update(
+            self::TABLE,
+            $session->state(),
+            ['id' => $session->getId(), 'userid' => $session->getUserId()]
+        );
     }
 
     /**
      * @inheritDoc
      * @throws Exception
      */
-    function delete(UserId $userId, SessionId $id): void {
+    public function delete(UserId $userId, SessionId $id): void {
         $this->connection->delete(self::TABLE, ['id' => $id->toString(), 'userid' => $userId->toString()]);
     }
 
@@ -49,7 +53,7 @@ class DbalSessionRepository extends AbstractDBRepository implements SessionRepos
             ->from(self::TABLE)
             ->where('userid = :userid')
             ->andWhere('id = :id')
-            ->setParameters(['userid'=> $userId->toString(), 'id'=> $id->toString()])
+            ->setParameters(['userid' => $userId->toString(), 'id' => $id->toString()])
             ->executeQuery()
             ->fetchAssociative();
 

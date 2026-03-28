@@ -13,7 +13,11 @@ use Psr\Log\LoggerInterface;
 use Slim\Exception\HttpNotFoundException;
 
 class UpdateSessionAction extends SessionAction {
-    public function __construct(LoggerInterface $logger, SessionRepository $sessionRepository, private SessionValidator $validator) {
+    public function __construct(
+        LoggerInterface $logger,
+        SessionRepository $sessionRepository,
+        private SessionValidator $validator
+    ) {
         parent::__construct($logger, $sessionRepository);
     }
 
@@ -21,7 +25,7 @@ class UpdateSessionAction extends SessionAction {
      * @inheritDoc
      */
     protected function action(): Response {
-        $userId = new UserId ($this->request->getAttribute('userId'));
+        $userId = new UserId($this->request->getAttribute('userId'));
         $sessionId = new SessionId($this->resolveArg('id'));
 
         $data = $this->request->getParsedBody();
@@ -38,7 +42,9 @@ class UpdateSessionAction extends SessionAction {
             throw new HttpNotFoundException($this->request, "Passet hittades inte");
         }
         // Uppdatera fälten
-        $record->setActivityId(isset($data['activityid']) ? new ActivityId($data['activityid']) : $record->getActivityId());
+        $record->setActivityId(
+            isset($data['activityid']) ? new ActivityId($data['activityid']) : $record->getActivityId()
+        );
         $record->setDate(isset($data['date']) ? new DateTimeImmutable($data['date']) : $record->getDate());
         $record->setDistance($data['distance'] ?? $record->getDistance());
         $record->setDuration($data['duration'] ?? $record->getDuration());

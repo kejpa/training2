@@ -14,7 +14,7 @@ class DbalActivityRepository extends AbstractDBRepository implements ActivityRep
      * @inheritDoc
      * @throws Exception
      */
-    function getAllForUser(string $id): array {
+    public function getAllForUser(string $id): array {
         $qb = $this->connection->createQueryBuilder();
         $rows = $qb->select('*')
             ->from(self::TABLE)
@@ -30,15 +30,19 @@ class DbalActivityRepository extends AbstractDBRepository implements ActivityRep
      * @inheritDoc
      * @throws Exception
      */
-    function add(Activity $activity): void {
+    public function add(Activity $activity): void {
         $this->connection->insert(self::TABLE, $activity->state());
     }
 
-    function update(Activity $activity): void {
-        $this->connection->update(self::TABLE, $activity->state(), ['id' => $activity->getId(), 'userid' => $activity->getUserId()]);
+    public function update(Activity $activity): void {
+        $this->connection->update(
+            self::TABLE,
+            $activity->state(),
+            ['id' => $activity->getId(), 'userid' => $activity->getUserId()]
+        );
     }
 
-    function delete(string $id, string $userId): void {
+    public function delete(string $id, string $userId): void {
         $this->connection->delete(self::TABLE, ['id' => $id, 'userid' => $userId]);
     }
 
@@ -46,7 +50,7 @@ class DbalActivityRepository extends AbstractDBRepository implements ActivityRep
      * @inheritDoc
      * @throws Exception
      */
-    function getActivityForUser(string $id, string $userId): ?Activity {
+    public function getActivityForUser(string $id, string $userId): ?Activity {
         $qb = $this->connection->createQueryBuilder();
         $result = $qb->select('*')
             ->from(self::TABLE)

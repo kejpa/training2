@@ -11,10 +11,10 @@ class GetAllSessionsAction extends SessionAction {
      * @inheritDoc
      */
     protected function action(): Response {
-        $userId=new UserId ($this->request->getAttribute('userId'));
+        $userId = new UserId($this->request->getAttribute('userId'));
 
-        $sessions=$this->sessionRepository->getAll($userId);
+        $sessions = $this->sessionRepository->getAll($userId);
 
-        return $this->respondWithData(["sessions"=>$sessions]);
+        return $this->respondWithData(["sessions" => $sessions]);
     }
 }

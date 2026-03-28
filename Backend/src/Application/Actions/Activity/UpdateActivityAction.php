@@ -10,7 +10,11 @@ use Psr\Log\LoggerInterface;
 use Slim\Exception\HttpNotFoundException;
 
 class UpdateActivityAction extends ActivityAction {
-    public function __construct(LoggerInterface $logger, ActivityRepository $sessionRepository, private ActivityValidator $validator) {
+    public function __construct(
+        LoggerInterface $logger,
+        ActivityRepository $sessionRepository,
+        private ActivityValidator $validator
+    ) {
         parent::__construct($logger, $sessionRepository);
     }
 
@@ -43,6 +47,5 @@ class UpdateActivityAction extends ActivityAction {
 
         // returnerar data
         return $this->respondWithData(["activity" => $activity]);
-
     }
 }

@@ -16,11 +16,10 @@ class GetActivityAction extends ActivityAction {
         // Läs aktivitet
         $activity = $this->activityRepository->getActivityForUser($id, $userId);
         if (!$activity) {
-            throw new HttpNotFoundException ($this->request, "Activity not found");
+            throw new HttpNotFoundException($this->request, "Activity not found");
         }
 
         // returnerar data
         return $this->respondWithData(["activity" => $activity]);
-
     }
 }

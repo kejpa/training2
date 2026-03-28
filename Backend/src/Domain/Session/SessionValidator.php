@@ -11,7 +11,7 @@ class SessionValidator {
     private array $errors = [];
 
     /**
-     * @param array<string, string> $data
+     * @param array<string, string|null> $data
      * @return bool
      */
     public function validateRegister(array $data): bool {
@@ -22,7 +22,10 @@ class SessionValidator {
         }
         if (!is_null($data['duration']) && DateTimeImmutable::createFromFormat('H:i', $data['duration']) === false) {
             $this->errors['duration'] = 'Ogiltig tidsangivelse';
-        } elseif (!is_null($data['duration']) && $data['duration'] !== (DateTimeImmutable::createFromFormat('H:i', $data['duration']))->format('H:i')) {
+        } elseif (
+            !is_null($data['duration']) &&
+            $data['duration'] !== (DateTimeImmutable::createFromFormat('H:i', $data['duration']))->format('H:i')
+        ) {
             $this->errors['duration'] = 'Felaktig tidsangivelse';
         }
         if (DateTimeImmutable::createFromFormat('Y-m-d', $data['date']) === false) {

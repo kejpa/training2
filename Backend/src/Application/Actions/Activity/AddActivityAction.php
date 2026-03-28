@@ -10,8 +10,11 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 
 class AddActivityAction extends ActivityAction {
-
-    public function __construct(LoggerInterface $logger, ActivityRepository $sessionRepository, private ActivityValidator $validator) {
+    public function __construct(
+        LoggerInterface $logger,
+        ActivityRepository $sessionRepository,
+        private ActivityValidator $validator
+    ) {
         parent::__construct($logger, $sessionRepository);
     }
 
