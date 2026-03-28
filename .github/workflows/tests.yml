@@ -15,6 +15,7 @@ jobs:
         experimental: [false]
         include:
           - php: 8.3
+            experimental: false
             analysis: true
 
     steps:
