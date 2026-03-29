@@ -64,3 +64,4 @@ jobs:
         run: |
           composer require php-coveralls/php-coveralls -n -W
           vendor/bin/php-coveralls --coverage_clover=clover.xml -v
+
