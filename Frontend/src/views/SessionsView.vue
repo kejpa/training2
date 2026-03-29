@@ -61,7 +61,7 @@ async function removeSession() {
     </label>
     <label>
       Beskrivning <br>
-      <textarea rows="5" cols="40" v-model="session.description"></textarea>
+      <textarea v-model="session.description"></textarea>
     </label>
     <label>
       Rpe: <select v-model="session.rpe">
@@ -77,15 +77,30 @@ async function removeSession() {
 </template>
 
 <style scoped>
-#form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 10px;
-}
+@media (min-width: 1024px) {
 
-button {
-  margin-left: 10px;
-}
+  h2 {
+    margin: auto;
+  }
 
+  #form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: auto;
+    margin-bottom: 10px;
+  }
+
+  textarea {
+    width: 600px;
+    height: 250px;
+  }
+
+  button {
+    margin-left: 10px;
+    font-size: 1.1em;
+    padding: .2em;
+    min-width: 4em;
+  }
+}
 </style>

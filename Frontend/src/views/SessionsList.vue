@@ -26,45 +26,54 @@ onMounted(async () => {
   </ul>
   <ul v-for="session in sessions" :key="session.id" @click="$router.push(`/sessions/${session.id}`)">
     <li>{{ `${activities.find(itm => itm.id === session.activityid)?.emoji} ${activities.find(itm => itm.id === session.activityid)?.name}` }}</li>
-    <li>{{ session.date }}</li>
-    <li>{{ session.distance ? `${session.distance} ${activities.find(itm => itm.id === session.activityid)?.distance_unit} ` : '' }}</li>
-    <li>{{ session.duration ? `${session.duration.substring(0,5)}` : '' }}</li>
+    <li class="right">{{ session.date }}</li>
+    <li class="right">{{ session.distance ? `${session.distance} ${activities.find(itm => itm.id === session.activityid)?.distance_unit} ` : '' }}</li>
+    <li class="right">{{ session.duration ? `${session.duration.substring(0,5)}` : '' }}</li>
     <li>{{ session.description }}</li>
-    <li>{{ session.rpe }}</li>
+    <li class="right">{{ session.rpe }}</li>
   </ul>
 </template>
 
 <style scoped>
-ul {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-  gap: 10px;
-  list-style: none;
-  padding: 0;
-  background-color: #888;
-  cursor: pointer;
-}
+@media (min-width: 1024px) {
 
-ul:nth-child(odd) {
-  background-color: #eee;
-}
+  ul {
+    min-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 3fr 1fr;
+    gap: 10px;
+    list-style: none;
+    padding: 0;
+    background-color: #888;
+    cursor: pointer;
+  }
 
-ul li {
-  list-style: none;
-}
+  ul:nth-child(odd) {
+    background-color: #eee;
+  }
 
-ul.header {
-  background-color: #ccc;
-  cursor: default;
-}
+  ul li {
+    list-style: none;
+  }
 
-ul.header li {
-  font-weight: bold;
-}
+  ul li.right {
+    text-align: right;
+  }
 
-li img {
-  height: 16px;
-  margin: 5px;
-}
+  ul.header {
+    background-color: #ccc;
+    cursor: default;
+  }
 
+  ul.header li {
+    font-weight: bold;
+    text-align: center;
+  }
+
+  li img {
+    height: 16px;
+    margin: 5px;
+  }
+}
 </style>

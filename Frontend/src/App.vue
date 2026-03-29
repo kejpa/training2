@@ -1,25 +1,26 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import {RouterLink, RouterView} from 'vue-router'
 import ToastContainer from '@/components/ToastContainer.vue'
 </script>
 
 <template>
-  <ToastContainer />
+  <ToastContainer/>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+    <h1><img alt="Vue logo" class="logo" src="@/assets/icons/notebook.png"/>
+      Träningsdagbok
+    </h1>
 
     <div class="wrapper">
       <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/activities">Activities</RouterLink>
-        <RouterLink to="/sessions">Sessions</RouterLink>
-        <RouterLink to="/sessionslist">SessionsList</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/">Mata in pass</RouterLink>
+        <RouterLink to="/activities">Aktiviteter</RouterLink>
+        <RouterLink to="/sessionslist">Lista</RouterLink>
+        <RouterLink to="/about">Om...</RouterLink>
       </nav>
     </div>
   </header>
 
-  <RouterView />
+  <RouterView/>
 </template>
 
 <style scoped>
@@ -29,8 +30,9 @@ header {
 }
 
 .logo {
-  display: block;
+  display: inline-block;
   margin: 0 auto 2rem;
+  width: 100px;
 }
 
 nav {
@@ -61,6 +63,7 @@ nav a:first-of-type {
     display: flex;
     place-items: center;
     padding-right: calc(var(--section-gap) / 2);
+    flex-direction: column;
   }
 
   .logo {
@@ -68,13 +71,10 @@ nav a:first-of-type {
   }
 
   header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
+    width: 50%;
   }
 
   nav {
-    text-align: left;
     margin-left: -1rem;
     font-size: 1rem;
 

@@ -55,7 +55,7 @@ async function removeActivity(act) {
       <button @click="activity=activitiesStore.getInitial()">Ny</button>
     </div>
   </div>
-
+<hr>
   <ul v-if="activities.length>0" class="header">
     <li>Emoji</li>
     <li>Name</li>
@@ -70,49 +70,63 @@ async function removeActivity(act) {
     <li><img :src="act.log_distance ? check : remove" alt="log"></li>
     <li>{{ act.distance_unit }}</li>
     <li><img :src="act.log_duration ? check : remove" alt="log"></li>
-    <li><img :src="edit" alt="Redigera" @click="activity={...act}"> <img :src="waste" alt="Radera" @click="removeActivity(act)"></li>
+    <li><img :src="edit" title="Redigera aktivitet" alt="Redigera" @click="activity={...act}"> <img :src="waste" title="Radera aktivitet" alt="Radera" @click="removeActivity(act)"></li>
   </ul>
 </template>
 
 <style scoped>
-#form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-button {
-  margin-left: 10px;
-}
+@media (min-width: 1024px) {
 
-ul {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-  gap: 10px;
-  list-style: none;
-  padding: 0;
-  background-color: #888;
-}
+  h2 {
+    margin: auto;
+  }
 
-ul:nth-child(odd) {
-  background-color: #eee;
-}
+  #form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: auto;
+    margin-bottom: 10px;
+  }
 
-ul li {
-  list-style: none;
-}
+  button {
+    margin-left: 10px;
+  }
 
-ul.header {
-  background-color: #ccc;
-}
+  hr {
+    margin-bottom: 10px;
+  }
 
-ul.header li {
-  font-weight: bold;
-}
+  ul {
+    min-width: 650px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 10px;
+    list-style: none;
+    padding: 0;
+    background-color: #888;
+  }
 
-li img {
-  height: 16px;
-  margin: 5px;
-}
+  ul:nth-child(odd) {
+    background-color: #eee;
+  }
 
+  ul li {
+    list-style: none;
+  }
+
+  ul.header {
+    background-color: #ccc;
+  }
+
+  ul.header li {
+    font-weight: bold;
+  }
+
+  li img {
+    height: 16px;
+    margin: 5px;
+  }
+}
 </style>
