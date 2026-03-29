@@ -24,7 +24,6 @@
       <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/phar-io/version" />
       <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/php-di/invoker" />
       <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/php-di/php-di" />
-      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/php-di/phpdoc-reader" />
       <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/phpdocumentor/reflection-common" />
       <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/phpdocumentor/reflection-docblock" />
       <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/phpdocumentor/type-resolver" />
@@ -81,6 +80,20 @@
       <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/symfony/polyfill-mbstring" />
       <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/symfony/polyfill-php80" />
       <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/vlucas/phpdotenv" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/guzzlehttp/guzzle" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/guzzlehttp/promises" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/guzzlehttp/psr7" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/php-coveralls/php-coveralls" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/psr/http-client" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/symfony/config" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/symfony/console" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/symfony/filesystem" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/symfony/polyfill-intl-grapheme" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/symfony/polyfill-intl-normalizer" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/symfony/service-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/symfony/stopwatch" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/symfony/string" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/symfony/yaml" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
