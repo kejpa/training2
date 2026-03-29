@@ -35,13 +35,11 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-@media (min-width: 1024px) {
+@media (min-width: 650px) {
 
   ul {
-    min-width: 900px;
-    margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 3fr 1fr;
+    grid-template-columns: 8rem 6.5rem 4.1rem 3.5rem 1fr 2rem;
     gap: 10px;
     list-style: none;
     padding: 0;
@@ -55,6 +53,7 @@ onMounted(async () => {
 
   ul li {
     list-style: none;
+   padding:0 5px;
   }
 
   ul li.right {

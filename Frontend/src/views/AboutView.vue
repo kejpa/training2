@@ -5,7 +5,7 @@
 </template>
 
 <style>
-@media (min-width: 1024px) {
+@media (min-width: 650px) {
   .about {
     display: flex;
     flex-direction: column;

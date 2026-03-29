@@ -77,7 +77,7 @@ async function removeSession() {
 </template>
 
 <style scoped>
-@media (min-width: 1024px) {
+@media (min-width: 650px) {
 
   h2 {
     margin: auto;
@@ -92,8 +92,10 @@ async function removeSession() {
   }
 
   textarea {
-    width: 600px;
-    height: 250px;
+    max-width: 600px;
+    max-height: 250px;
+    width: 50vw;
+    height: 30vh;
   }
 
   button {

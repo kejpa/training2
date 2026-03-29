@@ -75,7 +75,7 @@ async function removeActivity(act) {
 </template>
 
 <style scoped>
-@media (min-width: 1024px) {
+@media (min-width: 650px) {
 
   h2 {
     margin: auto;
