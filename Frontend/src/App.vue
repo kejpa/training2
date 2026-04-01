@@ -1,12 +1,25 @@
 <script setup>
-import {RouterLink, RouterView} from 'vue-router'
+import {RouterLink, RouterView, useRouter} from 'vue-router'
 import ToastContainer from '@/components/ToastContainer.vue'
+import edit from "@/assets/icons/edit.svg"
+import activity from "@/assets/icons/activity.png"
+import info from "@/assets/icons/info.png"
+import list from "@/assets/icons/list.png"
+
+const router = useRouter()
+
 </script>
 
 <template>
-  <ToastContainer/>
   <header>
-    <h1><img alt="Vue logo" class="logo" src="@/assets/icons/notebook.png"/>
+  <nav class="header">
+    <img :src="edit" alt="Mata in" @click="router.push('/')">
+    <img :src="activity" alt="Aktiviteter" @click="router.push('/activities')">
+    <img :src="list" alt="Lista" @click="router.push('/sessionslist')">
+    <img :src="info" alt="Om" @click="router.push('/about')">
+  </nav>
+  <ToastContainer/>
+    <h1><img alt="Dagbok" class="logo" src="@/assets/icons/notebook.png"/>
       Träningsdagbok
     </h1>
 
@@ -19,46 +32,61 @@ import ToastContainer from '@/components/ToastContainer.vue'
       </nav>
     </div>
   </header>
-
+<main>
   <RouterView/>
+  </main>
+  <footer>
+    &copy; Kjell Hansen 2026{{ new Date().getFullYear() > 2026 ? '-' + new Date().getFullYear() : '' }}
+  </footer>
 </template>
 
 <style scoped>
 header {
   line-height: 1.5;
-  max-height: 100vh;
+  max-height: 10vh;
 }
-
+header h1 {
+  text-align: center;
+}
 .logo {
   display: inline-block;
-  margin: 0 auto 2rem;
-  max-width: 100px;
+  width: 7vw;
 }
 
-nav {
-  width: 100%;
-  font-size: 12px;
+.wrapper nav {
+  display: none;
+}
+nav.header {
+  grid-area: header;
+  background-color: maroon;
+  display: flex;
+  flex-direction: row;
+  padding: 1vh;
+  justify-content: space-evenly;
+}
+main {
+  grid-area: main;
+  margin:0 5vw;
+  overflow: auto;
+}
+
+footer {
+  grid-area: footer;
   text-align: center;
-  margin-top: 2rem;
+  padding: 1rem;
+  background-color: var(--color-background-soft);
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
+nav.header img {
+  height: 8vh;
 }
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  padding: 0 1rem;
-}
-
-nav a:first-of-type {
-  border: 0;
-}
 
 @media (min-width: 650px) {
+  nav.header {
+    display: none;
+  }
+
   header {
     display: flex;
     place-items: center;
@@ -76,6 +104,25 @@ nav a:first-of-type {
 
     padding: 1rem 0;
     margin-top: 1rem;
+  }
+
+  nav {
+    width: 100%;
+    font-size: 12px;
+    text-align: center;
+    margin-top: .5rem;
+  }
+
+  nav a.router-link-exact-active {
+    color: var(--color-text);
+  }
+
+  nav a.router-link-exact-active:hover {
+    background-color: transparent;
+  }
+
+  nav a {
+    padding: 0 1rem;
   }
 }
 </style>

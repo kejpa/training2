@@ -77,32 +77,27 @@ async function removeSession() {
 </template>
 
 <style scoped>
-@media (min-width: 650px) {
+h2 {
+  margin: auto;
+}
 
-  h2 {
-    margin: auto;
-  }
+#form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: auto;
+  margin-bottom: 10px;
+}
 
-  #form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin: auto;
-    margin-bottom: 10px;
-  }
+textarea {
+  width: clamp(200px, 80vw, 600px);
+  height: clamp(200px, 30vh, 400px);
+}
 
-  textarea {
-    max-width: 600px;
-    max-height: 250px;
-    width: 50vw;
-    height: 30vh;
-  }
-
-  button {
-    margin-left: 10px;
-    font-size: 1.1em;
-    padding: .2em;
-    min-width: 4em;
-  }
+button {
+  margin-left: 10px;
+  font-size: 1.1em;
+  padding: .2em;
+  min-width: 4em;
 }
 </style>

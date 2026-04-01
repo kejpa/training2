@@ -18,8 +18,8 @@ const emojis = ref(['🏊‍♂️', '🤽‍♀️', '🏄‍♀️', '🚣‍�
 ])
 
 onMounted(() => {
-  activitiesStore.getAll()
-  activity.value = activitiesStore.getInitial();
+    activitiesStore.getAll()
+    activity.value = activitiesStore.getInitial();
   }
 )
 
@@ -27,6 +27,7 @@ async function saveActivity() {
   await activitiesStore.saveActivity(activity.value)
   activity.value = activitiesStore.getInitial();
 }
+
 async function removeActivity(act) {
   await activitiesStore.deleteActivity(act.id);
 }
@@ -55,78 +56,92 @@ async function removeActivity(act) {
       <button @click="activity=activitiesStore.getInitial()">Ny</button>
     </div>
   </div>
-<hr>
-  <ul v-if="activities.length>0" class="header">
-    <li>Emoji</li>
-    <li>Name</li>
-    <li>Log distance</li>
-    <li>Distance unit</li>
-    <li>Log time</li>
-    <li>&nbsp;</li>
-  </ul>
-  <ul v-for="act in activities" :key="act">
-    <li>{{ act.emoji }}</li>
-    <li>{{ act.name }}</li>
-    <li><img :src="act.log_distance ? check : remove" alt="log"></li>
-    <li>{{ act.distance_unit }}</li>
-    <li><img :src="act.log_duration ? check : remove" alt="log"></li>
-    <li><img :src="edit" title="Redigera aktivitet" alt="Redigera" @click="activity={...act}"> <img :src="waste" title="Radera aktivitet" alt="Radera" @click="removeActivity(act)"></li>
-  </ul>
+  <hr>
+  <div id="list">
+    <ul v-if="activities.length>0" class="header">
+      <li>Emoji</li>
+      <li>Name</li>
+      <li>Log distance</li>
+      <li>Distance unit</li>
+      <li>Log time</li>
+      <li>&nbsp;</li>
+    </ul>
+    <ul v-for="act in activities" :key="act">
+      <li>{{ act.emoji }}</li>
+      <li>{{ act.name }}</li>
+      <li class="center"><img :src="act.log_distance ? check : remove" alt="log"></li>
+      <li class="center">{{ act.distance_unit }}</li>
+      <li class="center"><img :src="act.log_duration ? check : remove" alt="log"></li>
+      <li><img :src="edit" title="Redigera aktivitet" alt="Redigera" @click="activity={...act}">
+        <img :src="waste" title="Radera aktivitet" alt="Radera" @click="removeActivity(act)"></li>
+    </ul>
+  </div>
 </template>
 
 <style scoped>
-@media (min-width: 650px) {
 
-  h2 {
-    margin: auto;
-  }
-
-  #form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin: auto;
-    margin-bottom: 10px;
-  }
-
-  button {
-    margin-left: 10px;
-  }
-
-  hr {
-    margin-bottom: 10px;
-  }
-
-  ul {
-    min-width: 650px;
-    margin: auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-    gap: 10px;
-    list-style: none;
-    padding: 0;
-    background-color: #888;
-  }
-
-  ul:nth-child(odd) {
-    background-color: #eee;
-  }
-
-  ul li {
-    list-style: none;
-  }
-
-  ul.header {
-    background-color: #ccc;
-  }
-
-  ul.header li {
-    font-weight: bold;
-  }
-
-  li img {
-    height: 16px;
-    margin: 5px;
-  }
+h2 {
+  margin: auto;
 }
+
+#form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: auto;
+  margin-bottom: 10px;
+}
+
+button {
+  margin-left: 10px;
+}
+
+hr {
+  margin-bottom: 10px;
+}
+
+#list {
+  max-height: 30vh;
+  overflow: scroll;
+}
+
+ul {
+  width: clamp(200px, 90vw, 1000px);
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  background-color: #888;
+}
+
+ul:nth-child(odd) {
+  background-color: #eee;
+}
+
+ul li {
+  list-style: none;
+}
+
+ul.header {
+  background-color: #ccc;
+}
+
+ul.header li {
+  font-weight: bold;
+}
+
+li:nth-child(1) {
+  padding-left: 3px;
+}
+
+li.center {
+  text-align: center;
+}
+
+li img {
+  height: 16px;
+}
+
 </style>

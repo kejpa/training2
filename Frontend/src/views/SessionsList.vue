@@ -17,29 +17,85 @@ onMounted(async () => {
 
 <template>
   <ul class="header">
-    <li>Aktivitet</li>
-    <li>Datum</li>
-    <li>Distans</li>
-    <li>Tid</li>
-    <li>Beskrivning</li>
-    <li>rpe</li>
+    <li class="activity">Aktivitet</li>
+    <li class="date">Datum</li>
+    <li class="distance">Distans</li>
+    <li class="duration">Tid</li>
+    <li class="desc">Beskrivning</li>
+    <li class="rpe">rpe</li>
   </ul>
-  <ul v-for="session in sessions" :key="session.id" @click="$router.push(`/sessions/${session.id}`)">
-    <li>{{ `${activities.find(itm => itm.id === session.activityid)?.emoji} ${activities.find(itm => itm.id === session.activityid)?.name}` }}</li>
-    <li class="right">{{ session.date }}</li>
-    <li class="right">{{ session.distance ? `${session.distance} ${activities.find(itm => itm.id === session.activityid)?.distance_unit} ` : '' }}</li>
-    <li class="right">{{ session.duration ? `${session.duration.substring(0,5)}` : '' }}</li>
-    <li>{{ session.description }}</li>
-    <li class="right">{{ session.rpe }}</li>
+  <ul v-for="session in sessions" :key="session.id"
+      @click="$router.push(`/sessions/${session.id}`)">
+    <li class="activity">{{
+        `${activities.find(itm => itm.id === session.activityid)?.emoji} ${activities.find(itm => itm.id === session.activityid)?.name}`
+      }}
+    </li>
+    <li class="date">{{ session.date }}</li>
+    <li class="right distance">{{
+        session.distance ? `${session.distance} ${activities.find(itm => itm.id === session.activityid)?.distance_unit} ` : ''
+      }}
+    </li>
+    <li class="right duration">{{ session.duration ? `${session.duration.substring(0, 5)}` : '' }}</li>
+    <li class="desc">{{ session.description }}</li>
+    <li class="right rpe">{{ session.rpe }}</li>
   </ul>
 </template>
 
 <style scoped>
+ul {
+  display: grid;
+  grid-template-columns: 28vw 20vw 1fr 9vw;
+  grid-template-areas:
+    "Activity Distance Description Rpe"
+    "Date Duration Description .";
+  column-gap: 5px;
+  list-style: none;
+  padding: 0;
+  background-color: #888;
+  cursor: pointer;
+}
+.activity { grid-area: Activity; }
+.date { grid-area: Date; }
+.distance { grid-area: Distance; }
+.duration { grid-area: Duration; }
+.desc { grid-area: Description; }
+.rpe { grid-area: Rpe; }
+
+ul:nth-child(odd) {
+  background-color: #eee;
+}
+
+ul li {
+  list-style: none;
+  padding: 0 5px;
+  border-right: 1px solid #fff;
+  vertical-align: text-top;
+}
+
+ul li.right {
+  text-align: right;
+}
+
+ul.header {
+  background-color: #ccc;
+  cursor: default;
+}
+
+ul.header li {
+  font-weight: bold;
+  text-align: center;
+}
+
+li img {
+  height: 16px;
+  margin: 5px;
+}
+
 @media (min-width: 650px) {
 
   ul {
     display: grid;
-    grid-template-columns: 8rem 6.5rem 4.1rem 3.5rem 1fr 2rem;
+    grid-template-columns: 8rem 6rem 4.1rem 3.5rem 1fr 2rem;
     gap: 10px;
     list-style: none;
     padding: 0;
@@ -47,32 +103,5 @@ onMounted(async () => {
     cursor: pointer;
   }
 
-  ul:nth-child(odd) {
-    background-color: #eee;
-  }
-
-  ul li {
-    list-style: none;
-   padding:0 5px;
-  }
-
-  ul li.right {
-    text-align: right;
-  }
-
-  ul.header {
-    background-color: #ccc;
-    cursor: default;
-  }
-
-  ul.header li {
-    font-weight: bold;
-    text-align: center;
-  }
-
-  li img {
-    height: 16px;
-    margin: 5px;
-  }
 }
 </style>

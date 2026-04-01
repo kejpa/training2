@@ -1,11 +1,15 @@
 @import './base.css';
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+}
 
 #app {
-  display: flex;
-  flex-direction: column;
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 120px 1fr 100px;
+  grid-template-areas: "header" "main" "footer";
   font-weight: normal;
 }
 
@@ -17,8 +21,16 @@ a,
   padding: 3px;
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+@media (min-width: 650px) {
+  #app {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  @media (hover: hover) {
+    a:hover {
+      background-color: hsla(160, 100%, 37%, 0.2);
+    }
   }
 }
