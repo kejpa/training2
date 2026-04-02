@@ -58,7 +58,7 @@ header h1 {
 }
 nav.header {
   grid-area: header;
-  background-color: maroon;
+  background-color: #000080;
   display: flex;
   flex-direction: row;
   padding: 1vh;
@@ -73,8 +73,9 @@ main {
 footer {
   grid-area: footer;
   text-align: center;
-  padding: 1rem;
-  background-color: var(--color-background-soft);
+  padding-top: 10px;
+  background-color: var(--color-background);
+  border: 3px double var(--color-border);
 }
 
 nav.header img {

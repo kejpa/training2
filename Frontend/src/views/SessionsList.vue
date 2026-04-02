@@ -51,7 +51,6 @@ ul {
   column-gap: 5px;
   list-style: none;
   padding: 0;
-  background-color: #888;
   cursor: pointer;
 }
 .activity { grid-area: Activity; }
@@ -60,10 +59,6 @@ ul {
 .duration { grid-area: Duration; }
 .desc { grid-area: Description; }
 .rpe { grid-area: Rpe; }
-
-ul:nth-child(odd) {
-  background-color: #eee;
-}
 
 ul li {
   list-style: none;
@@ -77,7 +72,7 @@ ul li.right {
 }
 
 ul.header {
-  background-color: #ccc;
+  background-color: #ccf;
   cursor: default;
 }
 

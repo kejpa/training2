@@ -113,12 +113,8 @@ ul {
   gap: 10px;
   list-style: none;
   padding: 0;
-  background-color: #888;
 }
 
-ul:nth-child(odd) {
-  background-color: #eee;
-}
 
 ul li {
   list-style: none;

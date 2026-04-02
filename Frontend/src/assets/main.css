@@ -8,9 +8,16 @@ html, body {
 #app {
   height: 100vh;
   display: grid;
-  grid-template-rows: 120px 1fr 100px;
+  grid-template-rows: 120px 1fr 50px;
   grid-template-areas: "header" "main" "footer";
   font-weight: normal;
+}
+
+ul {
+  background-color: var(--vt-c-list-even);
+}
+ul:nth-child(odd) {
+  background-color: var(--vt-c-list-odd);
 }
 
 a,
