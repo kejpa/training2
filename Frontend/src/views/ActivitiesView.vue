@@ -102,7 +102,7 @@ hr {
 
 #list {
   max-height: 30vh;
-  overflow: scroll;
+  overflow-y: auto;
 }
 
 ul {

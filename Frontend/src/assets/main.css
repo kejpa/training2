@@ -20,10 +20,9 @@ ul:nth-child(odd) {
   background-color: var(--vt-c-list-odd);
 }
 
-a,
-.green {
+a {
   text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
+  color: var(--vt-c-indigo);
   transition: 0.4s;
   padding: 3px;
 }
@@ -31,13 +30,14 @@ a,
 @media (min-width: 650px) {
   #app {
     max-width: 1280px;
+    grid-template-rows: auto 1fr 50px;
     margin: 0 auto;
     padding: 2rem;
   }
 
   @media (hover: hover) {
     a:hover {
-      background-color: hsla(160, 100%, 37%, 0.2);
+      background-color: var(--color-background-mute);
     }
   }
 }

@@ -43,7 +43,6 @@ const router = useRouter()
 <style scoped>
 header {
   line-height: 1.5;
-  max-height: 10vh;
 }
 header h1 {
   text-align: center;
@@ -75,7 +74,7 @@ footer {
   text-align: center;
   padding-top: 10px;
   background-color: var(--color-background);
-  border: 3px double var(--color-border);
+  border-top: 3px double var(--color-border);
 }
 
 nav.header img {
@@ -84,6 +83,9 @@ nav.header img {
 
 
 @media (min-width: 650px) {
+.wrapper nav {
+  display: initial;
+}
   nav.header {
     display: none;
   }
@@ -101,21 +103,16 @@ nav.header img {
   }
 
   nav {
-    font-size: 1rem;
+    font-size: 1.5rem;
 
     padding: 1rem 0;
-    margin-top: 1rem;
-  }
-
-  nav {
     width: 100%;
-    font-size: 12px;
     text-align: center;
     margin-top: .5rem;
   }
 
-  nav a.router-link-exact-active {
-    color: var(--color-text);
+  nav a {
+    color: var(--vt-c-indigo);
   }
 
   nav a.router-link-exact-active:hover {

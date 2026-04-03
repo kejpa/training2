@@ -90,7 +90,8 @@ li img {
 
   ul {
     display: grid;
-    grid-template-columns: 8rem 6rem 4.1rem 3.5rem 1fr 2rem;
+    grid-template-columns: 8rem 8rem 4.1rem 3.5rem 1fr 2rem;
+    grid-template-areas: "Activity Date Distance Duration Description Rpe";
     gap: 10px;
     list-style: none;
     padding: 0;
