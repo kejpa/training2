@@ -4,9 +4,9 @@
   --vt-c-white-soft: #f8f8f8;
   --vt-c-white-mute: #f2f2f2;
 
-  --vt-c-black: #181818;
-  --vt-c-black-soft: #222222;
-  --vt-c-black-mute: #282828;
+  --vt-c-black: #181848;
+  --vt-c-black-soft: #222248;
+  --vt-c-black-mute: #282848;
 
   --vt-c-indigo: #2c3e50;
 
@@ -50,6 +50,9 @@
 
     --color-heading: var(--vt-c-text-dark-1);
     --color-text: var(--vt-c-text-dark-2);
+
+    --vt-c-list-odd: #444;
+    --vt-c-list-even: #888;
   }
 }
 
@@ -86,4 +89,12 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+input,
+textarea,
+select,
+button {
+  background-color: var(--color-background-soft);
+  color: var(--color-text);
 }

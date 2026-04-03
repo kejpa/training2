@@ -1,5 +1,5 @@
-import {defineStore} from 'pinia'
-import {ref} from 'vue'
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
 export const useToastsStore = defineStore('toasts', () => {
   const toasts = ref([])
@@ -14,7 +14,7 @@ export const useToastsStore = defineStore('toasts', () => {
       mess = message
     }
     let now = new Date()
-    let toast = {time: now.getTime(), type, message: mess}
+    let toast = { time: now.getTime(), type, message: mess }
     toast.toastTimer = setTimeout(() => {
       remove(toast)
     }, 5000)

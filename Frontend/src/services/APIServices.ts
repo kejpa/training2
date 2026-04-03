@@ -1,7 +1,4 @@
-import {
-  getAccessToken,
-  storeAccessToken,
-} from '../stores/accessTokenStorage'
+import { getAccessToken, storeAccessToken } from '../stores/accessTokenStorage'
 
 export default new (class APIService {
   apiBase: string
@@ -24,7 +21,7 @@ export default new (class APIService {
     return new Promise((resolve, reject) => {
       // Hämta data från endpointen
       fetch(this.apiBase + params, {
-        headers: {'Authorization': 'Bearer ' + jwtToken},
+        headers: { Authorization: 'Bearer ' + jwtToken },
         method: 'GET',
       })
         .then((response) => {
@@ -42,8 +39,8 @@ export default new (class APIService {
               .then((data) => {
                 jwtToken = data.data.access_token
                 storeAccessToken(jwtToken)
-               fetch(this.apiBase + params, {
-                  headers: {'Authorization': 'Bearer ' + jwtToken},
+                fetch(this.apiBase + params, {
+                  headers: { Authorization: 'Bearer ' + jwtToken },
                   method: 'GET',
                 }).then((response) => {
                   if (response.ok) {
@@ -107,8 +104,8 @@ export default new (class APIService {
       fetch(this.apiBase + params, {
         method: 'POST',
         headers: {
-          'Authorization': 'Bearer ' + jwtToken,
-          'Content-Type': 'application/json'
+          Authorization: 'Bearer ' + jwtToken,
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(object),
       })
@@ -127,11 +124,11 @@ export default new (class APIService {
               .then((data) => {
                 jwtToken = data.data.access_token
                 storeAccessToken(jwtToken)
-               fetch(this.apiBase + params, {
+                fetch(this.apiBase + params, {
                   method: 'POST',
                   headers: {
-                    'Authorization': 'Bearer ' + jwtToken,
-                    'Content-Type': 'application/json'
+                    Authorization: 'Bearer ' + jwtToken,
+                    'Content-Type': 'application/json',
                   },
                   body: JSON.stringify(object),
                 }).then((response) => {
@@ -167,8 +164,8 @@ export default new (class APIService {
       fetch(this.apiBase + params, {
         method: 'PUT',
         headers: {
-          'Authorization': 'Bearer ' + jwtToken,
-          'Content-Type': 'application/json'
+          Authorization: 'Bearer ' + jwtToken,
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(object),
       })
@@ -190,8 +187,8 @@ export default new (class APIService {
                 fetch(this.apiBase + params, {
                   method: 'PUT',
                   headers: {
-                    'Authorization': 'Bearer ' + jwtToken,
-                    'Content-Type': 'application/json'
+                    Authorization: 'Bearer ' + jwtToken,
+                    'Content-Type': 'application/json',
                   },
                   body: JSON.stringify(object),
                 }).then((response) => {
@@ -225,8 +222,8 @@ export default new (class APIService {
       fetch(this.apiBase + params, {
         method: 'DELETE',
         headers: {
-          'Authorization': 'Bearer ' + jwtToken,
-          'Content-Type': 'application/json'
+          Authorization: 'Bearer ' + jwtToken,
+          'Content-Type': 'application/json',
         },
       })
         .then((response) => {
@@ -247,8 +244,8 @@ export default new (class APIService {
                 fetch(this.apiBase + params, {
                   method: 'DELETE',
                   headers: {
-                    'Authorization': 'Bearer ' + jwtToken,
-                    'Content-Type': 'application/json'
+                    Authorization: 'Bearer ' + jwtToken,
+                    'Content-Type': 'application/json',
                   },
                 }).then((response) => {
                   if (response.ok) {

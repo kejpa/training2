@@ -1,11 +1,13 @@
-import {defineStore} from 'pinia'
+import { defineStore } from 'pinia'
 import APIServices from '@/services/APIServices.ts'
-import {storeAccessToken} from "@/stores/accessTokenStorage.ts";
-import {computed, ref} from "vue";
+import { storeAccessToken } from '@/stores/accessTokenStorage.ts'
+import { computed, ref } from 'vue'
 
 export const useLoginStore = defineStore('login', () => {
   const user = ref(null)
-  const userName = computed(() => user.value ? `${user.value.firstname} ${user.value.lastname}` : '')
+  const userName = computed(() =>
+    user.value ? `${user.value.firstname} ${user.value.lastname}` : '',
+  )
 
   async function register(user) {
     return await APIServices.post('register', user)
@@ -22,9 +24,9 @@ export const useLoginStore = defineStore('login', () => {
     } else {
       data = await APIServices.post('login/totp', userInfo)
     }
-    let token=data.data.access_token
+    let token = data.data.access_token
     storeAccessToken(token)
   }
 
-  return {user, userName, register, sendMail, login} //, resend, sendMail, logout}
+  return { user, userName, register, sendMail, login } //, resend, sendMail, logout}
 })

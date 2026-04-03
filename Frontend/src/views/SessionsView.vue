@@ -1,16 +1,15 @@
 <script setup>
-
-import {onMounted, ref} from "vue";
-import {useSessionsStore} from "@/stores/sessionsStore.js";
-import {useActivitiesStore} from "@/stores/activitiesStore.js";
-import {storeToRefs} from "pinia";
-import {useRoute} from "vue-router";
+import { onMounted, ref } from 'vue'
+import { useSessionsStore } from '@/stores/sessionsStore.js'
+import { useActivitiesStore } from '@/stores/activitiesStore.js'
+import { storeToRefs } from 'pinia'
+import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const sessionsStore = useSessionsStore()
 const activitiesStore = useActivitiesStore()
 const session = ref({})
-const {activities} = storeToRefs(activitiesStore)
+const { activities } = storeToRefs(activitiesStore)
 
 onMounted(async () => {
   await activitiesStore.getAll()
@@ -24,19 +23,19 @@ onMounted(async () => {
 })
 
 async function saveSession() {
-  if (!activities.value.find(itm => itm.id === session.value.activityid)?.log_duration) {
+  if (!activities.value.find((itm) => itm.id === session.value.activityid)?.log_duration) {
     session.value.duration = null
   }
-  if (!activities.value.find(itm => itm.id === session.value.activityid)?.log_distance) {
+  if (!activities.value.find((itm) => itm.id === session.value.activityid)?.log_distance) {
     session.value.distance = null
   }
   await sessionsStore.saveSession(session.value)
-  session.value = sessionsStore.getInitial();
+  session.value = sessionsStore.getInitial()
 }
 
 async function removeSession() {
-  await sessionsStore.deleteSession(session.value.id);
-  session.value = sessionsStore.getInitial();
+  await sessionsStore.deleteSession(session.value.id)
+  session.value = sessionsStore.getInitial()
 }
 </script>
 
@@ -46,31 +45,32 @@ async function removeSession() {
     <label>
       Träning:
       <select v-model="session.activityid">
-        <option v-for="act in activities" :value="act.id">{{ `${act.emoji}  ${act.name}` }}</option>
+        <option v-for="act in activities" :value="act.id" :key="act">
+          {{ `${act.emoji}  ${act.name}` }}
+        </option>
       </select>
     </label>
-    <label>
-      Datum: <input type="date" v-model="session.date"/>
+    <label> Datum: <input type="date" v-model="session.date" /> </label>
+    <label v-if="activities.find((itm) => itm.id === session.activityid)?.log_duration ?? false">
+      Tid: <input type="time" v-model="session.duration" />
     </label>
-    <label v-if="activities.find(itm => itm.id===session.activityid)?.log_duration ?? false">
-      Tid: <input type="time" v-model="session.duration"/>
-    </label>
-    <label v-if="activities.find(itm => itm.id===session.activityid)?.log_distance ?? false">
-      Distans: <input type="text" pattern="[0-9.]*" size="5" v-model="session.distance"/>
-      {{ activities.find(itm => itm.id === session.activityid)?.distance_unit ?? '' }}
+    <label v-if="activities.find((itm) => itm.id === session.activityid)?.log_distance ?? false">
+      Distans: <input type="text" pattern="[0-9.]*" size="5" v-model="session.distance" />
+      {{ activities.find((itm) => itm.id === session.activityid)?.distance_unit ?? '' }}
     </label>
     <label>
-      Beskrivning <br>
+      Beskrivning <br />
       <textarea v-model="session.description"></textarea>
     </label>
     <label>
-      Rpe: <select v-model="session.rpe">
-      <option v-for="i in [1,2,3,4,5,6,7,8,9,10]" :value="i">{{ i }}</option>
-    </select>
+      Rpe:
+      <select v-model="session.rpe">
+        <option v-for="i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" :key="i" :value="i">{{ i }}</option>
+      </select>
     </label>
     <div>
       <button @click="saveSession">Spara</button>
-      <button @click="session = sessionsStore.getInitial();">Ny</button>
+      <button @click="session = sessionsStore.getInitial()">Ny</button>
       <button v-if="session.id" @click="removeSession">Radera</button>
     </div>
   </div>
@@ -97,7 +97,7 @@ textarea {
 button {
   margin-left: 10px;
   font-size: 1.1em;
-  padding: .2em;
+  padding: 0.2em;
   min-width: 4em;
 }
 </style>

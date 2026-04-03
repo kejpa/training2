@@ -1,4 +1,4 @@
-import {createRouter, createWebHistory} from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,7 +17,7 @@ const router = createRouter({
       path: '/sessions/:id?',
       name: 'sessions',
       component: () => import('../views/SessionsView.vue'),
-      props: true
+      props: true,
     },
     {
       path: '/sessionslist',

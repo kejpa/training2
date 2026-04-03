@@ -1,25 +1,25 @@
 <script setup>
-import {RouterLink, RouterView, useRouter} from 'vue-router'
+import { RouterLink, RouterView, useRouter } from 'vue-router'
 import ToastContainer from '@/components/ToastContainer.vue'
-import edit from "@/assets/icons/edit.svg"
-import activity from "@/assets/icons/activity.png"
-import info from "@/assets/icons/info.png"
-import list from "@/assets/icons/list.png"
+import edit from '@/assets/icons/edit.svg'
+import activity from '@/assets/icons/activity.png'
+import info from '@/assets/icons/info.png'
+import list from '@/assets/icons/list.png'
 
 const router = useRouter()
-
 </script>
 
 <template>
   <header>
-  <nav class="header">
-    <img :src="edit" alt="Mata in" @click="router.push('/')">
-    <img :src="activity" alt="Aktiviteter" @click="router.push('/activities')">
-    <img :src="list" alt="Lista" @click="router.push('/sessionslist')">
-    <img :src="info" alt="Om" @click="router.push('/about')">
-  </nav>
-  <ToastContainer/>
-    <h1><img alt="Dagbok" class="logo" src="@/assets/icons/notebook.png"/>
+    <nav class="header">
+      <img :src="edit" alt="Mata in" @click="router.push('/')" />
+      <img :src="activity" alt="Aktiviteter" @click="router.push('/activities')" />
+      <img :src="list" alt="Lista" @click="router.push('/sessionslist')" />
+      <img :src="info" alt="Om" @click="router.push('/about')" />
+    </nav>
+    <ToastContainer />
+    <h1>
+      <img alt="Dagbok" class="logo" src="@/assets/icons/notebook.png" />
       Träningsdagbok
     </h1>
 
@@ -32,11 +32,13 @@ const router = useRouter()
       </nav>
     </div>
   </header>
-<main>
-  <RouterView/>
+  <main>
+    <RouterView />
   </main>
   <footer>
-    &copy; Kjell Hansen 2026{{ new Date().getFullYear() > 2026 ? '-' + new Date().getFullYear() : '' }}
+    &copy; Kjell Hansen 2026{{
+      new Date().getFullYear() > 2026 ? '-' + new Date().getFullYear() : ''
+    }}
   </footer>
 </template>
 
@@ -65,7 +67,7 @@ nav.header {
 }
 main {
   grid-area: main;
-  margin:0 5vw;
+  margin: 0 2vw;
   overflow: auto;
 }
 
@@ -81,11 +83,10 @@ nav.header img {
   height: 8vh;
 }
 
-
 @media (min-width: 650px) {
-.wrapper nav {
-  display: initial;
-}
+  .wrapper nav {
+    display: initial;
+  }
   nav.header {
     display: none;
   }
@@ -108,7 +109,7 @@ nav.header img {
     padding: 1rem 0;
     width: 100%;
     text-align: center;
-    margin-top: .5rem;
+    margin-top: 0.5rem;
   }
 
   nav a {
