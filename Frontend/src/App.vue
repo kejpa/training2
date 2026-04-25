@@ -26,8 +26,9 @@ const router = useRouter()
     <div class="wrapper">
       <nav>
         <RouterLink to="/">Mata in pass</RouterLink>
-        <RouterLink to="/activities">Aktiviteter</RouterLink>
         <RouterLink to="/sessionslist">Lista</RouterLink>
+        <RouterLink to="/statistics">Statistik</RouterLink>
+        <RouterLink to="/activities">Aktiviteter</RouterLink>
         <RouterLink to="/about">Om...</RouterLink>
       </nav>
     </div>
