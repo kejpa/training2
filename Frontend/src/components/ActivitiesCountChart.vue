@@ -43,38 +43,58 @@ const series = computed(() => {
   return tmp
 })
 
-const options = {
-  chart: {
-    type: 'bar',
-    stacked: true,
-    toolbar: {
-      show: false
+const options = computed(() => ({
+    chart: {
+      type: 'bar',
+      stacked: true,
+      toolbar: {
+        show: true,
+        tools: {
+          pan: true,
+          zoom: false,
+          zoomin: false,
+          zoomout: false,
+          reset: true,
+          download: false,
+          selection: false,
+        }
+      },
+      zoom: {
+        enabled: true,
+        type: 'x',
+      },
+      pan: {
+        enabled: true,
+        type: 'x',
+      },
     },
-  },
-  xaxis: {
-    categories: months.value,
-    max: months.value[months.value.length - 1],
-    min: months.value[months.value.length - props.monthCount],
-  },
-  yaxis: {
-    stepSize: 1,
-  },
-  legend: {
-    show: true,
-    showForSingleSeries: true,
-    position: 'right',
-    offsetY: 40
-  },
-  plotOptions: {
-    bar: {
-      dataLabels: {
-        total: {
-          enabled: true,
+    xaxis: {
+      categories: months.value,
+      min: months.value[months.value.length - 5],
+      max: months.value[months.value.length - 1],
+      range: props.monthCount - 1, // antal steg synliga åt gången (0-indexerat, 4 = 5 staplar)
+      tickPlacement: 'on',
+    },
+    yaxis: {
+      stepSize: 1,
+    },
+    legend: {
+      show: true,
+      showForSingleSeries: true,
+      position: 'right',
+      offsetY: 40
+    },
+    plotOptions: {
+      bar: {
+        dataLabels: {
+          total: {
+            enabled: true,
+          }
         }
       }
     }
-  }
-}
+  })
+)
 
 onMounted(async () => {
   await activitiesStore.getAll()
