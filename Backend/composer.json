@@ -3,7 +3,7 @@
     "require": {
         "php": "^8.2",
         "ext-json": "*",
-        "bacon/bacon-qr-code": "^3.0",
+        "bacon/bacon-qr-code": "^3.1",
         "doctrine/dbal": "^4.4",
         "firebase/php-jwt": "^7.0",
         "monolog/monolog": "^3.10",
