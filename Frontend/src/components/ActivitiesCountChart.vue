@@ -5,7 +5,7 @@ import {useActivitiesStore} from "@/stores/activitiesStore.js";
 import {useSessionsStore} from "@/stores/sessionsStore.js";
 import {storeToRefs} from "pinia";
 
-const props = defineProps(['showActivities', 'monthCount'])
+const props = defineProps(['monthCount'])
 const activitiesStore = useActivitiesStore()
 const sessionsStore = useSessionsStore()
 
@@ -32,13 +32,11 @@ const months = computed(() => {
 const series = computed(() => {
   let tmp = []
   for (const activity of activities.value) {
-    if (props.showActivities.includes(activity.id)) {
-      let data = []
-      for (const month of months.value) {
-        data.push(sessions.value.filter(s => s.date.substring(0, 7) === month && s.activityid === activity.id).length)
-      }
-      tmp.push({name: activity.name, data})
+    let data = []
+    for (const month of months.value) {
+      data.push(sessions.value.filter(s => s.date.substring(0, 7) === month && s.activityid === activity.id).length)
     }
+    tmp.push({name: activity.name, data})
   }
   return tmp
 })
@@ -72,7 +70,7 @@ const options = computed(() => ({
       categories: months.value,
       min: months.value[months.value.length - 5],
       max: months.value[months.value.length - 1],
-      range: props.monthCount - 1, // antal steg synliga åt gången (0-indexerat, 4 = 5 staplar)
+      range: props.monthCount - 1,
       tickPlacement: 'on',
     },
     yaxis: {
@@ -81,8 +79,7 @@ const options = computed(() => ({
     legend: {
       show: true,
       showForSingleSeries: true,
-      position: 'right',
-      offsetY: 40
+      position: 'top',
     },
     plotOptions: {
       bar: {
@@ -106,6 +103,7 @@ onMounted(async () => {
 </script>
 
 <template>
+  <h3>Antal träningar</h3>
   <VueApexCharts
     type="bar"
     :options
@@ -114,5 +112,7 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-
+h3 {
+  text-align: center;
+}
 </style>

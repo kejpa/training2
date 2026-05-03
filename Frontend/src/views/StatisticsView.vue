@@ -59,17 +59,23 @@ const monthlyStats = computed(() => {
   return tmp
 })
 
-const showActivities = computed(() => {
-  return activities.value.map(itm => {
-   // return itm.name==="Simning" ? itm.id : null
-    return itm.id
-  })
-})
+const openActivities = ref({})
+
+function toggle(id) {
+  openActivities.value[id] = !openActivities.value[id]
+  localStorage.setItem('openActivities', JSON.stringify(openActivities.value))
+}
 
 onMounted(async () => {
   await activitiesStore.getAll()
   await sessionsStore.getAll()
+  monthCount.value = localStorage.getItem('monthCount') ?? 3
+  const openActivities = localStorage.getItem('openActivities') ?? []
 })
+
+function storeMonthCount() {
+  localStorage.setItem('monthCount', monthCount.value)
+}
 </script>
 
 <template>
@@ -77,7 +83,16 @@ onMounted(async () => {
     Antal månader: {{ monthCount }} <br>
     <input type="range" min="1" max="12" value="1" v-model="monthCount"/>
   </div>
-  <ActivitiesCountChart :show-activities="showActivities" :month-count="monthCount"/>
+  <ActivitiesCountChart :month-count="monthCount" @change="storeMonthCount"/>
+  <div v-for="activity in activities" :key="activity.id">
+    <h2 @click="toggle(activity.id)" style="cursor: pointer">
+      {{ activity.name }}
+      <span>{{ openActivities[activity.id] === false ? '˅' : '>' }}</span>
+    </h2>
+    <div v-show="openActivities[activity.id]===false">
+      Diagram
+    </div>
+  </div>
   <p v-for="o in monthlyStats" :key="o">{{ o }}</p>
 </template>
 
