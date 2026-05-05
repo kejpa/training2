@@ -1,45 +1,23 @@
 <script setup>
-import {computed, onMounted} from "vue";
+import {computed} from "vue";
 import VueApexCharts from 'vue3-apexcharts'
 import {useActivitiesStore} from "@/stores/activitiesStore.js";
-import {useSessionsStore} from "@/stores/sessionsStore.js";
 import {storeToRefs} from "pinia";
+import {useStatisticsStore} from "@/stores/statisticsStore.js";
 
 const props = defineProps(['monthCount'])
 const activitiesStore = useActivitiesStore()
-const sessionsStore = useSessionsStore()
+const statisticsStore = useStatisticsStore()
 
-const {sessions} = storeToRefs(sessionsStore)
+const {months} = storeToRefs(statisticsStore)
 const {activities} = storeToRefs(activitiesStore)
 
-const months = computed(() => {
-  if (sessions.value.length === 0) return []
-  let tmp = []
-  let firstDate = sessions.value.reduce((min, item) => {
-    return new Date(item.date) < new Date(min) ? item.date : min
-  }, sessions.value[0].date)
-  for (let y = new Date(firstDate).getFullYear(); y <= new Date().getFullYear(); y++) {
-    for (let m = 1; m < 13; m++) {
-      let mnth = `${y}-${m.toString().padStart(2, '0')}`
-      if (mnth >= firstDate.substring(0, 7) && mnth <= new Date().toISOString().substring(0, 7)) {
-        tmp.push(mnth)
-      }
-    }
-  }
-  return tmp
-})
-
-const series = computed(() => {
-  let tmp = []
-  for (const activity of activities.value) {
-    let data = []
-    for (const month of months.value) {
-      data.push(sessions.value.filter(s => s.date.substring(0, 7) === month && s.activityid === activity.id).length)
-    }
-    tmp.push({name: activity.name, data})
-  }
-  return tmp
-})
+const series = computed(() =>
+  activities.value.map(activity => ({
+    name: activity.name,
+    data: statisticsStore.countPerMonth(activity.id)
+  }))
+)
 
 const options = computed(() => ({
     chart: {
@@ -93,17 +71,9 @@ const options = computed(() => ({
   })
 )
 
-onMounted(async () => {
-  await activitiesStore.getAll()
-  await sessionsStore.getAll()
-
-})
-
-
 </script>
 
 <template>
-  <h3>Antal träningar</h3>
   <VueApexCharts
     type="bar"
     :options
