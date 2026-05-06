@@ -46,7 +46,7 @@ const options = computed(() => ({
     },
     xaxis: {
       categories: months.value,
-      min: months.value[months.value.length - 5],
+      min: months.value[0],
       max: months.value[months.value.length - 1],
       range: props.monthCount - 1,
       tickPlacement: 'on',

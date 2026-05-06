@@ -37,16 +37,16 @@ function storeMonthCount() {
 <template>
   <div>
     Antal månader: {{ monthCount }} <br>
-    <input type="range" min="1" max="12" value="1" v-model="monthCount"/>
+    <input type="range" min="1" max="12" value="1" v-model="monthCount" @change="storeMonthCount" />
   </div>
-  <ActivitiesCountChart :month-count="monthCount" @change="storeMonthCount" />
+  <ActivitiesCountChart :month-count="monthCount"/>
   <div v-for="activity in activities" :key="activity.id">
     <h2 @click="toggle(activity.id)" style="cursor: pointer">
       {{ activity.name }}
       <span>{{ openActivities[activity.id] === false ? '˅' : '>' }}</span>
     </h2>
     <div>
-      <ActivityDistanceChart :month-count="monthCount" :activity-id="activity.id"/>
+      <ActivityDistanceChart v-if="activity.log_distance" :month-count="monthCount" :activity-id="activity.id" />
     </div>
   </div>
 </template>
