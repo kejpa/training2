@@ -39,10 +39,22 @@ export const useStatisticsStore = defineStore('statistics', () => {
         .reduce((sum, s) => sum + (s.distance ?? 0), 0)
     )
   }
+  function durationPerMonth(activityId) {
+    return months.value.map(month =>
+      sessions.value
+        .filter(s => s.date.substring(0, 7) === month && s.activityid === activityId)
+        .reduce((sum, s) => {
+          if (!s.duration) return sum
+          const [h, m] = s.duration.split(':').map(Number)
+          return sum + h * 60 + m
+        }, 0)
+    )
+  }
 
   return {
     months,
     countPerMonth,
     distancePerMonth,
+    durationPerMonth,
   }
 })

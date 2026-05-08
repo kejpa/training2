@@ -6,6 +6,7 @@ import {useActivitiesStore} from "@/stores/activitiesStore.js";
 import {useStatisticsStore} from "@/stores/statisticsStore.js";
 import ActivitiesCountChart from "@/components/ActivitiesCountChart.vue";
 import ActivityDistanceChart from "@/components/ActivityDistanceChart.vue";
+import ActivityDurationChart from "@/components/ActivityDurationChart.vue";
 
 const monthCount = ref(3)
 
@@ -47,6 +48,7 @@ function storeMonthCount() {
     </h2>
     <div>
       <ActivityDistanceChart v-if="activity.log_distance" :month-count="monthCount" :activity-id="activity.id" />
+      <ActivityDurationChart v-if="activity.log_duration" :month-count="monthCount" :activity-id="activity.id" />
     </div>
   </div>
 </template>
