@@ -67,6 +67,12 @@ const options = computed(() => ({
           }
         }
       }
+    },
+    grid: {
+      padding: {
+        left: 30,
+        right: 20
+      }
     }
   })
 )
@@ -74,15 +80,22 @@ const options = computed(() => ({
 </script>
 
 <template>
+  <div style="height: 30vh">
   <VueApexCharts
     type="bar"
     :options
     :series
+    height="100%"
   />
+  </div>
 </template>
 
 <style scoped>
 h3 {
   text-align: center;
+}
+
+div.vue-apexcharts {
+  min-height: initial;
 }
 </style>

@@ -16,14 +16,16 @@ const {activities} = storeToRefs(activitiesStorage)
 const activity = ref({})
 const chartRef = ref(null)
 
-// Varaktighetsdiagram
-const series = computed(() => [{
-  data: statisticsStore.durationPerMonth(props.activityId)
-}])
+// Ansträngningsdiagram
+const series = computed(() => statisticsStore.excerssionPerMonth(props.activityId))
 
 const options = {
   chart: {
     type: 'bar',
+    offsetX: 0,
+    sparkline: {
+      enabled: false
+    },
     toolbar: {
       show: true,
       tools: {
@@ -45,48 +47,41 @@ const options = {
       type: 'x',
     },
   },
+  legend: {
+    show: true,
+    showForSingleSeries: true,
+    position: 'top',
+  },
   xaxis: {
     categories: months.value,
     min: months.value[0],
     max: months.value[months.value.length - 1],
     range: props.monthCount - 1,
     tickPlacement: 'on',
+    labels: {
+      offsetX: 0
+    }
   },
   yaxis: {
-    labels: {
-      formatter: function (val) {
-        const h = Math.floor(val / 60)
-        const m = val % 60
-        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
-      }
-    },
+    stepSize: 1,
   },
   dataLabels: {
     enabled: true,
-    formatter: function (val) {
-      const h = Math.floor(val / 60)
-      const m = val % 60
-      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
-    }
   },
   plotOptions: {
     bar: {
       dataLabels: {
         total: {
-          enabled: false,
+          enabled: true,
         }
       }
     }
   },
   tooltip: {
     y: {
-      formatter: function (val) {
-        const h = Math.floor(val / 60)
-        const m = val % 60
-        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
-      },
+      formatter: (val) => `${val}`,
       title: {
-        formatter: () => undefined
+        formatter: (seriesName) => seriesName
       }
     }
   },
@@ -122,7 +117,7 @@ watch(props, () => {
 </script>
 
 <template>
-  <h3>Varaktighet per månad</h3>
+  <h3>Ansträngning per månad</h3>
   <div style="height: 30vh">
   <VueApexCharts ref="chartRef"
                  type="bar"

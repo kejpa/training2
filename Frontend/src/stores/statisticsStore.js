@@ -51,10 +51,28 @@ export const useStatisticsStore = defineStore('statistics', () => {
     )
   }
 
+  function excerssionPerMonth(activityId) {
+    const low = { name: '1-4', data: [] }
+    const mid = { name: '5-7', data: [] }
+    const high = { name: '8+', data: [] }
+
+    for (const month of months.value) {
+      const monthSessions = sessions.value.filter(s =>
+        s.date.substring(0, 7) === month && s.activityid === activityId
+      )
+      low.data.push(monthSessions.filter(s => s.rpe >= 1 && s.rpe <= 4).length)
+      mid.data.push(monthSessions.filter(s => s.rpe >= 5 && s.rpe <= 7).length)
+      high.data.push(monthSessions.filter(s => s.rpe >= 8).length)
+    }
+
+    return [low, mid, high]
+  }
+
   return {
     months,
     countPerMonth,
     distancePerMonth,
     durationPerMonth,
+    excerssionPerMonth,
   }
 })

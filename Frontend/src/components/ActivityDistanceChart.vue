@@ -20,54 +20,62 @@ const series = computed(() => [{
   data: statisticsStore.distancePerMonth(props.activityId)
 }])
 
-const options = computed(() => ({
-    chart: {
-      type: 'bar',
-      toolbar: {
-        show: true,
-        tools: {
-          pan: true,
-          zoom: false,
-          zoomin: false,
-          zoomout: false,
-          reset: true,
-          download: false,
-          selection: false,
-        }
-      },
-      zoom: {
-        enabled: true,
-        type: 'x',
-      },
-      pan: {
-        enabled: true,
-        type: 'x',
-      },
-    },
-    xaxis: {
-      categories: months.value,
-      min: months.value[0],
-      max: months.value[months.value.length - 1],
-      range: props.monthCount - 1,
-      tickPlacement: 'on',
-    },
-    yaxis: {
-      title: {
-        text: `[${activity.value.distance_unit}]`,
-        style: {
-          fontSize: '1.2em',
+const options = computed(() => {
+    return ({
+      chart: {
+        type: 'bar',
+        toolbar: {
+          show: true,
+          tools: {
+            pan: true,
+            zoom: false,
+            zoomin: false,
+            zoomout: false,
+            reset: true,
+            download: false,
+            selection: false,
+          }
         },
-      }
-    },
-    tooltip: {
-      y: {
-        formatter: (val) => `${val} ${activity.value.distance_unit}`,
+        zoom: {
+          enabled: true,
+          type: 'x',
+        },
+        pan: {
+          enabled: true,
+          type: 'x',
+        },
+      },
+      xaxis: {
+        categories: months.value,
+        min: months.value[0],
+        max: months.value[months.value.length - 1],
+        range: props.monthCount - 1,
+        tickPlacement: 'on',
+      },
+      yaxis: {
         title: {
-          formatter: () => undefined
+          text: `[${activity.value.distance_unit}]`,
+          style: {
+            fontSize: '1.2em',
+          },
+        }
+      },
+      tooltip: {
+        y: {
+          formatter: (val) => `${val} ${activity.value.distance_unit}`,
+          title: {
+            formatter: () => undefined
+          }
+        }
+      },
+      grid: {
+        padding: {
+          left: 30,
+          right: 20
         }
       }
-    }
-  })
+    });
+  }
 )
 
 onMounted(() => {
@@ -83,11 +91,14 @@ onMounted(() => {
 
 <template>
   <h3>Distans per månad</h3>
+  <div style="height: 30vh">
   <VueApexCharts
     type="bar"
     :options
     :series
+    height="100%"
   />
+  </div>
 </template>
 
 <style scoped>

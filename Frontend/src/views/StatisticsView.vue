@@ -7,6 +7,7 @@ import {useStatisticsStore} from "@/stores/statisticsStore.js";
 import ActivitiesCountChart from "@/components/ActivitiesCountChart.vue";
 import ActivityDistanceChart from "@/components/ActivityDistanceChart.vue";
 import ActivityDurationChart from "@/components/ActivityDurationChart.vue";
+import ActivityRPEChart from "@/components/ActivityRPEChart.vue";
 
 const monthCount = ref(3)
 
@@ -46,9 +47,10 @@ function storeMonthCount() {
       {{ activity.name }}
       <span>{{ openActivities[activity.id] === false ? '˅' : '>' }}</span>
     </h2>
-    <div>
+    <div v-show="openActivities[activity.id]">
       <ActivityDistanceChart v-if="activity.log_distance" :month-count="monthCount" :activity-id="activity.id" />
       <ActivityDurationChart v-if="activity.log_duration" :month-count="monthCount" :activity-id="activity.id" />
+      <ActivityRPEChart :month-count="monthCount" :activity-id="activity.id" />
     </div>
   </div>
 </template>
