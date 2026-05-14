@@ -5,6 +5,7 @@ import edit from '@/assets/icons/edit.svg'
 import activity from '@/assets/icons/activity.png'
 import info from '@/assets/icons/info.png'
 import list from '@/assets/icons/list.png'
+import chart from '@/assets/icons/chart.png'
 
 const router = useRouter()
 </script>
@@ -15,6 +16,7 @@ const router = useRouter()
       <img :src="edit" alt="Mata in" @click="router.push('/')" />
       <img :src="activity" alt="Aktiviteter" @click="router.push('/activities')" />
       <img :src="list" alt="Lista" @click="router.push('/sessionslist')" />
+      <img :src="chart" alt="Graf" @click="router.push('/statistics')" />
       <img :src="info" alt="Om" @click="router.push('/about')" />
     </nav>
     <ToastContainer />
