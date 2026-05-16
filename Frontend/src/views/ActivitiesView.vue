@@ -6,6 +6,7 @@ import edit from '@/assets/icons/edit.svg'
 import remove from '@/assets/icons/delete.png'
 import waste from '@/assets/icons/waste.png'
 import check from '@/assets/icons/check.svg'
+import {useToastsStore} from "@/stores/toastsStore.js";
 
 const activitiesStore = useActivitiesStore()
 const { activities } = storeToRefs(activitiesStore)
@@ -60,10 +61,12 @@ onMounted(() => {
 async function saveActivity() {
   await activitiesStore.saveActivity(activity.value)
   activity.value = activitiesStore.getInitial()
+  useToastsStore().addToast('success', 'Aktiviteten har sparats')
 }
 
 async function removeActivity(act) {
   await activitiesStore.deleteActivity(act.id)
+  useToastsStore().addToast('success', 'Aktiviteten har raderats')
 }
 </script>
 

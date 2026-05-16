@@ -11,7 +11,7 @@ const { register } = useLoginStore()
 function registreraAnvandare() {
   try {
     let info = register(user.value)
-    addToast('info', info)
+    addToast('info', 'Skapade användare')
     router.push('/login')
     return
   } catch (e) {

@@ -4,6 +4,7 @@ import { useSessionsStore } from '@/stores/sessionsStore.js'
 import { useActivitiesStore } from '@/stores/activitiesStore.js'
 import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router'
+import {useToastsStore} from "@/stores/toastsStore.js";
 
 const route = useRoute()
 const sessionsStore = useSessionsStore()
@@ -31,11 +32,13 @@ async function saveSession() {
   }
   await sessionsStore.saveSession(session.value)
   session.value = sessionsStore.getInitial()
+  useToastsStore().addToast('success', 'Passet har sparats')
 }
 
 async function removeSession() {
   await sessionsStore.deleteSession(session.value.id)
   session.value = sessionsStore.getInitial()
+  useToastsStore().addToast('success', 'Passet har raderats')
 }
 </script>
 

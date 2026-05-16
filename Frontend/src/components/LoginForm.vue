@@ -1,29 +1,25 @@
 <script setup>
-import { ref } from 'vue'
-import { useLoginStore } from '@/stores/loginStore.js'
-import { useToastsStore } from '@/stores/toastsStore.js'
+import {ref} from 'vue'
+import {useLoginStore} from '@/stores/loginStore.js'
+import {useToastsStore} from '@/stores/toastsStore.js'
 
-const user = ref({ email: '', code: '' })
+const user = ref({email: '', code: ''})
 const loginStore = useLoginStore()
-const { login, resend } = useLoginStore()
+const {login, resend} = useLoginStore()
 const enterCode = ref(false)
-const loginAlternative = ref('mail')
 
 function nextState() {
-  if (loginAlternative.value === 'mail') {
-    let payload = {}
-    payload.email = user.value.email
-    loginStore
-      .sendMail(payload)
-      .then(() => {
-        enterCode.value = true
-      })
-      .catch((e) => {
-        useToastsStore().addToast('error', e.data.error)
-      })
-  } else {
-    enterCode.value = true
-  }
+  let payload = {}
+  payload.email = user.value.email
+  loginStore
+    .sendMail(payload)
+    .then(() => {
+      enterCode.value = true
+      useToastsStore().addToast('error', e.data.error)
+    })
+    .catch((e) => {
+      useToastsStore().addToast('error', e.data.error)
+    })
 }
 </script>
 <template>
@@ -31,24 +27,17 @@ function nextState() {
     <h1>Logga in</h1>
     <label>
       <span>Användare:</span>
-      <input type="email" v-model="user.email" required :disabled="enterCode" />
-    </label>
-    <label v-if="!enterCode">
-      <input type="radio" v-model="loginAlternative" value="auth" />Logga in med authenticator
-    </label>
-    <label v-if="!enterCode">
-      <input type="radio" v-model="loginAlternative" value="mail" />Skicka inloggningskod via mail
+      <input type="email" v-model="user.email" required :disabled="enterCode"/>
     </label>
     <button v-if="!enterCode" @click="nextState">Nästa</button>
     <template v-if="enterCode">
       <label>
         <span>Loginkod:</span>
-        <input type="text" v-model="user.code" pattern="[0-9]{6}" size="7" required />
+        <input type="text" v-model="user.code" pattern="[0-9]{6}" size="7" required/>
       </label>
-      <button @click="login(loginAlternative, user)">Logga in</button>
+      <button @click="login(user)">Logga in</button>
     </template>
-    <button v-if="!enterCode" @click="resend(user)">Skicka qr-kod</button>
-    <br />
+    <br/>
     <RouterLink to="/register">Ny användare</RouterLink>
   </div>
 </template>
