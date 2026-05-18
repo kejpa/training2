@@ -1,13 +1,16 @@
-import { defineStore } from 'pinia'
+import {defineStore} from 'pinia'
 import APIServices from '@/services/APIServices.ts'
-import { storeAccessToken } from '@/stores/accessTokenStorage.ts'
-import { computed, ref } from 'vue'
+import {deleteAccessToken, storeAccessToken} from '@/stores/accessTokenStorage.ts'
+import {computed, ref} from 'vue'
+import router from '@/router'
 
 export const useLoginStore = defineStore('login', () => {
+  const accessToken = ref(null)
   const user = ref(null)
   const userName = computed(() =>
     user.value ? `${user.value.firstname} ${user.value.lastname}` : '',
   )
+  const isAuthenticated = computed(() => !!accessToken.value)
 
   async function register(user) {
     return await APIServices.post('register', user)
@@ -17,16 +20,53 @@ export const useLoginStore = defineStore('login', () => {
     return await APIServices.post('getNewCode', email)
   }
 
-  async function login(alt, userInfo) {
-    let data
-    if (alt === 'mail') {
+  async function login(userInfo) {
+    try {
+      let data
       data = await APIServices.post('login/mail', userInfo)
-    } else {
-      data = await APIServices.post('login/totp', userInfo)
+
+      // Lagra token och user data
+      accessToken.value = data.access_token
+      user.value = data.user
+      storeAccessToken(accessToken.value)
+
+      return {success: true}
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.error || 'Inloggning misslyckades'
+      }
     }
-    let token = data.data.access_token
-    storeAccessToken(token)
+  }
+  function logout() {
+    // Rensa state
+    accessToken.value = null
+    user.value = null
+    deleteAccessToken()
+
+    // Anropa logout endpoint
+    APIServices.post('logout').catch(() => {})
+
+    // Redirect till login
+    router.push({ name: 'login' })
+  }
+  function restoreSession() {
+    const token = localStorage.getItem('access_token')
+    if (token) {
+      accessToken.value = token
+      fetchUser()
+    }
   }
 
-  return { user, userName, register, sendMail, login } //, resend, sendMail, logout}
+  async function fetchUser() {
+    try {
+      const data = await APIServices.get('refresh')
+      user.value = data.user
+    } catch (error) {
+      // Refreshtoken är ogiltig eller saknas
+      logout()
+    }
+  }
+
+  return {user, userName,isAuthenticated, register, sendMail, login, logout, restoreSession}
 })

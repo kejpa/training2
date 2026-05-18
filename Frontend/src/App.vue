@@ -1,6 +1,8 @@
 <script setup>
-import { RouterLink, RouterView, useRouter } from 'vue-router'
+import {onMounted} from 'vue'
+import {RouterLink, RouterView, useRouter} from 'vue-router'
 import ToastContainer from '@/components/ToastContainer.vue'
+import {useLoginStore} from "@/stores/loginStore.js";
 import edit from '@/assets/icons/edit.svg'
 import activity from '@/assets/icons/activity.png'
 import info from '@/assets/icons/info.png'
@@ -8,20 +10,26 @@ import list from '@/assets/icons/list.png'
 import chart from '@/assets/icons/chart.png'
 
 const router = useRouter()
+const loginStore = useLoginStore()
+
+onMounted(() => {
+  // Återställ session om token finns i localStorage
+  loginStore.restoreSession()
+})
 </script>
 
 <template>
   <header>
     <nav class="header">
-      <img :src="edit" alt="Mata in" @click="router.push('/')" />
-      <img :src="activity" alt="Aktiviteter" @click="router.push('/activities')" />
-      <img :src="list" alt="Lista" @click="router.push('/sessionslist')" />
-      <img :src="chart" alt="Graf" @click="router.push('/statistics')" />
-      <img :src="info" alt="Om" @click="router.push('/about')" />
+      <img :src="edit" alt="Mata in" @click="router.push('/')"/>
+      <img :src="activity" alt="Aktiviteter" @click="router.push('/activities')"/>
+      <img :src="list" alt="Lista" @click="router.push('/sessionslist')"/>
+      <img :src="chart" alt="Graf" @click="router.push('/statistics')"/>
+      <img :src="info" alt="Om" @click="router.push('/about')"/>
     </nav>
-    <ToastContainer />
+    <ToastContainer/>
     <h1>
-      <img alt="Dagbok" class="logo" src="@/assets/icons/notebook.png" />
+      <img alt="Dagbok" class="logo" src="@/assets/icons/notebook.png"/>
       Träningsdagbok
     </h1>
 
@@ -36,7 +44,7 @@ const router = useRouter()
     </div>
   </header>
   <main>
-    <RouterView />
+    <RouterView/>
   </main>
   <footer>
     &copy; Kjell Hansen 2026{{
@@ -49,9 +57,11 @@ const router = useRouter()
 header {
   line-height: 1.5;
 }
+
 header h1 {
   text-align: center;
 }
+
 .logo {
   display: inline-block;
   width: 7vw;
@@ -60,6 +70,7 @@ header h1 {
 .wrapper nav {
   display: none;
 }
+
 nav.header {
   grid-area: header;
   background-color: #000080;
@@ -68,6 +79,7 @@ nav.header {
   padding: 1vh;
   justify-content: space-evenly;
 }
+
 main {
   grid-area: main;
   margin: 0 2vw;
@@ -90,6 +102,7 @@ nav.header img {
   .wrapper nav {
     display: initial;
   }
+
   nav.header {
     display: none;
   }

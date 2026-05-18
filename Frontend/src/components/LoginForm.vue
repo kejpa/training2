@@ -2,6 +2,7 @@
 import {ref} from 'vue'
 import {useLoginStore} from '@/stores/loginStore.js'
 import {useToastsStore} from '@/stores/toastsStore.js'
+import router from "@/router/index.js";
 
 const user = ref({email: '', code: ''})
 const loginStore = useLoginStore()
@@ -21,6 +22,23 @@ function nextState() {
       useToastsStore().addToast('error', e.data.error)
     })
 }
+
+async function handleLogin() {
+  error.value = ''
+
+  const result = await loginStore.login( {
+    email: email.value,
+    code: code.value
+  })
+
+  if (result.success) {
+    // Redirect till ursprunglig destination eller home
+    const redirect = route.query.redirect || '/'
+    router.push(redirect)
+  } else {
+    error.value = result.error
+  }
+}
 </script>
 <template>
   <div>
@@ -35,7 +53,7 @@ function nextState() {
         <span>Loginkod:</span>
         <input type="text" v-model="user.code" pattern="[0-9]{6}" size="7" required/>
       </label>
-      <button @click="login(user)">Logga in</button>
+      <button @click="handleLogin()">Logga in</button>
     </template>
     <br/>
     <RouterLink to="/register">Ny användare</RouterLink>
