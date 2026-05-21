@@ -1,6 +1,6 @@
 import {defineStore} from 'pinia'
 import APIServices from '@/services/APIServices.ts'
-import {deleteAccessToken, storeAccessToken} from '@/stores/accessTokenStorage.ts'
+import {deleteAccessToken, getAccessToken, storeAccessToken} from '@/stores/accessTokenStorage.ts'
 import {computed, ref} from 'vue'
 import router from '@/router'
 
@@ -22,12 +22,11 @@ export const useLoginStore = defineStore('login', () => {
 
   async function login(userInfo) {
     try {
-      let data
-      data = await APIServices.post('login/mail', userInfo)
+      let data = await APIServices.post('login/mail', userInfo)
 
       // Lagra token och user data
-      accessToken.value = data.access_token
-      user.value = data.user
+      accessToken.value = data.data.access_token
+      user.value = data.data.user
       storeAccessToken(accessToken.value)
 
       return {success: true}
@@ -51,7 +50,7 @@ export const useLoginStore = defineStore('login', () => {
     router.push({ name: 'login' })
   }
   function restoreSession() {
-    const token = localStorage.getItem('access_token')
+    const token = getAccessToken()
     if (token) {
       accessToken.value = token
       fetchUser()

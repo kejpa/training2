@@ -1,19 +1,18 @@
 <script setup>
-import { ref } from 'vue'
-import { useLoginStore } from '@/stores/loginStore.js'
+import {ref} from 'vue'
+import {useLoginStore} from '@/stores/loginStore.js'
 import router from '@/router/index.js'
-import { useToastsStore } from '@/stores/toastsStore.js'
+import {useToastsStore} from '@/stores/toastsStore.js'
 
-const { addToast } = useToastsStore()
-const user = ref({ email: '', otp: '' })
-const { register } = useLoginStore()
+const {addToast} = useToastsStore()
+const user = ref({email: '', otp: ''})
+const {register} = useLoginStore()
 
 function registreraAnvandare() {
   try {
-    let info = register(user.value)
+    register(user.value)
     addToast('info', 'Skapade användare')
     router.push('/login')
-    return
   } catch (e) {
     console.log(e)
     addToast('error', 'Kunde inte skapa användare')
@@ -25,18 +24,18 @@ function registreraAnvandare() {
     <h1>Registrera användare</h1>
     <label>
       <span>Förnamn:</span>
-      <input type="text" v-model="user.firstname" required />
+      <input type="text" v-model="user.firstname" required/>
     </label>
     <label>
       <span>Efternamn:</span>
-      <input type="text" v-model="user.lastname" required />
+      <input type="text" v-model="user.lastname" required/>
     </label>
     <label>
       <span>Epost:</span>
-      <input type="email" v-model="user.email" required />
+      <input type="email" v-model="user.email" required/>
     </label>
     <button @click="registreraAnvandare">Registrera!</button>
-    <br />
+    <br/>
     <RouterLink to="/login">Logga in</RouterLink>
   </div>
 </template>

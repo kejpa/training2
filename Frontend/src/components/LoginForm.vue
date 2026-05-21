@@ -1,9 +1,11 @@
 <script setup>
-import {ref} from 'vue'
+import {nextTick, ref} from 'vue'
 import {useLoginStore} from '@/stores/loginStore.js'
 import {useToastsStore} from '@/stores/toastsStore.js'
 import router from "@/router/index.js";
+import {useRoute} from "vue-router";
 
+const route = useRoute()
 const user = ref({email: '', code: ''})
 const loginStore = useLoginStore()
 const {login, resend} = useLoginStore()
@@ -16,7 +18,6 @@ function nextState() {
     .sendMail(payload)
     .then(() => {
       enterCode.value = true
-      useToastsStore().addToast('error', e.data.error)
     })
     .catch((e) => {
       useToastsStore().addToast('error', e.data.error)
@@ -24,19 +25,23 @@ function nextState() {
 }
 
 async function handleLogin() {
-  error.value = ''
-
-  const result = await loginStore.login( {
-    email: email.value,
-    code: code.value
+  const result = await loginStore.login({
+    email: user.value.email,
+    code: user.value.code
   })
 
   if (result.success) {
+    // Vänta på att store state har uppdaterats
+    await nextTick()
+
     // Redirect till ursprunglig destination eller home
     const redirect = route.query.redirect || '/'
-    router.push(redirect)
+    // Dubbel-check att vi är inloggade
+    if (loginStore.isAuthenticated) {
+      router.replace(redirect)
+    }
   } else {
-    error.value = result.error
+    useToastsStore().addToast('error', result.error)
   }
 }
 </script>

@@ -1,5 +1,9 @@
 <script setup>
 import {APP_VERSION} from '@/version'
+import {useLoginStore} from "@/stores/loginStore.js";
+
+const loginStore = useLoginStore()
+const isAuthenticated = loginStore.isAuthenticated
 
 </script>
 <template>
@@ -14,14 +18,17 @@ import {APP_VERSION} from '@/version'
       All data lagras säkert och endast du har tillgång till dina träningsuppgifter.
     </p>
     <div class="version-badge">
-      <p>v{{ APP_VERSION }}</p>
+      <p>Version: v{{ APP_VERSION }}</p>
+      <button v-if="isAuthenticated" @click="loginStore.logout()">Logga ut</button>
      </div>
 
   </div>
 </template>
 
 <style>
-
+.version-badge {
+  margin: 2em auto 0 1em;
+}
 @media (min-width: 650px) {
   .about {
     display: flex;

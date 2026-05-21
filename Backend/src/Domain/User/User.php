@@ -86,10 +86,12 @@ class User implements JsonSerializable {
 
     public function setCode(?string $code): void {
         $this->code = $code;
+        $this->updated_at = new DateTimeImmutable();
     }
 
     public function setExpires(?DateTimeImmutable $expires): void {
         $this->expires = $expires;
+        $this->updated_at = new DateTimeImmutable();
     }
 
     public function getExpires(): ?DateTimeImmutable {

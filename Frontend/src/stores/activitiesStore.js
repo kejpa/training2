@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import {defineStore} from 'pinia'
+import {ref} from 'vue'
 import APIServices from '@/services/APIServices.ts'
 
 export const useActivitiesStore = defineStore('activities', () => {
@@ -51,8 +51,8 @@ export const useActivitiesStore = defineStore('activities', () => {
   }
 
   function getInitial() {
-    return { ...initial }
+    return {...initial}
   }
 
-  return { activities, getInitial, getAll, saveActivity, deleteActivity }
+  return {activities, getInitial, getAll, saveActivity, deleteActivity}
 })

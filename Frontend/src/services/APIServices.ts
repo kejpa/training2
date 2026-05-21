@@ -25,7 +25,7 @@ export default new (class APIService {
         method: 'GET',
       })
         .then((response) => {
-          if (response.status === 200) {
+          if (response.ok) {
             resolve(response.json())
           } else if (response.status === 401) {
             fetch(this.apiBase + 'refresh')
@@ -78,7 +78,7 @@ export default new (class APIService {
         //        credentials: 'include'
       })
         .then((response) => {
-          if (response.status === 200) {
+          if (response.ok) {
             resolve(response.headers)
           } else {
             throw response.json()
@@ -110,7 +110,7 @@ export default new (class APIService {
         body: JSON.stringify(object),
       })
         .then((response) => {
-          if (response.status === 200) {
+          if (response.ok) {
             resolve(response.json())
           } else if (response.status === 401) {
             fetch(this.apiBase + 'refresh')
@@ -170,7 +170,7 @@ export default new (class APIService {
         body: JSON.stringify(object),
       })
         .then((response) => {
-          if (response.status === 200) {
+          if (response.ok) {
             resolve(response.json())
           } else if (response.status === 401) {
             fetch(this.apiBase + 'refresh')
@@ -227,8 +227,8 @@ export default new (class APIService {
         },
       })
         .then((response) => {
-          if (response.status === 200) {
-            resolve(response.json())
+          if (response.ok) {
+            resolve(null)
           } else if (response.status === 401) {
             fetch(this.apiBase + 'refresh')
               .then((response) => {
@@ -249,7 +249,7 @@ export default new (class APIService {
                   },
                 }).then((response) => {
                   if (response.ok) {
-                    resolve(response.json())
+                    resolve(null)
                   } else {
                     throw response.json()
                   }

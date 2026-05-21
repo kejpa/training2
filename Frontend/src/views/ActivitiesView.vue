@@ -98,8 +98,8 @@ async function removeActivity(act) {
     </div>
   </div>
   <hr />
-  <div id="list">
-    <ul v-if="activities.length > 0" class="header">
+  <div id="list" v-if="activities.length > 0">
+    <ul class="header">
       <li>Emoji</li>
       <li>Name</li>
       <li>Log distance</li>
