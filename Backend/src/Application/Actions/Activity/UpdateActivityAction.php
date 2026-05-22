@@ -43,6 +43,7 @@ class UpdateActivityAction extends ActivityAction {
         $activity->setLogTime($data['log_duration'] ?? $activity->getLogTime());
         $activity->setName($data['name'] ?? $activity->getName());
         $activity->setDistanceUnit($data['distance_unit'] ?? $activity->getDistanceUnit());
+        $activity->setSortorder($data['sortorder'] ?? $activity->getSortorder());
         $this->activityRepository->update($activity);
 
         // returnerar data

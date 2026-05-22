@@ -11,11 +11,12 @@ export const useActivitiesStore = defineStore('activities', () => {
     log_distance: false,
     log_duration: false,
     distance_unit: 'm',
+    sortorder: -1
   }
 
   async function getAll() {
     let data = await APIServices.get('activities')
-    activities.value = data.data.activities
+    activities.value = data.data.activities.sort((a, b) => a.sortorder - b.sortorder)
   }
 
   async function saveActivity(activity) {
@@ -23,10 +24,10 @@ export const useActivitiesStore = defineStore('activities', () => {
       await updateActivity(activity.id, activity)
     } else {
       await addActivity(activity)
+      getAll().then(() => {
+        console.log('Activities saved')
+      })
     }
-    getAll().then(() => {
-      console.log('Activities saved')
-    })
   }
 
   async function addActivity(activity) {

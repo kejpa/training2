@@ -38,7 +38,7 @@ class DbalActivityRepository extends AbstractDBRepository implements ActivityRep
         $this->connection->update(
             self::TABLE,
             $activity->state(),
-            ['id' => $activity->getId(), 'userid' => $activity->getUserId()]
+            ['id' => $activity->getId()->toString(), 'userid' => $activity->getUserId()->toString()]
         );
     }
 

@@ -15,7 +15,8 @@ class Activity implements JsonSerializable {
         private string $name,
         private bool $logDistance,
         private bool $logTime,
-        private string $distanceUnit
+        private string $distanceUnit,
+        private int $sortorder
     ) {
         if (!$this->id) {
             $this->id = new ActivityId();
@@ -121,6 +122,20 @@ class Activity implements JsonSerializable {
     }
 
     /**
+     * @return int
+     */
+    public function getSortorder(): int {
+        return $this->sortorder;
+    }
+
+    /**
+     * @param int $sortorder
+     */
+    public function setSortorder(int $sortorder): void {
+        $this->sortorder = $sortorder;
+    }
+
+    /**
      * @param array<string, mixed> $row
      * @return self
      */
@@ -132,7 +147,8 @@ class Activity implements JsonSerializable {
             $row['name'],
             $row['log_distance'],
             $row['log_duration'],
-            $row['distance_unit']
+            $row['distance_unit'],
+            $row['sortorder']
         );
     }
 
@@ -149,6 +165,7 @@ class Activity implements JsonSerializable {
             'log_distance' => (int)$this->logDistance,
             'log_duration' => (int)$this->logTime,
             'distance_unit' => $this->logDistance ? $this->distanceUnit : '',
+            'sortorder' => $this->sortorder,
         ];
     }
 
@@ -165,6 +182,7 @@ class Activity implements JsonSerializable {
         $me->log_distance = $this->logDistance;
         $me->log_duration = $this->logTime;
         $me->distance_unit = $this->distanceUnit;
+        $me->sortorder = $this->sortorder;
 
         return $me;
     }
