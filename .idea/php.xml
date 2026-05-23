@@ -13,6 +13,7 @@
   <component name="PhpCodeSniffer">
     <phpcs_settings>
       <PhpCSConfiguration beautifier_path="$PROJECT_DIR$/Backend/vendor/bin/phpcbf" tool_path="$PROJECT_DIR$/Backend/vendor/bin/phpcs" />
+      <phpcs_by_interpreter asDefaultInterpreter="true" interpreter_id="0303c7eb-81e5-4c0c-828e-4e2c2e86a410" beautifier_path="C:\Users\kjell\Documents\Webbprojekt\Training2\Backend\vendor\bin\phpcbf" tool_path="C:\Users\kjell\Documents\Webbprojekt\Training2\Backend\vendor\bin\phpcs" timeout="30000" />
     </phpcs_settings>
   </component>
   <component name="PhpIncludePathManager">
@@ -113,6 +114,7 @@
   <component name="PhpStan">
     <PhpStan_settings>
       <PhpStanConfiguration tool_path="$PROJECT_DIR$/Backend/vendor/bin/phpstan" />
+      <phpstan_by_interpreter asDefaultInterpreter="true" interpreter_id="0303c7eb-81e5-4c0c-828e-4e2c2e86a410" tool_path="C:\Users\kjell\Documents\Webbprojekt\Training2\Backend\vendor\bin\phpstan" timeout="60000" />
     </PhpStan_settings>
   </component>
   <component name="PhpStanOptionsConfiguration">
@@ -122,6 +124,11 @@
     <phpunit_settings>
       <PhpUnitSettings configuration_file_path="$PROJECT_DIR$/Backend/phpunit.xml" custom_loader_path="$PROJECT_DIR$/Backend/vendor/autoload.php" use_configuration_file="true" />
     </phpunit_settings>
+  </component>
+  <component name="Psalm">
+    <Psalm_settings>
+      <psalm_fixer_by_interpreter asDefaultInterpreter="true" interpreter_id="0303c7eb-81e5-4c0c-828e-4e2c2e86a410" timeout="60000" />
+    </Psalm_settings>
   </component>
   <component name="PsalmOptionsConfiguration">
     <option name="transferred" value="true" />

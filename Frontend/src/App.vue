@@ -3,6 +3,7 @@ import {onMounted} from 'vue'
 import {RouterLink, RouterView, useRouter} from 'vue-router'
 import ToastContainer from '@/components/ToastContainer.vue'
 import {useLoginStore} from "@/stores/loginStore.js";
+import {useRegisterSW} from 'virtual:pwa-register/vue'
 import edit from '@/assets/icons/edit.svg'
 import activity from '@/assets/icons/activity.png'
 import info from '@/assets/icons/info.png'
@@ -11,6 +12,8 @@ import chart from '@/assets/icons/chart.png'
 
 const router = useRouter()
 const loginStore = useLoginStore()
+
+const {needRefresh, updateServiceWorker} = useRegisterSW()
 
 onMounted(() => {
   // Återställ session om token finns i localStorage
@@ -28,6 +31,11 @@ onMounted(() => {
       <img :src="info" alt="Om" @click="router.push('/about')"/>
     </nav>
     <ToastContainer/>
+    <div v-if="needRefresh" class="update-banner">
+      <span>En ny version finns tillgänglig.</span>
+      <button @click="updateServiceWorker()">Uppdatera nu</button>
+      <button @click="needRefresh = false">Senare</button>
+    </div>
     <h1>
       <img alt="Dagbok" class="logo" src="@/assets/icons/notebook.png"/>
       Träningsdagbok
@@ -85,6 +93,42 @@ main {
   margin: 0 2vw;
   overflow: auto;
   padding-left: 1em;
+}
+
+.update-banner {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1a1a2e;
+  border: 1px solid #41b883;
+  border-radius: 8px;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  white-space: nowrap;
+}
+
+.update-banner button {
+  padding: 0.3rem 0.8rem;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.update-banner button:first-of-type {
+  background: #41b883;
+  color: white;
+}
+
+.update-banner button:last-of-type {
+  background: transparent;
+  border: 1px solid #666;
+  color: inherit;
 }
 
 footer {
