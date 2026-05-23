@@ -7,6 +7,7 @@ namespace Tests\Domain\Activity;
 use App\Domain\Activity\Activity;
 use App\Domain\ValueObject\ActivityId;
 use App\Domain\ValueObject\UserId;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class ActivityTest extends TestCase {
@@ -17,7 +18,8 @@ class ActivityTest extends TestCase {
         string $name = 'Löpning',
         bool $logDistance = true,
         bool $logTime = true,
-        string $distanceUnit = 'km'
+        string $distanceUnit = 'km',
+        int $sortorder=2
     ): Activity {
         return new Activity(
             $id,
@@ -26,7 +28,8 @@ class ActivityTest extends TestCase {
             $name,
             $logDistance,
             $logTime,
-            $distanceUnit
+            $distanceUnit,
+            $sortorder
         );
     }
 
@@ -39,7 +42,7 @@ class ActivityTest extends TestCase {
             'Löpning',
             true,
             true,
-            'km'
+            'km', 2
         );
 
         $this->assertInstanceOf(Activity::class, $activity);
@@ -144,6 +147,19 @@ class ActivityTest extends TestCase {
 
         $this->assertEquals('mi', $activity->getDistanceUnit());
     }
+    public function testGetSortorder(): void {
+        $activity = $this->createTestActivity(null, null, '🏃', 'Test', true, true, 'mi', 2);
+
+        $this->assertEquals(2, $activity->getSortorder());
+    }
+
+    public function testSetOrder(): void {
+        $activity = $this->createTestActivity();
+
+        $activity->setSortorder(3);
+
+        $this->assertEquals(3, $activity->getSortorder());
+    }
 
     public function testFromRow(): void {
         $activityId = (new ActivityId())->toString();
@@ -156,7 +172,8 @@ class ActivityTest extends TestCase {
             'name' => 'Löpning',
             'log_distance' => true,
             'log_duration' => false,
-            'distance_unit' => 'km'
+            'distance_unit' => 'km',
+            'sortorder' => 2
         ];
 
         $activity = Activity::fromRow($row);
@@ -169,6 +186,7 @@ class ActivityTest extends TestCase {
         $this->assertTrue($activity->getLogDistance());
         $this->assertFalse($activity->getLogTime());
         $this->assertEquals('km', $activity->getDistanceUnit());
+        $this->assertEquals(2, $activity->getSortorder());
     }
 
     public function testFromRowWithDifferentData(): void {
@@ -179,7 +197,8 @@ class ActivityTest extends TestCase {
             'name' => 'Cykling',
             'log_distance' => false,
             'log_duration' => true,
-            'distance_unit' => 'mi'
+            'distance_unit' => 'mi',
+            'sortorder' => 2
         ];
 
         $activity = Activity::fromRow($row);
@@ -189,6 +208,7 @@ class ActivityTest extends TestCase {
         $this->assertFalse($activity->getLogDistance());
         $this->assertTrue($activity->getLogTime());
         $this->assertEquals('mi', $activity->getDistanceUnit());
+        $this->assertEquals(2, $activity->getSortorder());
     }
 
     public function testState(): void {
@@ -202,7 +222,8 @@ class ActivityTest extends TestCase {
             'Löpning',
             true,
             false,
-            'km'
+            'km',
+            2
         );
 
         $state = $activity->state();
@@ -215,6 +236,7 @@ class ActivityTest extends TestCase {
         $this->assertArrayHasKey('log_distance', $state);
         $this->assertArrayHasKey('log_duration', $state);
         $this->assertArrayHasKey('distance_unit', $state);
+        $this->assertArrayHasKey('sortorder', $state);
 
         $this->assertEquals($activityId->toString(), $state['id']);
         $this->assertEquals($userId->toString(), $state['userid']);
@@ -223,6 +245,7 @@ class ActivityTest extends TestCase {
         $this->assertTrue((bool)$state['log_distance']);
         $this->assertFalse((bool)$state['log_duration']);
         $this->assertEquals('km', $state['distance_unit']);
+        $this->assertEquals(2, $state['sortorder']);
     }
 
     public function testStateReturnsCorrectTypes(): void {
@@ -236,6 +259,7 @@ class ActivityTest extends TestCase {
         $this->assertIsInt($state['log_distance']);
         $this->assertIsInt($state['log_duration']);
         $this->assertIsString($state['distance_unit']);
+        $this->assertIsInt($state['sortorder']);
     }
 
     public function testJsonSerialize(): void {
@@ -249,7 +273,8 @@ class ActivityTest extends TestCase {
             'Styrketräning',
             false,
             true,
-            'kg'
+            'kg',
+            2
         );
 
         $json = $activity->jsonSerialize();
@@ -262,6 +287,7 @@ class ActivityTest extends TestCase {
         $this->assertFalse($json->log_distance);
         $this->assertTrue($json->log_duration);
         $this->assertEquals('kg', $json->distance_unit);
+        $this->assertEquals(2, $json->sortorder);
     }
 
     public function testJsonSerializeHasAllProperties(): void {
@@ -275,6 +301,7 @@ class ActivityTest extends TestCase {
         $this->assertObjectHasProperty('log_distance', $json);
         $this->assertObjectHasProperty('log_duration', $json);
         $this->assertObjectHasProperty('distance_unit', $json);
+        $this->assertObjectHasProperty('sortorder', $json);
     }
 
     public function testJsonSerializeCanBeEncoded(): void {
@@ -317,9 +344,7 @@ class ActivityTest extends TestCase {
         $this->assertEquals($state['distance_unit'], $json->distance_unit);
     }
 
-    /**
-     * @dataProvider booleanCombinationsProvider
-     */
+    #[DataProvider('booleanCombinationsProvider')]
     public function testHandlesDifferentBooleanCombinations(bool $logDistance, bool $logTime): void {
         $activity = $this->createTestActivity(null, null, '🏃', 'Test', $logDistance, $logTime);
 
@@ -346,9 +371,7 @@ class ActivityTest extends TestCase {
         ];
     }
 
-    /**
-     * @dataProvider distanceUnitProvider
-     */
+    #[DataProvider('distanceUnitProvider')]
     public function testHandlesDifferentDistanceUnits(string $unit): void {
         $activity = $this->createTestActivity(null, null, '🏃', 'Test', true, true, $unit);
 

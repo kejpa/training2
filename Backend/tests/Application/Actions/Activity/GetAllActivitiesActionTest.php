@@ -57,7 +57,8 @@ class GetAllActivitiesActionTest extends TestCase {
             $name,
             true,
             true,
-            'km'
+            'km',
+            2
         );
     }
 
@@ -224,7 +225,8 @@ class GetAllActivitiesActionTest extends TestCase {
             'Styrketräning',
             false,
             true,
-            'kg'
+            'kg',
+            2
         );
 
         $this->request
@@ -394,9 +396,9 @@ class GetAllActivitiesActionTest extends TestCase {
         $userId = (new UserId())->toString();
 
         $activities = [
-            new Activity(new ActivityId(), new UserId($userId), '🏃', 'Löpning', true, true, 'km'),
-            new Activity(new ActivityId(), new UserId($userId), '🧘', 'Yoga', false, true, 'min'),
-            new Activity(new ActivityId(), new UserId($userId), '🏋️', 'Styrka', false, false, ''),
+            new Activity(new ActivityId(), new UserId($userId), '🏃', 'Löpning', true, true, 'km',2),
+            new Activity(new ActivityId(), new UserId($userId), '🧘', 'Yoga', false, true, 'min',2),
+            new Activity(new ActivityId(), new UserId($userId), '🏋️', 'Styrka', false, false, '',2),
         ];
 
         $this->request

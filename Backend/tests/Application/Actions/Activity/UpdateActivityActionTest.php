@@ -67,7 +67,8 @@ class UpdateActivityActionTest extends TestCase {
         string $name = 'Löpning',
         bool $logDistance = true,
         bool $logTime = true,
-        string $distanceUnit = 'km'
+        string $distanceUnit = 'km',
+        int $sortorder=2
     ): Activity {
         return new Activity(
             $activityId ? new ActivityId($activityId) : new ActivityId(),
@@ -76,7 +77,8 @@ class UpdateActivityActionTest extends TestCase {
             $name,
             $logDistance,
             $logTime,
-            $distanceUnit
+            $distanceUnit,
+            $sortorder
         );
     }
 

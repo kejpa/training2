@@ -65,7 +65,8 @@ class GetActivityActionTest extends TestCase {
             'Löpning',
             true,
             true,
-            'km'
+            'km',
+            2
         );
     }
 
@@ -300,7 +301,8 @@ class GetActivityActionTest extends TestCase {
             'Styrketräning',
             false,
             true,
-            'kg'
+            'kg',
+            2
         );
 
         $this->setArgs(['id' => $activityId]);
@@ -329,6 +331,7 @@ class GetActivityActionTest extends TestCase {
         $this->assertFalse($activityData->log_distance);
         $this->assertTrue($activityData->log_duration);
         $this->assertEquals('kg', $activityData->distance_unit);
+        $this->assertEquals(2, $activityData->sortorder);
     }
 
 
@@ -396,7 +399,8 @@ class GetActivityActionTest extends TestCase {
                 'Test',
                 true,
                 true,
-                'km'
+                'km',
+                2
             );
 
             $this->setArgs(['id' => $activityId]);

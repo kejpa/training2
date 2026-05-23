@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Domain\Activity;
 
 use App\Domain\Activity\ActivityValidator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class ActivityValidatorTest extends TestCase {
@@ -22,7 +23,8 @@ class ActivityValidatorTest extends TestCase {
             'emoji' => '🏃',
             'log_distance' => true,
             'log_duration' => true,
-            'distance_unit' => 'km'
+            'distance_unit' => 'km',
+            'sortorder' => 2,
         ];
 
         $result = $this->validator->validateRegister($data);
@@ -294,9 +296,7 @@ class ActivityValidatorTest extends TestCase {
         $this->assertTrue($result);
     }
 
-    /**
-     * @dataProvider validDataProvider
-     */
+    #[DataProvider('validDataProvider')]
     public function testValidatesVariousValidData(array $data): void {
         $result = $this->validator->validateRegister($data);
 
@@ -327,9 +327,7 @@ class ActivityValidatorTest extends TestCase {
         ];
     }
 
-    /**
-     * @dataProvider invalidDataProvider
-     */
+    #[DataProvider('invalidDataProvider')]
     public function testValidatesVariousInvalidData(array $data, array $expectedErrors): void {
         $result = $this->validator->validateRegister($data);
 

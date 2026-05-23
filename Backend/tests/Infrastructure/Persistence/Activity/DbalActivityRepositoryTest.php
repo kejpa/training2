@@ -40,7 +40,8 @@ class DbalActivityRepositoryTest extends TestCase {
             name TEXT NOT NULL,
             log_distance INTEGER NOT NULL,
             log_duration INTEGER NOT NULL,
-            distance_unit TEXT NOT NULL
+            distance_unit TEXT NOT NULL,
+            sortorder INTEGER NOT NULL
         )
         SQL;
 
@@ -54,7 +55,8 @@ class DbalActivityRepositoryTest extends TestCase {
         string $name = 'Löpning',
         bool $logDistance = true,
         bool $logTime = true,
-        string $distanceUnit = 'km'
+        string $distanceUnit = 'km',
+        int $sortorder=2
     ): Activity {
         return new Activity(
             $activityId ? new ActivityId($activityId) : new ActivityId(),
@@ -63,7 +65,8 @@ class DbalActivityRepositoryTest extends TestCase {
             $name,
             $logDistance,
             $logTime,
-            $distanceUnit
+            $distanceUnit,
+            $sortorder
         );
     }
 
@@ -89,7 +92,8 @@ class DbalActivityRepositoryTest extends TestCase {
             'Styrketräning',
             false,
             true,
-            'kg'
+            'kg',
+            2
         );
 
         $this->repository->add($activity);
@@ -157,9 +161,9 @@ class DbalActivityRepositoryTest extends TestCase {
         $user1 = new UserId();
         $user2 = new UserId();
 
-        $activity1 = new Activity(new ActivityId(), $user1, '🏃', 'User1 Activity', true, true, 'km');
-        $activity2 = new Activity(new ActivityId(), $user2, '🚴', 'User2 Activity', true, true, 'km');
-        $activity3 = new Activity(new ActivityId(), $user1, '🏊', 'User1 Activity 2', true, true, 'km');
+        $activity1 = new Activity(new ActivityId(), $user1, '🏃', 'User1 Activity', true, true, 'km',2);
+        $activity2 = new Activity(new ActivityId(), $user2, '🚴', 'User2 Activity', true, true, 'km',2);
+        $activity3 = new Activity(new ActivityId(), $user1, '🏊', 'User1 Activity 2', true, true, 'km',2);
 
         $this->repository->add($activity1);
         $this->repository->add($activity2);
@@ -185,7 +189,8 @@ class DbalActivityRepositoryTest extends TestCase {
             'Styrketräning',
             false,
             true,
-            'kg'
+            'kg',
+            2
         );
 
         $this->repository->add($originalActivity);
@@ -202,6 +207,7 @@ class DbalActivityRepositoryTest extends TestCase {
         $this->assertFalse($activity->getLogDistance());
         $this->assertTrue($activity->getLogTime());
         $this->assertEquals('', $activity->getDistanceUnit());
+        $this->assertEquals(2, $activity->getSortorder());
     }
 
     // ========== getActivityForUser() tests ==========
@@ -254,7 +260,8 @@ class DbalActivityRepositoryTest extends TestCase {
             'Yoga',
             false,
             true,
-            'min'
+            'min',
+            2
         );
 
         $this->repository->add($originalActivity);
@@ -266,6 +273,7 @@ class DbalActivityRepositoryTest extends TestCase {
         $this->assertFalse($result->getLogDistance());
         $this->assertTrue($result->getLogTime());
         $this->assertEquals('', $result->getDistanceUnit());
+        $this->assertEquals(2, $result->getSortorder());
     }
 
     // ========== update() tests ==========

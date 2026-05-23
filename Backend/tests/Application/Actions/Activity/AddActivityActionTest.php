@@ -54,7 +54,8 @@ class AddActivityActionTest extends TestCase {
             'name' => 'Löpning',
             'log_distance' => true,
             'log_duration' => true,
-            'distance_unit' => 'km'
+            'distance_unit' => 'km',
+            'sortorder' => 2
         ];
     }
 
@@ -110,7 +111,8 @@ class AddActivityActionTest extends TestCase {
             'name' => 'Cykling',
             'log_distance' => true,
             'log_duration' => false,
-            'distance_unit' => 'km'
+            'distance_unit' => 'km',
+            'sortorder' => 2
         ];
 
         $this->request
@@ -268,7 +270,8 @@ class AddActivityActionTest extends TestCase {
             'NAME' => 'Löpning',
             'LOG_DISTANCE' => true,
             'LOG_DURATION' => true,
-            'DISTANCE_UNIT' => 'km'
+            'DISTANCE_UNIT' => 'km',
+            'SORTORDER'=> 2
         ];
 
         $this->request
@@ -286,7 +289,8 @@ class AddActivityActionTest extends TestCase {
                 'name' => 'Löpning',
                 'log_distance' => true,
                 'log_duration' => true,
-                'distance_unit' => 'km'
+                'distance_unit' => 'km',
+                'sortorder' => 2
             ])
             ->willReturn(true);
 
@@ -309,7 +313,8 @@ class AddActivityActionTest extends TestCase {
             'name' => 'Styrketräning',
             'log_distance' => false,
             'log_duration' => true,
-            'distance_unit' => 'km'
+            'distance_unit' => 'km',
+            'sortorder' => 2
         ];
 
         $this->request
@@ -342,8 +347,16 @@ class AddActivityActionTest extends TestCase {
         $this->assertObjectHasProperty('userId', $body->data);
         $this->assertObjectHasProperty('emoji', $body->data);
         $this->assertObjectHasProperty('name', $body->data);
+        $this->assertObjectHasProperty('sortorder', $body->data);
+        $this->assertObjectHasProperty('log_distance', $body->data);
+        $this->assertObjectHasProperty('log_duration', $body->data);
+        $this->assertObjectHasProperty('distance_unit', $body->data);
         $this->assertEquals('🏋️', $body->data->emoji);
         $this->assertEquals('Styrketräning', $body->data->name);
+        $this->assertEquals(2, $body->data->sortorder);
+        $this->assertEquals(false, $body->data->log_distance);
+        $this->assertEquals(true, $body->data->log_duration);
+        $this->assertEquals('km', $body->data->distance_unit);
     }
 
     public function testRepositoryIsCalledExactlyOnce(): void {
@@ -373,8 +386,7 @@ class AddActivityActionTest extends TestCase {
         );
     }
 
-    public function testHandlesEmojiCorrectly(): void
-    {
+    public function testHandlesEmojiCorrectly(): void {
         $emojis = ['🏃', '🚴', '🏊', '🧘', '🏋️', '⚽', '🏀', '💪'];
 
         foreach ($emojis as $emoji) {
@@ -387,7 +399,8 @@ class AddActivityActionTest extends TestCase {
                 'name' => 'Test',
                 'log_distance' => true,
                 'log_duration' => true,
-                'distance_unit' => 'km'
+                'distance_unit' => 'km',
+                'sortorder' => 2
             ];
 
             $this->request
@@ -418,6 +431,7 @@ class AddActivityActionTest extends TestCase {
             $this->assertEquals($emoji, $capturedActivity->getEmoji(), "Failed for emoji: $emoji");
         }
     }
+
     public function testActivityCreatedWithAllFields(): void {
         $userId = (new UserId())->toString();
         $data = [
@@ -425,7 +439,8 @@ class AddActivityActionTest extends TestCase {
             'name' => 'Löpning',
             'log_distance' => true,
             'log_duration' => false,
-            'distance_unit' => 'km'
+            'distance_unit' => 'km',
+            'sortorder' => 2
         ];
 
         $this->request
@@ -460,10 +475,10 @@ class AddActivityActionTest extends TestCase {
         $this->assertTrue($capturedActivity->getLogDistance());
         $this->assertFalse($capturedActivity->getLogTime());
         $this->assertEquals('km', $capturedActivity->getDistanceUnit());
+        $this->assertEquals(2, $capturedActivity->getSortorder());
     }
 
-    public function testHandlesBooleanFlags(): void
-    {
+    public function testHandlesBooleanFlags(): void {
         $testCases = [
             ['log_distance' => true, 'log_duration' => true],
             ['log_distance' => true, 'log_duration' => false],
@@ -481,7 +496,8 @@ class AddActivityActionTest extends TestCase {
                 'name' => 'Test',
                 'log_distance' => $flags['log_distance'],
                 'log_duration' => $flags['log_duration'],
-                'distance_unit' => 'km'
+                'distance_unit' => 'km',
+                'sortorder' => 2
             ];
 
             $this->request
@@ -513,8 +529,8 @@ class AddActivityActionTest extends TestCase {
             $this->assertEquals($flags['log_duration'], $capturedActivity->getLogTime());
         }
     }
-    public function testHandlesDifferentDistanceUnits(): void
-    {
+
+    public function testHandlesDifferentDistanceUnits(): void {
         $units = ['km', 'mi', 'm', 'yd'];
 
         foreach ($units as $unit) {
@@ -527,7 +543,8 @@ class AddActivityActionTest extends TestCase {
                 'name' => 'Test',
                 'log_distance' => true,
                 'log_duration' => true,
-                'distance_unit' => $unit
+                'distance_unit' => $unit,
+                'sortorder'=> 2
             ];
 
             $this->request
@@ -558,6 +575,7 @@ class AddActivityActionTest extends TestCase {
             $this->assertEquals($unit, $capturedActivity->getDistanceUnit(), "Failed for unit: $unit");
         }
     }
+
     public function testValidationIsCalledBeforeRepositoryAdd(): void {
         $userId = (new UserId())->toString();
         $data = $this->createTestActivityData();
