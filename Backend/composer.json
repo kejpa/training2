@@ -20,7 +20,7 @@
         "php-coveralls/php-coveralls": "^2.9",
         "phpspec/prophecy-phpunit": "^2.5",
         "phpstan/extension-installer": "^1.4",
-        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan": "^2.2",
         "phpunit/phpunit": "^11.5",
         "squizlabs/php_codesniffer": "^4.0"
     },
