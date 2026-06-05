@@ -124,11 +124,7 @@ class EmailService {
         return "
 <h1>Välkommen {$user->getName()}!</h1>
 <p>Tack för att du registrerade dig.</p>
-<p>Du kan välja att logga in med en engångskod som antingen skickas varje gång du loggar in, 
-eller via valfri authenticator-app.</p>
-<p>Scanna nedanstående qr-kod om du vill använda en authenticator-app för inloggning<br>
-<img src='cid:qrkod' alt='qrkod' /> </p>
-<p>Vill du logga in med en engångskod kan du denna gång använda följande kod: {$user->getCode()}</p>
+<p>Du loggar in med en engångskod, denna gång använda följande kod: {$user->getCode()}</p>
 <p>mvh<br>Webbmaster</p>
 ";
     }

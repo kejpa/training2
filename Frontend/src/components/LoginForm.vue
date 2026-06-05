@@ -52,14 +52,14 @@ async function handleLogin() {
       <span>Användare:</span>
       <input type="email" v-model="user.email" required :disabled="enterCode"/>
     </label>
-    <button v-if="!enterCode" @click="nextState">Nästa</button>
-    <template v-if="enterCode">
+    <button v-if="!enterCode" @click="nextState()">Nästa</button>
+    <div v-if="enterCode">
       <label>
         <span>Loginkod:</span>
         <input type="text" v-model="user.code" pattern="[0-9]{6}" size="7" required/>
       </label>
       <button @click="handleLogin()">Logga in</button>
-    </template>
+    </div>
     <br/>
     <RouterLink to="/register">Ny användare</RouterLink>
   </div>
