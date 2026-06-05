@@ -14,14 +14,13 @@ const enterCode = ref(false)
 function nextState() {
   let payload = {}
   payload.email = user.value.email
-  loginStore
-    .sendMail(payload)
-    .then(() => {
-      enterCode.value = true
-    })
-    .catch((e) => {
-      useToastsStore().addToast('error', e.data.error)
-    })
+  let data = loginStore.sendMail(payload)
+  if (data.success) {
+    enterCode.value = true
+    alert("enterCode=" + enterCode.value)
+  } else {
+    useToastsStore().addToast('error', e.data.error)
+  }
 }
 
 async function handleLogin() {
@@ -60,8 +59,9 @@ async function handleLogin() {
       </label>
       <button @click="handleLogin()">Logga in</button>
     </div>
-    <br/>
     <RouterLink to="/register">Ny användare</RouterLink>
+    <input type="checkbox" v-model="enterCode">
+    <br/>
   </div>
 </template>
 <style scoped>
