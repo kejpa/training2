@@ -11,17 +11,15 @@ const loginStore = useLoginStore()
 const {login, resend} = useLoginStore()
 const enterCode = ref(false)
 
-function nextState() {
+async function nextState() {
   let payload = {}
   payload.email = user.value.email
-  loginStore
-    .sendMail(payload)
-    .then(() => {
-      enterCode.value = true
-    })
-    .catch((e) => {
-      useToastsStore().addToast('error', e.data.error)
-    })
+  let response = await loginStore.sendMail(payload)
+  if (response.statusCode === 200) {
+    enterCode.value = true
+  } else {
+    useToastsStore().addToast('error', response.data.error)
+  }
 }
 
 async function handleLogin() {
@@ -30,7 +28,7 @@ async function handleLogin() {
     code: user.value.code
   })
 
-  if (result.success) {
+  if (result.success === true ) {
     // Vänta på att store state har uppdaterats
     await nextTick()
 
@@ -52,16 +50,15 @@ async function handleLogin() {
       <span>Användare:</span>
       <input type="email" v-model="user.email" required :disabled="enterCode"/>
     </label>
-    <button v-if="!enterCode" @click="nextState">Nästa</button>
-    <template v-if="enterCode">
+    <button v-if="!enterCode" @click="nextState()">Nästa</button>
+    <div v-if="enterCode">
       <label>
         <span>Loginkod:</span>
         <input type="text" v-model="user.code" pattern="[0-9]{6}" size="7" required/>
       </label>
       <button @click="handleLogin()">Logga in</button>
-    </template>
-    <br/>
-    <RouterLink to="/register">Ny användare</RouterLink>
+    </div>
+    <p><RouterLink to="/register">Ny användare</RouterLink></p>
   </div>
 </template>
 <style scoped>
