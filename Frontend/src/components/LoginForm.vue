@@ -11,15 +11,14 @@ const loginStore = useLoginStore()
 const {login, resend} = useLoginStore()
 const enterCode = ref(false)
 
-function nextState() {
+async function nextState() {
   let payload = {}
   payload.email = user.value.email
-  let data = loginStore.sendMail(payload)
-  if (data.success) {
+  let response = await loginStore.sendMail(payload)
+  if (response.statusCode === 200) {
     enterCode.value = true
-    alert("enterCode=" + enterCode.value)
   } else {
-    useToastsStore().addToast('error', e.data.error)
+    useToastsStore().addToast('error', response.data.error)
   }
 }
 
@@ -29,7 +28,7 @@ async function handleLogin() {
     code: user.value.code
   })
 
-  if (result.success) {
+  if (result.success === true ) {
     // Vänta på att store state har uppdaterats
     await nextTick()
 
@@ -59,9 +58,7 @@ async function handleLogin() {
       </label>
       <button @click="handleLogin()">Logga in</button>
     </div>
-    <RouterLink to="/register">Ny användare</RouterLink>
-    <input type="checkbox" v-model="enterCode">
-    <br/>
+    <p><RouterLink to="/register">Ny användare</RouterLink></p>
   </div>
 </template>
 <style scoped>
