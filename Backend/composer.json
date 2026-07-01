@@ -5,7 +5,7 @@
         "ext-json": "*",
         "bacon/bacon-qr-code": "^3.1",
         "doctrine/dbal": "^4.4",
-        "firebase/php-jwt": "^7.0",
+        "firebase/php-jwt": "^7.1",
         "monolog/monolog": "^3.10",
         "php-di/php-di": "^7.1",
         "phpmailer/phpmailer": "^7.1",
