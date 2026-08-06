@@ -10,7 +10,7 @@ class EmailService {
     private bool $isDevelopment;
     private string $mailLogPath;
 
-    public function __construct(string $logPath = null) {
+    public function __construct() {
         $this->isDevelopment = ($_ENV['APP_ENV'] ?? 'production') === 'development';
 
         // Använd befintlig logs-mapp och lägg till mail-undermapp
