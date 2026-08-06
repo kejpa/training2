@@ -8,7 +8,7 @@ use Ramsey\Uuid\UuidInterface;
 class AbstractId {
     protected UuidInterface $value;
 
-    public function __construct(string $id = null) {
+    final public function __construct(?string $id = null) {
         $this->value = $id ? Uuid::fromString($id) : Uuid::uuid4();
     }
 
