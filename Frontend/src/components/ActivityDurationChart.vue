@@ -1,25 +1,27 @@
 <script setup>
-import {computed, onMounted, ref, watch} from "vue";
+import { computed, onMounted, ref, watch } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
-import {storeToRefs} from "pinia";
-import {useStatisticsStore} from "@/stores/statisticsStore.js";
-import {useSessionsStore} from "@/stores/sessionsStore.js";
-import {useActivitiesStore} from "@/stores/activitiesStore.js";
+import { storeToRefs } from 'pinia'
+import { useStatisticsStore } from '@/stores/statisticsStore.js'
+import { useSessionsStore } from '@/stores/sessionsStore.js'
+import { useActivitiesStore } from '@/stores/activitiesStore.js'
 
 const props = defineProps(['activityId', 'monthCount'])
 const statisticsStore = useStatisticsStore()
-const {months} = storeToRefs(statisticsStore)
+const { months } = storeToRefs(statisticsStore)
 
 const sessionsStorage = useSessionsStore()
 const activitiesStorage = useActivitiesStore()
-const {activities} = storeToRefs(activitiesStorage)
+const { activities } = storeToRefs(activitiesStorage)
 const activity = ref({})
 const chartRef = ref(null)
 
 // Varaktighetsdiagram
-const series = computed(() => [{
-  data: statisticsStore.durationPerMonth(props.activityId)
-}])
+const series = computed(() => [
+  {
+    data: statisticsStore.durationPerMonth(props.activityId),
+  },
+])
 
 const options = {
   chart: {
@@ -34,7 +36,7 @@ const options = {
         reset: true,
         download: false,
         selection: false,
-      }
+      },
     },
     zoom: {
       enabled: true,
@@ -58,7 +60,7 @@ const options = {
         const h = Math.floor(val / 60)
         const m = val % 60
         return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
-      }
+      },
     },
   },
   dataLabels: {
@@ -67,16 +69,16 @@ const options = {
       const h = Math.floor(val / 60)
       const m = val % 60
       return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
-    }
+    },
   },
   plotOptions: {
     bar: {
       dataLabels: {
         total: {
           enabled: false,
-        }
-      }
-    }
+        },
+      },
+    },
   },
   tooltip: {
     y: {
@@ -86,25 +88,22 @@ const options = {
         return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
       },
       title: {
-        formatter: () => undefined
-      }
-    }
+        formatter: () => undefined,
+      },
+    },
   },
   grid: {
     padding: {
       left: 30,
-      right: 20
-    }
-  }
+      right: 20,
+    },
+  },
 }
 
 onMounted(() => {
-  let p = [
-    sessionsStorage.getAll(),
-    activitiesStorage.getAll(),
-  ]
+  let p = [sessionsStorage.getAll(), activitiesStorage.getAll()]
   Promise.all(p).then(() => {
-    activity.value = activities.value.find(itm => itm.id === props.activityId)
+    activity.value = activities.value.find((itm) => itm.id === props.activityId)
   })
 })
 
@@ -124,12 +123,7 @@ watch(props, () => {
 <template>
   <h3>Varaktighet per månad</h3>
   <div style="height: 30vh">
-  <VueApexCharts ref="chartRef"
-                 type="bar"
-                 :options
-                 :series
-                 height="100%"
-  />
+    <VueApexCharts ref="chartRef" type="bar" :options :series height="100%" />
   </div>
 </template>
 

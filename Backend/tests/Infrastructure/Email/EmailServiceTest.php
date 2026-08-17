@@ -332,7 +332,7 @@ class EmailServiceTest extends TestCase {
         $this->emailService->sendWelcomeEmail($user);
         $this->emailService->resendEmail($user);
         $this->emailService->sendNewCodeEmail($user);
-
+echo $this->testLogPath;
         $files = glob($this->testLogPath . '/mail/*.eml');
         $this->assertCount(3, $files);
     }

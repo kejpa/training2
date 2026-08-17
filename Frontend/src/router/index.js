@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import {useLoginStore} from "@/stores/loginStore.js";
+import { useLoginStore } from '@/stores/loginStore.js'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,59 +8,59 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: () => import('../views/SessionsView.vue'),
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: true },
     },
     {
       path: '/activities',
       name: 'activities',
       component: () => import('../views/ActivitiesView.vue'),
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: true },
     },
     {
       path: '/sessions/:id?',
       name: 'sessions',
       component: () => import('../views/SessionsView.vue'),
       props: true,
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: true },
     },
     {
       path: '/sessionslist',
       name: 'sessionslist',
       component: () => import('../views/SessionsList.vue'),
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: true },
     },
     {
       path: '/statistics',
       name: 'statistics',
       component: () => import('../views/StatisticsView.vue'),
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: true },
     },
-  // Publika rutter
+    // Publika rutter
     {
       path: '/about',
       name: 'about',
       component: () => import('../views/AboutView.vue'),
-      meta: { requiresAuth: false }
+      meta: { requiresAuth: false },
     },
     {
       path: '/register',
       name: 'register',
       component: () => import('../components/RegisterForm.vue'),
-      meta: { requiresAuth: false }
+      meta: { requiresAuth: false },
     },
     {
       path: '/login',
       name: 'login',
       component: () => import('../components/LoginForm.vue'),
-      meta: { requiresAuth: false }
+      meta: { requiresAuth: false },
     },
     // Catch-all route (404)
     {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
       component: () => import('@/views/NotFoundView.vue'),
-      meta: { requiresAuth: false }
-    }
+      meta: { requiresAuth: false },
+    },
   ],
 })
 
@@ -74,7 +74,7 @@ router.beforeEach((to, from, next) => {
   if (requiresAuth && !isAuthenticated) {
     next({
       name: 'login',
-      query: { redirect: to.fullPath } // Spara destination för redirect efter login
+      query: { redirect: to.fullPath }, // Spara destination för redirect efter login
     })
   }
   // Om användaren är inloggad och försöker nå login/register

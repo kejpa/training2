@@ -1,18 +1,18 @@
 <script setup>
-import {computed, onMounted, ref, watch} from "vue";
+import { computed, onMounted, ref, watch } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
-import {storeToRefs} from "pinia";
-import {useStatisticsStore} from "@/stores/statisticsStore.js";
-import {useSessionsStore} from "@/stores/sessionsStore.js";
-import {useActivitiesStore} from "@/stores/activitiesStore.js";
+import { storeToRefs } from 'pinia'
+import { useStatisticsStore } from '@/stores/statisticsStore.js'
+import { useSessionsStore } from '@/stores/sessionsStore.js'
+import { useActivitiesStore } from '@/stores/activitiesStore.js'
 
 const props = defineProps(['activityId', 'monthCount'])
 const statisticsStore = useStatisticsStore()
-const {months} = storeToRefs(statisticsStore)
+const { months } = storeToRefs(statisticsStore)
 
 const sessionsStorage = useSessionsStore()
 const activitiesStorage = useActivitiesStore()
-const {activities} = storeToRefs(activitiesStorage)
+const { activities } = storeToRefs(activitiesStorage)
 const activity = ref({})
 const chartRef = ref(null)
 
@@ -24,7 +24,7 @@ const options = {
     type: 'bar',
     offsetX: 0,
     sparkline: {
-      enabled: false
+      enabled: false,
     },
     toolbar: {
       show: true,
@@ -36,7 +36,7 @@ const options = {
         reset: true,
         download: false,
         selection: false,
-      }
+      },
     },
     zoom: {
       enabled: true,
@@ -59,8 +59,8 @@ const options = {
     range: props.monthCount - 1,
     tickPlacement: 'on',
     labels: {
-      offsetX: 0
-    }
+      offsetX: 0,
+    },
   },
   yaxis: {
     stepSize: 1,
@@ -73,33 +73,30 @@ const options = {
       dataLabels: {
         total: {
           enabled: true,
-        }
-      }
-    }
+        },
+      },
+    },
   },
   tooltip: {
     y: {
       formatter: (val) => `${val}`,
       title: {
-        formatter: (seriesName) => seriesName
-      }
-    }
+        formatter: (seriesName) => seriesName,
+      },
+    },
   },
   grid: {
     padding: {
       left: 30,
-      right: 20
-    }
-  }
+      right: 20,
+    },
+  },
 }
 
 onMounted(() => {
-  let p = [
-    sessionsStorage.getAll(),
-    activitiesStorage.getAll(),
-  ]
+  let p = [sessionsStorage.getAll(), activitiesStorage.getAll()]
   Promise.all(p).then(() => {
-    activity.value = activities.value.find(itm => itm.id === props.activityId)
+    activity.value = activities.value.find((itm) => itm.id === props.activityId)
   })
 })
 
@@ -119,12 +116,7 @@ watch(props, () => {
 <template>
   <h3>Ansträngning per månad</h3>
   <div style="height: 30vh">
-  <VueApexCharts ref="chartRef"
-                 type="bar"
-                 :options
-                 :series
-                 height="100%"
-  />
+    <VueApexCharts ref="chartRef" type="bar" :options :series height="100%" />
   </div>
 </template>
 

@@ -1,16 +1,16 @@
 <script setup>
-import {onMounted, ref} from 'vue'
-import {useActivitiesStore} from '@/stores/activitiesStore.js'
-import {storeToRefs} from 'pinia'
+import { onMounted, ref } from 'vue'
+import { useActivitiesStore } from '@/stores/activitiesStore.js'
+import { storeToRefs } from 'pinia'
 import edit from '@/assets/icons/edit.svg'
 import remove from '@/assets/icons/delete.png'
 import waste from '@/assets/icons/waste.png'
 import check from '@/assets/icons/check.svg'
 import up from '@/assets/icons/upp.jpg'
-import {useToastsStore} from "@/stores/toastsStore.js";
+import { useToastsStore } from '@/stores/toastsStore.js'
 
 const activitiesStore = useActivitiesStore()
-const {activities} = storeToRefs(activitiesStore)
+const { activities } = storeToRefs(activitiesStore)
 
 const activity = ref({})
 const emojis = ref([
@@ -108,16 +108,16 @@ function moveDown(index) {
   <h2>Aktiviteter</h2>
   <div id="form">
     <label
-    >Emoji
+      >Emoji
       <select v-model="activity.emoji">
         <option v-for="e in emojis" :key="e">{{ e }}</option>
       </select></label
     >
-    <label>Aktivitet <input v-model="activity.name" size="20"/></label>
+    <label>Aktivitet <input v-model="activity.name" size="20" /></label>
     <label>
-      <input type="checkbox" v-model="activity.log_distance"/> Logga distans
+      <input type="checkbox" v-model="activity.log_distance" /> Logga distans
       <span v-if="activity.log_distance === true"
-      >Distansenhet
+        >Distansenhet
         <select v-model="activity.distance_unit">
           <option>m</option>
           <option>km</option>
@@ -125,13 +125,13 @@ function moveDown(index) {
         </select>
       </span>
     </label>
-    <label><input type="checkbox" v-model="activity.log_duration" value="true"/> Logga tid</label>
+    <label><input type="checkbox" v-model="activity.log_duration" value="true" /> Logga tid</label>
     <div>
       <button @click="saveActivity">Spara</button>
       <button @click="activity = activitiesStore.getInitial()">Ny</button>
     </div>
   </div>
-  <hr/>
+  <hr />
   <div id="list" v-if="activities.length > 0">
     <ul class="header">
       <li>Emoji</li>
@@ -144,18 +144,29 @@ function moveDown(index) {
     <ul v-for="act in activities" :key="act">
       <li>{{ act.emoji }}</li>
       <li>{{ act.name }}</li>
-      <li class="center"><img :src="act.log_distance ? check : remove" alt="log"/></li>
+      <li class="center"><img :src="act.log_distance ? check : remove" alt="log" /></li>
       <li class="center">{{ act.distance_unit }}</li>
-      <li class="center"><img :src="act.log_duration ? check : remove" alt="log"/></li>
+      <li class="center"><img :src="act.log_duration ? check : remove" alt="log" /></li>
       <li>
-        <img :src="edit" title="Redigera aktivitet" alt="Redigera" @click="activity = { ...act }"/>
-        <img :src="waste" title="Radera aktivitet" alt="Radera" @click="removeActivity(act)"/>
+        <img :src="edit" title="Redigera aktivitet" alt="Redigera" @click="activity = { ...act }" />
+        <img :src="waste" title="Radera aktivitet" alt="Radera" @click="removeActivity(act)" />
       </li>
       <li>
-        <img v-if="act.sortorder!==0" :src="up" title="Flytta upp" alt="Flytta upp"
-             @click="moveUp(act.sortorder)"/>
-        <img v-if="act.sortorder!==activities.length-1" :src="up" class="down" title="Flytta ner"
-             alt="Flytta ner" @click="moveDown(act.sortorder)"/>
+        <img
+          v-if="act.sortorder !== 0"
+          :src="up"
+          title="Flytta upp"
+          alt="Flytta upp"
+          @click="moveUp(act.sortorder)"
+        />
+        <img
+          v-if="act.sortorder !== activities.length - 1"
+          :src="up"
+          class="down"
+          title="Flytta ner"
+          alt="Flytta ner"
+          @click="moveDown(act.sortorder)"
+        />
         {{ act.sortorder }}
       </li>
     </ul>

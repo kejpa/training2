@@ -4,8 +4,8 @@ import { useSessionsStore } from '@/stores/sessionsStore.js'
 import { useActivitiesStore } from '@/stores/activitiesStore.js'
 import { storeToRefs } from 'pinia'
 import { useRoute } from 'vue-router'
-import {useToastsStore} from "@/stores/toastsStore.js";
-import router from "@/router/index.js";
+import { useToastsStore } from '@/stores/toastsStore.js'
+import router from '@/router/index.js'
 
 const route = useRoute()
 const sessionsStore = useSessionsStore()
@@ -15,7 +15,7 @@ const { activities } = storeToRefs(activitiesStore)
 
 onMounted(async () => {
   await activitiesStore.getAll()
-  if(activities.value.length===0) {
+  if (activities.value.length === 0) {
     useToastsStore().addToast('info', 'Skapa aktiviteter först!')
     router.push('/activities')
     return

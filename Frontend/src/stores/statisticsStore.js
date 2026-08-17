@@ -9,9 +9,7 @@ export const useStatisticsStore = defineStore('statistics', () => {
 
   const months = computed(() => {
     if (sessions.value.length === 0) return []
-    const firstDate = sessions.value
-      .map(s => s.date.substring(0, 7))
-      .sort()[0]
+    const firstDate = sessions.value.map((s) => s.date.substring(0, 7)).sort()[0]
     const today = new Date().toISOString().substring(0, 7)
     const tmp = []
     let [y, m] = firstDate.split('-').map(Number)
@@ -19,35 +17,39 @@ export const useStatisticsStore = defineStore('statistics', () => {
     while (y < endY || (y === endY && m <= endM)) {
       tmp.push(`${y}-${String(m).padStart(2, '0')}`)
       m++
-      if (m > 12) { m = 1; y++ }
+      if (m > 12) {
+        m = 1
+        y++
+      }
     }
     return tmp
   })
 
   function countPerMonth(activityId) {
-    return months.value.map(month =>
-      sessions.value.filter(s =>
-        s.date.substring(0, 7) === month && s.activityid === activityId
-      ).length
+    return months.value.map(
+      (month) =>
+        sessions.value.filter(
+          (s) => s.date.substring(0, 7) === month && s.activityid === activityId,
+        ).length,
     )
   }
 
   function distancePerMonth(activityId) {
-    return months.value.map(month =>
+    return months.value.map((month) =>
       sessions.value
-        .filter(s => s.date.substring(0, 7) === month && s.activityid === activityId)
-        .reduce((sum, s) => sum + (s.distance ?? 0), 0)
+        .filter((s) => s.date.substring(0, 7) === month && s.activityid === activityId)
+        .reduce((sum, s) => sum + (s.distance ?? 0), 0),
     )
   }
   function durationPerMonth(activityId) {
-    return months.value.map(month =>
+    return months.value.map((month) =>
       sessions.value
-        .filter(s => s.date.substring(0, 7) === month && s.activityid === activityId)
+        .filter((s) => s.date.substring(0, 7) === month && s.activityid === activityId)
         .reduce((sum, s) => {
           if (!s.duration) return sum
           const [h, m] = s.duration.split(':').map(Number)
           return sum + h * 60 + m
-        }, 0)
+        }, 0),
     )
   }
 
@@ -57,12 +59,12 @@ export const useStatisticsStore = defineStore('statistics', () => {
     const high = { name: '8+', data: [] }
 
     for (const month of months.value) {
-      const monthSessions = sessions.value.filter(s =>
-        s.date.substring(0, 7) === month && s.activityid === activityId
+      const monthSessions = sessions.value.filter(
+        (s) => s.date.substring(0, 7) === month && s.activityid === activityId,
       )
-      low.data.push(monthSessions.filter(s => s.rpe >= 1 && s.rpe <= 4).length)
-      mid.data.push(monthSessions.filter(s => s.rpe >= 5 && s.rpe <= 7).length)
-      high.data.push(monthSessions.filter(s => s.rpe >= 8).length)
+      low.data.push(monthSessions.filter((s) => s.rpe >= 1 && s.rpe <= 4).length)
+      mid.data.push(monthSessions.filter((s) => s.rpe >= 5 && s.rpe <= 7).length)
+      high.data.push(monthSessions.filter((s) => s.rpe >= 8).length)
     }
 
     return [low, mid, high]

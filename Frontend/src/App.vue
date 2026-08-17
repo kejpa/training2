@@ -1,9 +1,9 @@
 <script setup>
-import {onMounted} from 'vue'
-import {RouterLink, RouterView, useRouter} from 'vue-router'
+import { onMounted } from 'vue'
+import { RouterLink, RouterView, useRouter } from 'vue-router'
 import ToastContainer from '@/components/ToastContainer.vue'
-import {useLoginStore} from "@/stores/loginStore.js";
-import {useRegisterSW} from 'virtual:pwa-register/vue'
+import { useLoginStore } from '@/stores/loginStore.js'
+import { useRegisterSW } from 'virtual:pwa-register/vue'
 import edit from '@/assets/icons/edit.svg'
 import activity from '@/assets/icons/activity.png'
 import info from '@/assets/icons/info.png'
@@ -13,7 +13,7 @@ import chart from '@/assets/icons/chart.png'
 const router = useRouter()
 const loginStore = useLoginStore()
 
-const {needRefresh, updateServiceWorker} = useRegisterSW()
+const { needRefresh, updateServiceWorker } = useRegisterSW()
 
 onMounted(() => {
   // Återställ session om token finns i localStorage
@@ -24,20 +24,20 @@ onMounted(() => {
 <template>
   <header>
     <nav class="header">
-      <img :src="edit" alt="Mata in" @click="router.push('/')"/>
-      <img :src="activity" alt="Aktiviteter" @click="router.push('/activities')"/>
-      <img :src="list" alt="Lista" @click="router.push('/sessionslist')"/>
-      <img :src="chart" alt="Graf" @click="router.push('/statistics')"/>
-      <img :src="info" alt="Om" @click="router.push('/about')"/>
+      <img :src="edit" alt="Mata in" @click="router.push('/')" />
+      <img :src="activity" alt="Aktiviteter" @click="router.push('/activities')" />
+      <img :src="list" alt="Lista" @click="router.push('/sessionslist')" />
+      <img :src="chart" alt="Graf" @click="router.push('/statistics')" />
+      <img :src="info" alt="Om" @click="router.push('/about')" />
     </nav>
-    <ToastContainer/>
+    <ToastContainer />
     <div v-if="needRefresh" class="update-banner">
       <span>En ny version finns tillgänglig.</span>
       <button @click="updateServiceWorker()">Uppdatera nu</button>
       <button @click="needRefresh = false">Senare</button>
     </div>
     <h1>
-      <img alt="Dagbok" class="logo" src="@/assets/icons/notebook.png"/>
+      <img alt="Dagbok" class="logo" src="@/assets/icons/notebook.png" />
       Träningsdagbok
     </h1>
 
@@ -52,7 +52,7 @@ onMounted(() => {
     </div>
   </header>
   <main>
-    <RouterView/>
+    <RouterView />
   </main>
   <footer>
     &copy; Kjell Hansen 2026{{

@@ -1,12 +1,12 @@
 <script setup>
-import {nextTick, ref} from 'vue'
-import {useLoginStore} from '@/stores/loginStore.js'
-import {useToastsStore} from '@/stores/toastsStore.js'
-import router from "@/router/index.js"
-import {useRoute} from "vue-router"
+import { nextTick, ref } from 'vue'
+import { useLoginStore } from '@/stores/loginStore.js'
+import { useToastsStore } from '@/stores/toastsStore.js'
+import router from '@/router/index.js'
+import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const user = ref({email: '', code: ''})
+const user = ref({ email: '', code: '' })
 const loginStore = useLoginStore()
 const toastsStore = useToastsStore()
 const enterCode = ref(false)
@@ -26,7 +26,7 @@ async function nextState() {
   error.value = ''
 
   try {
-    const response = await loginStore.sendMail({email: user.value.email})
+    const response = await loginStore.sendMail({ email: user.value.email })
 
     console.log('sendMail response:', response)
 
@@ -63,7 +63,7 @@ async function handleLogin() {
   try {
     const result = await loginStore.login({
       email: user.value.email,
-      code: user.value.code
+      code: user.value.code,
     })
 
     console.log('login result:', result)
@@ -77,7 +77,7 @@ async function handleLogin() {
 
       // Dubbel-check att vi är inloggade
       if (loginStore.isAuthenticated) {
-      toastsStore.addToast('success', 'Inloggning lyckades - Omdirigerar!')
+        toastsStore.addToast('success', 'Inloggning lyckades - Omdirigerar!')
         // Kontrollera att vi inte redan är där
         if (router.currentRoute.value.path !== redirect) {
           console.log('Redirecting to:', redirect)
@@ -100,27 +100,19 @@ async function handleLogin() {
     loading.value = false
   }
 }
-
-// Håll alla states synkade
-function reset() {
-  user.value = {email: '', code: ''}
-  enterCode.value = false
-  error.value = ''
-  loading.value = false
-}
 </script>
 <template>
   <div>
     <h1>Logga in</h1>
     <label>
       <span>Användare:</span>
-      <input type="email" v-model="user.email" required :disabled="enterCode"/>
+      <input type="email" v-model="user.email" required :disabled="enterCode" />
     </label>
     <button v-if="!enterCode" @click="nextState">Nästa</button>
     <div v-if="enterCode">
       <label>
         <span>Loginkod:</span>
-        <input type="text" v-model="user.code" pattern="[0-9]{6}" size="7" required/>
+        <input type="text" v-model="user.code" pattern="[0-9]{6}" size="7" required />
       </label>
       <button @click="handleLogin">Logga in</button>
     </div>

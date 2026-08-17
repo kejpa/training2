@@ -6,10 +6,8 @@
       <sourceFolder url="file://$MODULE_DIR$/Backend/tests" isTestSource="true" packagePrefix="Tests\" />
       <sourceFolder url="file://$MODULE_DIR$/Backend/tests/Application" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/Backend/tests/Domain" isTestSource="true" />
-      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/bacon/bacon-qr-code" />
       <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/brick/math" />
       <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/composer" />
-      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/dasprid/enum" />
       <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/doctrine/deprecations" />
       <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/doctrine/instantiator" />
       <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/fig/http-message-util" />
@@ -94,6 +92,7 @@
       <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/symfony/stopwatch" />
       <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/symfony/string" />
       <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/symfony/yaml" />
+      <excludeFolder url="file://$MODULE_DIR$/Backend/vendor/symfony/polyfill-php85" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

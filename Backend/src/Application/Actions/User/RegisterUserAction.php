@@ -9,7 +9,6 @@ use App\Domain\ValueObject\UserId;
 use App\Infrastructure\Email\EmailService;
 use BaconQrCode\Renderer\GDLibRenderer;
 use BaconQrCode\Writer;
-use PragmaRX\Google2FA\Google2FA;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Log\LoggerInterface;
 
@@ -38,19 +37,19 @@ class RegisterUserAction extends UserAction {
         }
 
         try {
-            // Skapa hemlig nyckel för 2-faktorsautentisering
-            $g2fa = new Google2FA();
-            $secret = $g2fa->generateSecretKey();
+            /*            // Skapa hemlig nyckel för 2-faktorsautentisering
+                        $g2fa = new Google2FA();
+                        $secret = $g2fa->generateSecretKey();
 
-            // Skapa en url för att kunna skapa en QR-kod
-            $qrUrl = $g2fa->getQRCodeUrl("Träningslogg", $data['email'], $secret);
+                        // Skapa en url för att kunna skapa en QR-kod
+                        $qrUrl = $g2fa->getQRCodeUrl("Träningslogg", $data['email'], $secret);
 
-            // Skapa en qr-ko mha BaconQR-biblioteket
-            $renderer = new GDLibRenderer(250);
-            $writer = new Writer($renderer);
+                        // Skapa en qr-ko mha BaconQR-biblioteket
+                        $renderer = new GDLibRenderer(250);
+                        $writer = new Writer($renderer);
 
-            // Skapa en base64-sträng med informationen från den skapade qr-koden
-            $b64_data = base64_encode($writer->writeString($qrUrl));
+                        // Skapa en base64-sträng med informationen från den skapade qr-koden
+                        $b64_data = base64_encode($writer->writeString($qrUrl));*/
 
             // Skapa en slumpmässig 6 siffrig kod
             $randomCode = (string)random_int(100000, 999999);
@@ -61,9 +60,13 @@ class RegisterUserAction extends UserAction {
                 $data['email'],
                 $data['firstname'],
                 $data['lastname'],
-                $secret,
-                $qrUrl,
-                $b64_data,
+                /*                $secret,
+                                $qrUrl,
+                                $b64_data,
+                */
+                '',
+                '',
+                '',
                 $randomCode,
                 new \DateTimeImmutable('+2 hours'),
             );

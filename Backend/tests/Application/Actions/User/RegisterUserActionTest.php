@@ -170,48 +170,6 @@ class RegisterUserActionTest extends TestCase {
         $this->assertEquals(201, $response->getStatusCode());
     }
 
-    public function testRegistrationCreatesUserWith2FA(): void {
-        $data = [
-            'email' => 'test@example.com',
-            'firstname' => 'Anna',
-            'lastname' => 'Andersson',
-        ];
-
-        $this->request
-            ->method('getParsedBody')
-            ->willReturn($data);
-
-        $this->userValidator
-            ->method('validateRegistration')
-            ->willReturn(true);
-
-        $capturedUser = null;
-        $this->userRepository
-            ->expects($this->once())
-            ->method('save')
-            ->willReturnCallback(function (User $user) use (&$capturedUser) {
-                $capturedUser = $user;
-            });
-
-        $response = $this->action->__invoke($this->request, $this->responseFactory->createResponse(), []);
-
-        $this->assertEquals(201, $response->getStatusCode());
-
-        // Verifiera att användaren har 2FA-data
-        $this->assertNotNull($capturedUser);
-        $this->assertNotEmpty($capturedUser->getSecret());
-        $this->assertNotEmpty($capturedUser->getQrUrl());
-        $this->assertNotEmpty($capturedUser->getImgData());
-        $this->assertNotEmpty($capturedUser->getCode());
-        $this->assertInstanceOf(\DateTimeImmutable::class, $capturedUser->getExpires());
-
-        // Verifiera att koden är 6 siffror
-        $this->assertMatchesRegularExpression('/^\d{6}$/', $capturedUser->getCode());
-
-        // Verifiera att QR-data är base64
-        $this->assertNotFalse(base64_decode($capturedUser->getImgData(), true));
-    }
-
     public function testRegistrationSetsExpirationTo2Hours(): void {
         $data = [
             'email' => 'test@example.com',
