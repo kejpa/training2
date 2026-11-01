@@ -4,7 +4,7 @@
         "php": "^8.2",
         "ext-json": "*",
         "doctrine/dbal": "^4.4",
-        "firebase/php-jwt": "^7.0",
+        "firebase/php-jwt": "^7.2",
         "monolog/monolog": "^3.10",
         "php-di/php-di": "^7.1",
         "phpmailer/phpmailer": "^7.1",
