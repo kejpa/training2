@@ -3,7 +3,7 @@
     "require": {
         "php": "^8.2",
         "ext-json": "*",
-        "doctrine/dbal": "^4.4",
+        "doctrine/dbal": "^4.5",
         "firebase/php-jwt": "^7.0",
         "monolog/monolog": "^3.10",
         "php-di/php-di": "^7.1",
